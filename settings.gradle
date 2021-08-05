@@ -1,2 +1,3 @@
 rootProject.name = "Alarm"
 include ':app'
+include ':baseUI'
