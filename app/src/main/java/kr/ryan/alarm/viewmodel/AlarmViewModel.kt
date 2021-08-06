@@ -1,11 +1,12 @@
 package kr.ryan.alarm.viewmodel
 
 import android.util.Log
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.Transformations
-import androidx.lifecycle.ViewModel
+import androidx.lifecycle.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.suspendCancellableCoroutine
 import kr.ryan.alarm.data.Alarm
+import kr.ryan.alarm.repository.AlarmRepository
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -16,9 +17,12 @@ import java.util.*
  * Created On 2021-08-04.
  * Description:
  */
-class AlarmViewModel : ViewModel() {
+class AlarmViewModel(private val repository: AlarmRepository) : ViewModel() {
 
-    private val _alarmList = MutableLiveData<List<Alarm>>()
+    private val _alarmList = repository.alarmList.asLiveData()
+    val alarmList: LiveData<List<Alarm>>
+        get() = _alarmList
+
     val alarmStatus:LiveData<String> = Transformations.map(_alarmList){
 
         runCatching {
@@ -32,5 +36,13 @@ class AlarmViewModel : ViewModel() {
 
     }
 
+
+    fun insertAlarm(alarm: Alarm) = viewModelScope.launch(Dispatchers.IO) {
+        repository.insertAlarm(alarm)
+    }
+
+    fun deleteAlarm(alarm: Alarm) = viewModelScope.launch(Dispatchers.IO) {
+        repository.deleteAlarm(alarm)
+    }
 
 }

@@ -3,6 +3,8 @@ package kr.ryan.alarm.room.dao
 import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Insert
+import androidx.room.Query
+import kotlinx.coroutines.flow.Flow
 import kr.ryan.alarm.data.Alarm
 
 /**
@@ -16,8 +18,11 @@ import kr.ryan.alarm.data.Alarm
 @Dao
 interface AlarmDao {
 
+    @Query("SELECT * FROM Alarm_table")
+    fun allAlarm(): Flow<List<Alarm>>
+
     @Insert
-    suspend fun insertAlarm(alarm: Alarm)
+    suspend fun insertAlarm(alarm: Alarm): Long
 
     @Delete
     suspend fun deleteAlarm(alarm: Alarm)
