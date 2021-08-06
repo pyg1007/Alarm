@@ -6,6 +6,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.suspendCancellableCoroutine
 import kr.ryan.alarm.data.Alarm
+import kr.ryan.alarm.data.AlarmStatus
 import kr.ryan.alarm.repository.AlarmRepository
 import kr.ryan.alarm.utility.fastAlarm
 import java.text.SimpleDateFormat
@@ -28,8 +29,9 @@ class AlarmViewModel(private val repository: AlarmRepository) : ViewModel() {
 
         runCatching {
             val current = Date()
-            val alarm = it.filter { alarm -> alarm.alarmOnOff || current.after(alarm.alarmTime) }.minByOrNull { alarm -> alarm.alarmTime }
-            alarm?.alarmTime!!.fastAlarm()
+            val alarmDate = it.filter { alarm -> alarm.alarmOnOff || current.after(alarm.alarmTime) || alarm.alarmStatus == AlarmStatus.DATE }.minByOrNull { alarm -> alarm.alarmTime }
+            val alarmDay = it.filter { alarm -> alarm.alarmOnOff }
+            alarmDate?.alarmTime!!.fastAlarm()
         }.onFailure {
             Log.e("Transformations Error", "Exception -> ${it.message}")
         }.getOrDefault("Empty")

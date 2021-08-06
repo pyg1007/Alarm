@@ -16,5 +16,6 @@ data class Alarm(
     @PrimaryKey
     val index: Int,
     var alarmTime: Date,
+    var alarmStatus: AlarmStatus,
     var alarmOnOff : Boolean
     )
