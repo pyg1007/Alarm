@@ -7,6 +7,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.suspendCancellableCoroutine
 import kr.ryan.alarm.data.Alarm
 import kr.ryan.alarm.repository.AlarmRepository
+import kr.ryan.alarm.utility.fastAlarm
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -27,9 +28,8 @@ class AlarmViewModel(private val repository: AlarmRepository) : ViewModel() {
 
         runCatching {
             val current = Date()
-            val fastAlarm = it.filter { alarm -> alarm.alarmOnOff || current.after(alarm.alarmTime) }.minByOrNull { alarm -> alarm.alarmTime }
-            val simpleDateFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault())
-            simpleDateFormat.format(fastAlarm)
+            val alarm = it.filter { alarm -> alarm.alarmOnOff || current.after(alarm.alarmTime) }.minByOrNull { alarm -> alarm.alarmTime }
+            alarm?.alarmTime!!.fastAlarm()
         }.onFailure {
             Log.e("Transformations Error", "Exception -> ${it.message}")
         }.getOrDefault("Empty")
