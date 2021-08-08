@@ -23,7 +23,11 @@ class DateViewHolder private constructor(private val binding: RecyclerDateBindin
     }
 
     companion object{
-        fun from(parent: ViewGroup) : DateViewHolder{
+
+        private var itemClickEvent: ((Alarm) -> Unit)? = null
+
+        fun from(parent: ViewGroup, onItemClickEventListener: ((Alarm) -> Unit)?) : DateViewHolder{
+            itemClickEvent = onItemClickEventListener
             return DateViewHolder(DataBindingUtil.inflate(LayoutInflater.from(parent.context), R.layout.recycler_date, parent, false))
         }
     }

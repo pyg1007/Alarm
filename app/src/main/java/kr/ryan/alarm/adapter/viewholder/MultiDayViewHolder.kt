@@ -19,12 +19,20 @@ class MultiDayViewHolder private constructor(private val binding: RecyclerMultiD
 
     fun bind(alarm: Alarm){
 
-
+        binding.root.setOnClickListener {
+            itemClickEvent?.let {
+                it(alarm)
+            }
+        }
 
     }
 
     companion object{
-        fun from(parent: ViewGroup): MultiDayViewHolder{
+
+        private var itemClickEvent: ((Alarm) -> Unit)? = null
+
+        fun from(parent: ViewGroup, onItemClickEventListener: ((Alarm) -> Unit)?): MultiDayViewHolder{
+            itemClickEvent = onItemClickEventListener
             return MultiDayViewHolder(DataBindingUtil.inflate(LayoutInflater.from(parent.context), R.layout.recycler_multi_day, parent, false))
         }
     }

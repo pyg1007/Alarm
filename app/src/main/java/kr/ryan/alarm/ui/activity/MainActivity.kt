@@ -27,6 +27,8 @@ class MainActivity : BaseActivity<ActivityMainBinding>(R.layout.activity_main) {
 
                 initRecyclerView()
 
+                recyclerViewItemClick()
+
                 observeRecyclerViewData()
 
             }
@@ -39,6 +41,14 @@ class MainActivity : BaseActivity<ActivityMainBinding>(R.layout.activity_main) {
     private fun initRecyclerView(){
         alarmAdapter = AlarmAdapter().apply {
             binding.recyclerAlarm.adapter = this
+        }
+    }
+
+    private fun recyclerViewItemClick(){
+        if (!::alarmAdapter.isInitialized) return
+
+        alarmAdapter.setOnItemClickEvent {
+            //TODO To Edit Mode Alarm Scrren
         }
     }
 
