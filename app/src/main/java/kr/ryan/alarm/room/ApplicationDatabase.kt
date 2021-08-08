@@ -1,8 +1,12 @@
 package kr.ryan.alarm.room
 
 import android.content.Context
+import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
+import androidx.room.TypeConverters
+import kr.ryan.alarm.data.Alarm
+import kr.ryan.alarm.data.DateConverter
 import kr.ryan.alarm.room.dao.AlarmDao
 
 /**
@@ -12,6 +16,9 @@ import kr.ryan.alarm.room.dao.AlarmDao
  * Created On 2021-08-05.
  * Description:
  */
+
+@Database(entities = [Alarm::class], version = 1, exportSchema = false)
+@TypeConverters(DateConverter::class)
 abstract class ApplicationDatabase : RoomDatabase() {
 
     abstract fun alarmDao(): AlarmDao

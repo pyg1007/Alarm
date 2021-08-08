@@ -1,5 +1,6 @@
 package kr.ryan.alarm.ui.activity
 
+import android.util.Log
 import androidx.activity.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.whenCreated
@@ -48,7 +49,8 @@ class MainActivity : BaseActivity<ActivityMainBinding>(R.layout.activity_main) {
         if (!::alarmAdapter.isInitialized) return
 
         alarmAdapter.setOnItemClickEvent {
-            //TODO To Edit Mode Alarm Scrren
+            Log.e(TAG, "onClicked")
+            //TODO To Edit Mode Alarm Screen
         }
     }
 
@@ -59,6 +61,10 @@ class MainActivity : BaseActivity<ActivityMainBinding>(R.layout.activity_main) {
                 alarmAdapter.submitList(it.toMutableList())
         }
 
+    }
+
+    companion object{
+        const val TAG = "MainActivity"
     }
 
 }
