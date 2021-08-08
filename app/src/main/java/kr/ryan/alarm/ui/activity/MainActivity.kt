@@ -1,4 +1,4 @@
-package kr.ryan.alarm.ui
+package kr.ryan.alarm.ui.activity
 
 import androidx.activity.viewModels
 import androidx.lifecycle.lifecycleScope
