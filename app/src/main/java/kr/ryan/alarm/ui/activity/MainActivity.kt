@@ -39,13 +39,13 @@ class MainActivity : BaseActivity<ActivityMainBinding>(R.layout.activity_main) {
 
     }
 
-    private fun initRecyclerView(){
+    private fun initRecyclerView() {
         alarmAdapter = AlarmAdapter().apply {
             binding.recyclerAlarm.adapter = this
         }
     }
 
-    private fun recyclerViewItemClick(){
+    private fun recyclerViewItemClick() {
         if (!::alarmAdapter.isInitialized) return
 
         alarmAdapter.setOnItemClickEvent {
@@ -54,16 +54,16 @@ class MainActivity : BaseActivity<ActivityMainBinding>(R.layout.activity_main) {
         }
     }
 
-    private fun observeRecyclerViewData(){
+    private fun observeRecyclerViewData() {
 
-        alarmViewModel.alarmList.observe(this@MainActivity){
+        alarmViewModel.alarmList.observe(this@MainActivity) {
             if (::alarmAdapter.isInitialized)
                 alarmAdapter.submitList(it.toMutableList())
         }
 
     }
 
-    companion object{
+    companion object {
         const val TAG = "MainActivity"
     }
 
