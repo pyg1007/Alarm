@@ -4,8 +4,7 @@ import android.content.Intent
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.whenCreated
 import androidx.lifecycle.whenStarted
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.*
 import kr.ryan.alarm.R
 import kr.ryan.alarm.databinding.ActivitySplashBinding
 import kr.weather.baseui.BaseActivity
@@ -25,16 +24,20 @@ class SplashActivity : BaseActivity<ActivitySplashBinding>(R.layout.activity_spl
 
             whenCreated {
 
-                delay(3 * 1000L)
-
-                Intent(this@SplashActivity, MainActivity::class.java).also {
-                    startActivity(it)
-                }
+                nextActivity()
 
             }
 
         }
 
+    }
+
+    private suspend fun nextActivity() = withContext(Dispatchers.Main){
+        delay(3 * 1000L)
+
+        Intent(this@SplashActivity, MainActivity::class.java).also {
+            startActivity(it)
+        }
     }
 
 }
