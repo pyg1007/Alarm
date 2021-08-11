@@ -1,10 +1,46 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<layout xmlns:android="http://schemas.android.com/apk/res/android">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+        <variable
+            name="fragment"
+            type="kr.ryan.alarm.ui.dialog.AlarmDialogFragment" />
+    </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
+
+        <Button
+            android:id="@+id/btn_add"
+            android:text="@string/add"
+            android:textStyle="bold"
+            android:textSize="18dp"
+            android:gravity="center"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:onClick="@{() -> fragment.add()}"
+            app:layout_constraintWidth_percent="0.45"
+            app:layout_constraintHeight_percent="0.2"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"/>
+
+        <Button
+            android:id="@+id/btn_cancel"
+            android:text="@string/cancel"
+            android:textStyle="bold"
+            android:textSize="18dp"
+            android:gravity="center"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:onClick="@{() -> fragment.cancel()}"
+            app:layout_constraintWidth_percent="0.45"
+            app:layout_constraintHeight_percent="0.2"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"/>
+
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

@@ -9,6 +9,7 @@ import kr.ryan.alarm.R
 import kr.ryan.alarm.adapter.AlarmAdapter
 import kr.ryan.alarm.application.AlarmApplication
 import kr.ryan.alarm.databinding.ActivityMainBinding
+import kr.ryan.alarm.ui.dialog.AlarmDialogFragment
 import kr.ryan.alarm.viewmodel.AlarmViewModel
 import kr.ryan.alarm.viewmodel.factory.AlarmViewModelFactory
 import kr.ryan.baseui.BaseActivity
@@ -26,6 +27,8 @@ class MainActivity : BaseActivity<ActivityMainBinding>(R.layout.activity_main) {
 
             whenCreated {
 
+                initBinding()
+
                 initRecyclerView()
 
                 recyclerViewItemClick()
@@ -36,6 +39,23 @@ class MainActivity : BaseActivity<ActivityMainBinding>(R.layout.activity_main) {
 
         }
 
+
+    }
+
+    private fun initBinding(){
+
+        binding.apply {
+            activity = this@MainActivity
+            viewModel = alarmViewModel
+        }
+
+    }
+
+    fun showAlarmAddDialogFragment(){
+
+        val dialog = AlarmDialogFragment()
+        if (!dialog.isAdded)
+            dialog.show(supportFragmentManager, "AlarmAdd")
 
     }
 

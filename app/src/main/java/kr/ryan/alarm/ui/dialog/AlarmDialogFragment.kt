@@ -3,11 +3,13 @@ package kr.ryan.alarm.ui.dialog
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.view.Window
 import android.view.WindowManager
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.whenCreated
 import androidx.lifecycle.whenResumed
 import kotlinx.coroutines.launch
 import kr.ryan.alarm.R
@@ -30,9 +32,16 @@ class AlarmDialogFragment: BaseDialogFragment<FragmentAlarmDialogBinding>(R.layo
     init {
 
         lifecycleScope.launch {
+
+            whenCreated {
+
+                setInitDialog()
+
+            }
+
             whenResumed {
 
-                requireActivity().dialogFragmentResize(this@AlarmDialogFragment, 0.9f, 0.8f)
+                requireActivity().dialogFragmentResize(this@AlarmDialogFragment, 0.9f, 0.7f)
 
             }
         }
@@ -40,7 +49,16 @@ class AlarmDialogFragment: BaseDialogFragment<FragmentAlarmDialogBinding>(R.layo
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        setInitDialog()
+        initBinding()
+    }
+
+    private fun initBinding() {
+
+        binding.apply {
+            fragment = this@AlarmDialogFragment
+            lifecycleOwner = viewLifecycleOwner
+        }
+
     }
 
     private fun setInitDialog() {
@@ -54,5 +72,17 @@ class AlarmDialogFragment: BaseDialogFragment<FragmentAlarmDialogBinding>(R.layo
             setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
             requestFeature(Window.FEATURE_NO_TITLE)
         }
+    }
+
+    fun cancel(){
+        Log.e(TAG, "cancel")
+    }
+
+    fun add(){
+        Log.e(TAG, "add")
+    }
+
+    companion object{
+        const val TAG = "AlarmDialogFragment"
     }
 }
