@@ -3,7 +3,6 @@ package kr.ryan.alarm.ui.dialog
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.view.Window
 import android.view.WindowManager
@@ -15,6 +14,7 @@ import kotlinx.coroutines.launch
 import kr.ryan.alarm.R
 import kr.ryan.alarm.databinding.FragmentAlarmDialogBinding
 import kr.ryan.alarm.utility.dialogFragmentResize
+import kr.ryan.alarm.utility.showShortToast
 import kr.ryan.alarm.viewmodel.AlarmViewModel
 import kr.ryan.baseui.BaseDialogFragment
 
@@ -25,7 +25,8 @@ import kr.ryan.baseui.BaseDialogFragment
  * Created On 2021-08-07.
  * Description:
  */
-class AlarmDialogFragment: BaseDialogFragment<FragmentAlarmDialogBinding>(R.layout.fragment_alarm_dialog) {
+class AlarmDialogFragment :
+    BaseDialogFragment<FragmentAlarmDialogBinding>(R.layout.fragment_alarm_dialog) {
 
     private val alarmDialogFragment by activityViewModels<AlarmViewModel>()
 
@@ -72,17 +73,32 @@ class AlarmDialogFragment: BaseDialogFragment<FragmentAlarmDialogBinding>(R.layo
             setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
             requestFeature(Window.FEATURE_NO_TITLE)
         }
+
+        isCancelable = false
     }
 
-    fun cancel(){
-        Log.e(TAG, "cancel")
+    fun cancel() {
+        requireContext().showShortToast("알람 추가 취소")
+        dismiss()
     }
 
-    fun add(){
-        Log.e(TAG, "add")
+    fun add() {
+        requireContext().showShortToast("알람 추가 성공")
+        dismiss()
     }
 
-    companion object{
+
+    companion object {
+
+        private lateinit var INSTANCE: AlarmDialogFragment
+
+        fun getInstance(): AlarmDialogFragment {
+            if (!::INSTANCE.isInitialized)
+                INSTANCE = AlarmDialogFragment()
+
+            return INSTANCE
+        }
+
         const val TAG = "AlarmDialogFragment"
     }
 }
