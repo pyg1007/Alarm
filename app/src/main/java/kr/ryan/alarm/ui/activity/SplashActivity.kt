@@ -7,7 +7,7 @@ import androidx.lifecycle.whenStarted
 import kotlinx.coroutines.*
 import kr.ryan.alarm.R
 import kr.ryan.alarm.databinding.ActivitySplashBinding
-import kr.weather.baseui.BaseActivity
+import kr.ryan.baseui.BaseActivity
 
 class SplashActivity : BaseActivity<ActivitySplashBinding>(R.layout.activity_splash) {
 

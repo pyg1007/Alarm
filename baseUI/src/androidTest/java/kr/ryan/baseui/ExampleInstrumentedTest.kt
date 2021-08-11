@@ -1,4 +1,4 @@
-package kr.weather.baseui
+package kr.ryan.baseui
 
 import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.ext.junit.runners.AndroidJUnit4

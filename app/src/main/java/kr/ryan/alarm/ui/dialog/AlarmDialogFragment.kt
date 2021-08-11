@@ -1,13 +1,20 @@
 package kr.ryan.alarm.ui.dialog
 
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
+import android.os.Bundle
+import android.view.View
+import android.view.Window
+import android.view.WindowManager
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
-import androidx.lifecycle.whenCreated
+import androidx.lifecycle.whenResumed
 import kotlinx.coroutines.launch
 import kr.ryan.alarm.R
 import kr.ryan.alarm.databinding.FragmentAlarmDialogBinding
+import kr.ryan.alarm.utility.dialogFragmentResize
 import kr.ryan.alarm.viewmodel.AlarmViewModel
-import kr.weather.baseui.BaseDialogFragment
+import kr.ryan.baseui.BaseDialogFragment
 
 /**
  * Alarm
@@ -23,16 +30,29 @@ class AlarmDialogFragment: BaseDialogFragment<FragmentAlarmDialogBinding>(R.layo
     init {
 
         lifecycleScope.launch {
-            whenCreated {
+            whenResumed {
 
-                //TODO init Views
-
-
+                requireActivity().dialogFragmentResize(this@AlarmDialogFragment, 0.9f, 0.8f)
 
             }
         }
-
-
     }
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        setInitDialog()
+    }
+
+    private fun setInitDialog() {
+        val layoutParams = WindowManager.LayoutParams().apply {
+            flags = WindowManager.LayoutParams.FLAG_DIM_BEHIND
+            dimAmount = 0.8f
+        }
+
+        dialog?.window?.apply {
+            attributes = layoutParams
+            setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+            requestFeature(Window.FEATURE_NO_TITLE)
+        }
+    }
 }

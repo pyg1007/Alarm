@@ -1,4 +1,4 @@
-package kr.weather.baseui
+package kr.ryan.baseui
 
 import org.junit.Test
 

@@ -11,7 +11,7 @@ import kr.ryan.alarm.application.AlarmApplication
 import kr.ryan.alarm.databinding.ActivityMainBinding
 import kr.ryan.alarm.viewmodel.AlarmViewModel
 import kr.ryan.alarm.viewmodel.factory.AlarmViewModelFactory
-import kr.weather.baseui.BaseActivity
+import kr.ryan.baseui.BaseActivity
 
 
 class MainActivity : BaseActivity<ActivityMainBinding>(R.layout.activity_main) {
