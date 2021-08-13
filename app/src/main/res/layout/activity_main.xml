@@ -21,11 +21,12 @@
         android:layout_height="match_parent"
         tools:context=".ui.activity.MainActivity">
 
-        <androidx.cardview.widget.CardView
+        <com.google.android.material.card.MaterialCardView
             android:id="@+id/card_alarm_time"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            app:cardElevation="30dp"
+            app:cardElevation="50dp"
+            app:cardCornerRadius="20dp"
             app:layout_constraintBottom_toTopOf="@id/alarm_setting"
             app:layout_constraintHeight_percent="0.25"
             app:layout_constraintLeft_toLeftOf="parent"
@@ -43,7 +44,7 @@
                 android:textSize="45dp"
                 android:textStyle="bold" />
 
-        </androidx.cardview.widget.CardView>
+        </com.google.android.material.card.MaterialCardView>
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/alarm_setting"
