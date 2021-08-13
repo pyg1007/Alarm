@@ -53,7 +53,7 @@ class MainActivity : BaseActivity<ActivityMainBinding>(R.layout.activity_main) {
 
     fun showAlarmAddDialogFragment() {
 
-        val dialog = AlarmDialogFragment.getInstance()
+        val dialog = AlarmDialogFragment()
         if (!dialog.isAdded)
             dialog.show(supportFragmentManager, "AlarmAdd")
 

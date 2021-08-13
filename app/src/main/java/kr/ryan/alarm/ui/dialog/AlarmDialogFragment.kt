@@ -3,9 +3,11 @@ package kr.ryan.alarm.ui.dialog
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.view.Window
 import android.view.WindowManager
+import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.whenCreated
@@ -36,22 +38,43 @@ class AlarmDialogFragment :
 
             whenCreated {
 
+                Log.e(TAG, "onCreate")
                 setInitDialog()
 
             }
 
             whenResumed {
 
+                Log.e(TAG, "onResume")
                 requireActivity().dialogFragmentResize(this@AlarmDialogFragment, 0.9f, 0.7f)
 
             }
+
         }
+    }
+
+    override fun onStop() {
+        super.onStop()
+        Log.e(TAG, "onStop")
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        Log.e(TAG, "onDestroyView")
+    }
+
+    override fun onDetach() {
+        super.onDetach()
+        Log.e(TAG, "onDetach")
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        Log.e(TAG, "onViewCreated")
         initBinding()
     }
+
+
 
     private fun initBinding() {
 
@@ -79,26 +102,22 @@ class AlarmDialogFragment :
 
     fun cancel() {
         requireContext().showShortToast("알람 추가 취소")
-        dismiss()
+        dismissDialogFragment()
     }
 
     fun add() {
         requireContext().showShortToast("알람 추가 성공")
-        dismiss()
+        dismissDialogFragment()
+    }
+
+    private fun dismissDialogFragment(){
+        parentFragmentManager.findFragmentByTag("AlarmAdd")?.let {
+            (it as DialogFragment).dismiss()
+        }
     }
 
 
     companion object {
-
-        private lateinit var INSTANCE: AlarmDialogFragment
-
-        fun getInstance(): AlarmDialogFragment {
-            if (!::INSTANCE.isInitialized)
-                INSTANCE = AlarmDialogFragment()
-
-            return INSTANCE
-        }
-
         const val TAG = "AlarmDialogFragment"
     }
 }
