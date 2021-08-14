@@ -14,4 +14,7 @@
     <color name="deep_orange_200">#FFAB91</color>
     <color name="deep_orange_700">#E64A19</color>
 
+    <color name="red">#FF0000</color>
+    <color name="blue">#0064FF</color>
+
 </resources>
