@@ -13,9 +13,10 @@ import java.util.*
  */
 @Entity(tableName = "Alarm_table")
 data class Alarm(
-    @PrimaryKey
-    val index: Int,
     var alarmTime: Date,
     var alarmStatus: AlarmStatus,
     var alarmOnOff : Boolean
-    )
+    ){
+    @PrimaryKey
+    val index: Int = 0
+}

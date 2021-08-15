@@ -13,4 +13,5 @@
     <string name="thursday">목</string>
     <string name="friday">금</string>
     <string name="saturday">토</string>
+    <string name="alarm_name">알람 이름</string>
 </resources>
