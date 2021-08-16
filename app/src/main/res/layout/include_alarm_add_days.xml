@@ -3,12 +3,20 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
+    <data>
+
+        <variable
+            name="viewModel"
+            type="kr.ryan.alarm.viewmodel.AlarmRegisterViewModel" />
+    </data>
+
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/const_sunday"
+            onDayClick="@{viewModel.dayClicked}"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             app:layout_constraintLeft_toLeftOf="parent"
@@ -32,6 +40,7 @@
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/const_monday"
+            onDayClick="@{viewModel.dayClicked}"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             app:layout_constraintLeft_toRightOf="@id/const_sunday"
@@ -54,6 +63,7 @@
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/const_tuesday"
+            onDayClick="@{viewModel.dayClicked}"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             app:layout_constraintLeft_toRightOf="@id/const_monday"
@@ -76,6 +86,7 @@
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/const_wednesday"
+            onDayClick="@{viewModel.dayClicked}"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             app:layout_constraintLeft_toRightOf="@id/const_tuesday"
@@ -98,6 +109,7 @@
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/const_thursday"
+            onDayClick="@{viewModel.dayClicked}"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             app:layout_constraintLeft_toRightOf="@id/const_wednesday"
@@ -120,6 +132,7 @@
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/const_friday"
+            onDayClick="@{viewModel.dayClicked}"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             app:layout_constraintLeft_toRightOf="@id/const_thursday"
@@ -142,6 +155,7 @@
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/const_saturday"
+            onDayClick="@{viewModel.dayClicked}"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             app:layout_constraintLeft_toRightOf="@id/const_friday"

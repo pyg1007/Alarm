@@ -18,5 +18,5 @@ data class Alarm(
     var alarmOnOff : Boolean
     ){
     @PrimaryKey
-    val index: Int = 0
+    var index: Int = 0
 }
