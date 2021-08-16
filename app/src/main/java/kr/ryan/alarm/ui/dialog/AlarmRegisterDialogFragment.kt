@@ -3,7 +3,6 @@ package kr.ryan.alarm.ui.dialog
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.view.ViewGroup
 import android.view.Window
@@ -73,15 +72,15 @@ class AlarmRegisterDialogFragment :
     private fun check() {
         alarmRegisterDialogViewModel.selectedDays.observe(viewLifecycleOwner) {
             clearView(binding.includeDays.rootViewGroup)
-            if (!it.isNullOrEmpty()){
-                it.forEach { days ->  createCircle(days) }
+            if (!it.isNullOrEmpty()) {
+                it.forEach { days -> createCircle(days) }
             }
         }
     }
 
-    private fun clearView(viewGroup: ViewGroup){
-        for (i in 0 until viewGroup.childCount){
-            when(val view = viewGroup.getChildAt(i)){
+    private fun clearView(viewGroup: ViewGroup) {
+        for (i in 0 until viewGroup.childCount) {
+            when (val view = viewGroup.getChildAt(i)) {
                 is TextView -> {
                     view.background = null
                 }
