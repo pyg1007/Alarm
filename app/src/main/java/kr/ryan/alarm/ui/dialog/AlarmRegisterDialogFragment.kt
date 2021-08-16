@@ -2,12 +2,13 @@ package kr.ryan.alarm.ui.dialog
 
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
-import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import android.view.ViewGroup
 import android.view.Window
 import android.view.WindowManager
+import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.viewModels
@@ -17,6 +18,7 @@ import androidx.lifecycle.whenResumed
 import kotlinx.coroutines.launch
 import kr.ryan.alarm.R
 import kr.ryan.alarm.application.AlarmApplication
+import kr.ryan.alarm.data.Days
 import kr.ryan.alarm.databinding.FragmentAlarmDialogBinding
 import kr.ryan.alarm.utility.createDraw
 import kr.ryan.alarm.utility.dialogFragmentResize
@@ -70,92 +72,57 @@ class AlarmRegisterDialogFragment :
 
     private fun check() {
         alarmRegisterDialogViewModel.selectedDays.observe(viewLifecycleOwner) {
-            Log.e(TAG, it.joinToString(","))
+            clearView(binding.includeDays.rootViewGroup)
+            if (!it.isNullOrEmpty()){
+                it.forEach { days ->  createCircle(days) }
+            }
         }
     }
 
-    private fun createCircle(view: View) {
-
-        if (view is ConstraintLayout) {
-            val circle: Drawable?
-            when (view) {
-                binding.includeDays.constSunday -> {
-                    circle = requireContext().createDraw(R.drawable.day_clicked_circle, "일")
-                    binding.includeDays.tvSunday.background = circle
-                    multiDaysSelected[0] = !multiDaysSelected[0]
+    private fun clearView(viewGroup: ViewGroup){
+        for (i in 0 until viewGroup.childCount){
+            when(val view = viewGroup.getChildAt(i)){
+                is TextView -> {
+                    view.background = null
                 }
-                binding.includeDays.constMonday -> {
-                    circle = requireContext().createDraw(R.drawable.day_clicked_circle, "월")
-                    binding.includeDays.tvMonday.background = circle
-                    multiDaysSelected[1] = !multiDaysSelected[1]
-                }
-                binding.includeDays.constTuesday -> {
-                    circle = requireContext().createDraw(R.drawable.day_clicked_circle, "화")
-                    binding.includeDays.tvTuesday.background = circle
-                    multiDaysSelected[2] = !multiDaysSelected[2]
-                }
-                binding.includeDays.constWednesday -> {
-                    circle = requireContext().createDraw(R.drawable.day_clicked_circle, "수")
-                    binding.includeDays.tvWednesday.background = circle
-                    multiDaysSelected[3] = !multiDaysSelected[3]
-                }
-                binding.includeDays.constThursday -> {
-                    circle = requireContext().createDraw(R.drawable.day_clicked_circle, "목")
-                    binding.includeDays.tvThursday.background = circle
-                    multiDaysSelected[4] = !multiDaysSelected[4]
-                }
-                binding.includeDays.constFriday -> {
-                    circle = requireContext().createDraw(R.drawable.day_clicked_circle, "금")
-                    binding.includeDays.tvFriday.background = circle
-                    multiDaysSelected[5] = !multiDaysSelected[5]
-                }
-                binding.includeDays.constSaturday -> {
-                    circle = requireContext().createDraw(R.drawable.day_clicked_circle, "토")
-                    binding.includeDays.tvSaturday.background = circle
-                    multiDaysSelected[6] = !multiDaysSelected[6]
+                is ConstraintLayout -> {
+                    clearView(view)
                 }
             }
-
         }
-
     }
 
-    private fun removeCircle(view: View) {
-
-        if (view is ConstraintLayout) {
-            when (view) {
-                binding.includeDays.constSunday -> {
-                    binding.includeDays.tvSunday.background = null
-                    multiDaysSelected[0] = !multiDaysSelected[0]
-                }
-                binding.includeDays.constMonday -> {
-                    binding.includeDays.tvMonday.background = null
-                    multiDaysSelected[1] = !multiDaysSelected[1]
-                }
-                binding.includeDays.constTuesday -> {
-                    binding.includeDays.tvTuesday.background = null
-                    multiDaysSelected[2] = !multiDaysSelected[2]
-                }
-                binding.includeDays.constWednesday -> {
-                    binding.includeDays.tvWednesday.background = null
-                    multiDaysSelected[3] = !multiDaysSelected[3]
-                }
-                binding.includeDays.constThursday -> {
-                    binding.includeDays.tvThursday.background = null
-                    multiDaysSelected[4] = !multiDaysSelected[4]
-                }
-                binding.includeDays.constFriday -> {
-                    binding.includeDays.tvFriday.background = null
-                    multiDaysSelected[5] = !multiDaysSelected[5]
-                }
-                binding.includeDays.constSaturday -> {
-                    binding.includeDays.tvSaturday.background = null
-                    multiDaysSelected[6] = !multiDaysSelected[6]
-                }
+    private fun createCircle(days: Days) {
+        when (days.day) {
+            "일" -> {
+                binding.includeDays.tvSunday.background =
+                    requireContext().createDraw(R.drawable.day_clicked_circle, days.day)
             }
-
+            "월" -> {
+                binding.includeDays.tvMonday.background =
+                    requireContext().createDraw(R.drawable.day_clicked_circle, days.day)
+            }
+            "화" -> {
+                binding.includeDays.tvTuesday.background =
+                    requireContext().createDraw(R.drawable.day_clicked_circle, days.day)
+            }
+            "수" -> {
+                binding.includeDays.tvWednesday.background =
+                    requireContext().createDraw(R.drawable.day_clicked_circle, days.day)
+            }
+            "목" -> {
+                binding.includeDays.tvThursday.background =
+                    requireContext().createDraw(R.drawable.day_clicked_circle, days.day)
+            }
+            "금" -> {
+                binding.includeDays.tvFriday.background =
+                    requireContext().createDraw(R.drawable.day_clicked_circle, days.day)
+            }
+            "토" -> {
+                binding.includeDays.tvSaturday.background =
+                    requireContext().createDraw(R.drawable.day_clicked_circle, days.day)
+            }
         }
-
     }
 
     private fun initBinding() {
