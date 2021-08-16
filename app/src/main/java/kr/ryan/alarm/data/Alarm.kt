@@ -15,8 +15,8 @@ import java.util.*
 data class Alarm(
     var alarmTime: Date,
     var alarmStatus: AlarmStatus,
-    var alarmOnOff : Boolean
-    ){
+    var alarmOnOff: Boolean
+) {
     @PrimaryKey
     var index: Int = 0
 }

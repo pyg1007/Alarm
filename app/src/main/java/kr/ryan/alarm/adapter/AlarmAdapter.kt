@@ -22,16 +22,16 @@ const val SINGLE = 1
 class AlarmAdapter : ListAdapter<Alarm, RecyclerView.ViewHolder>(AlarmDiffUtil()) {
 
     private var onItemClickEvent: ((Alarm) -> Unit)? = null
-    fun setOnItemClickEvent(listener: (Alarm) -> Unit){
+    fun setOnItemClickEvent(listener: (Alarm) -> Unit) {
         onItemClickEvent = listener
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
-        return when(viewType){
-            MULTIPLE ->{
+        return when (viewType) {
+            MULTIPLE -> {
                 MultiDayViewHolder.from(parent, onItemClickEvent)
             }
-            SINGLE ->{
+            SINGLE -> {
                 DateViewHolder.from(parent, onItemClickEvent)
             }
             else -> throw IllegalStateException("unKnwon Type")
@@ -39,7 +39,7 @@ class AlarmAdapter : ListAdapter<Alarm, RecyclerView.ViewHolder>(AlarmDiffUtil()
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-        when(getItemViewType(position)){
+        when (getItemViewType(position)) {
             MULTIPLE -> {
                 if (holder is MultiDayViewHolder)
                     holder.bind(getItem(position))
@@ -52,7 +52,7 @@ class AlarmAdapter : ListAdapter<Alarm, RecyclerView.ViewHolder>(AlarmDiffUtil()
     }
 
     override fun getItemViewType(position: Int): Int {
-        return when(getItem(position).alarmStatus){
+        return when (getItem(position).alarmStatus) {
             AlarmStatus.MULTIPLE_DAY -> MULTIPLE
             AlarmStatus.DATE -> SINGLE
         }

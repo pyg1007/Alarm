@@ -12,7 +12,8 @@ import kr.ryan.alarm.viewmodel.AlarmRegisterViewModel
  * Created On 2021-08-17.
  * Description:
  */
-class AlarmRegisterViewModelFactory(private val repository: AlarmRepository) : ViewModelProvider.Factory {
+class AlarmRegisterViewModelFactory(private val repository: AlarmRepository) :
+    ViewModelProvider.Factory {
 
     override fun <T : ViewModel?> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(AlarmRegisterViewModel::class.java))

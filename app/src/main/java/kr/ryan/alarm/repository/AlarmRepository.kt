@@ -16,12 +16,12 @@ class AlarmRepository(private val database: ApplicationDatabase) {
     val alarmList = database.alarmDao().allAlarm()
 
     @WorkerThread
-    suspend fun insertAlarm(alarm: Alarm){
+    suspend fun insertAlarm(alarm: Alarm) {
         database.alarmDao().insertAlarm(alarm)
     }
 
     @WorkerThread
-    suspend fun deleteAlarm(alarm: Alarm){
+    suspend fun deleteAlarm(alarm: Alarm) {
         database.alarmDao().deleteAlarm(alarm)
     }
 

@@ -12,11 +12,11 @@ import kr.ryan.alarm.data.Alarm
  */
 class AlarmDiffUtil : DiffUtil.ItemCallback<Alarm>() {
 
-    override fun areItemsTheSame(oldItem: Alarm, newItem: Alarm): Boolean
-        = oldItem.index == newItem.index
+    override fun areItemsTheSame(oldItem: Alarm, newItem: Alarm): Boolean =
+        oldItem.index == newItem.index
 
 
-    override fun areContentsTheSame(oldItem: Alarm, newItem: Alarm): Boolean
-        = oldItem.hashCode() == newItem.hashCode()
+    override fun areContentsTheSame(oldItem: Alarm, newItem: Alarm): Boolean =
+        oldItem.hashCode() == newItem.hashCode()
 
 }

@@ -35,7 +35,11 @@ import kr.ryan.baseui.BaseDialogFragment
 class AlarmRegisterDialogFragment :
     BaseDialogFragment<FragmentAlarmDialogBinding>(R.layout.fragment_alarm_dialog) {
 
-    private val alarmRegisterDialogViewModel by viewModels<AlarmRegisterViewModel> { AlarmRegisterViewModelFactory((requireActivity().application as AlarmApplication).repository) }
+    private val alarmRegisterDialogViewModel by viewModels<AlarmRegisterViewModel> {
+        AlarmRegisterViewModelFactory(
+            (requireActivity().application as AlarmApplication).repository
+        )
+    }
 
     private val multiDaysSelected = Array(7) { false }
 
@@ -64,8 +68,8 @@ class AlarmRegisterDialogFragment :
         check()
     }
 
-    private fun check(){
-        alarmRegisterDialogViewModel.selectedDays.observe(viewLifecycleOwner){
+    private fun check() {
+        alarmRegisterDialogViewModel.selectedDays.observe(viewLifecycleOwner) {
             Log.e(TAG, it.joinToString(","))
         }
     }

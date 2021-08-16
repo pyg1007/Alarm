@@ -12,12 +12,12 @@ import java.util.*
  */
 
 
-fun Date.fastAlarm(locale: Locale = Locale.getDefault()): String{
+fun Date.fastAlarm(locale: Locale = Locale.getDefault()): String {
 
     val simpleDateFormat: SimpleDateFormat
 
-    return when{
-        1000L * 60 * 24 * 99 < time ->{
+    return when {
+        1000L * 60 * 24 * 99 < time -> {
             simpleDateFormat = SimpleDateFormat("MM월 뒤에 알람이 울립니다.", locale)
             simpleDateFormat.format(this)
         }

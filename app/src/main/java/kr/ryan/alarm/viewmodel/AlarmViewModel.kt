@@ -4,12 +4,10 @@ import android.util.Log
 import androidx.lifecycle.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.suspendCancellableCoroutine
 import kr.ryan.alarm.data.Alarm
 import kr.ryan.alarm.data.AlarmStatus
 import kr.ryan.alarm.repository.AlarmRepository
 import kr.ryan.alarm.utility.fastAlarm
-import java.text.SimpleDateFormat
 import java.util.*
 
 /**
@@ -25,11 +23,13 @@ class AlarmViewModel(private val repository: AlarmRepository) : ViewModel() {
     val alarmList: LiveData<List<Alarm>>
         get() = _alarmList
 
-    val alarmStatus:LiveData<String> = Transformations.map(_alarmList){
+    val alarmStatus: LiveData<String> = Transformations.map(_alarmList) {
 
         runCatching {
             val current = Date()
-            val alarmDate = it.filter { alarm -> alarm.alarmOnOff || current.after(alarm.alarmTime) || alarm.alarmStatus == AlarmStatus.DATE }.minByOrNull { alarm -> alarm.alarmTime }
+            val alarmDate =
+                it.filter { alarm -> alarm.alarmOnOff || current.after(alarm.alarmTime) || alarm.alarmStatus == AlarmStatus.DATE }
+                    .minByOrNull { alarm -> alarm.alarmTime }
             val alarmDay = it.filter { alarm -> alarm.alarmOnOff }
             alarmDate?.alarmTime!!.fastAlarm()
         }.onFailure {

@@ -12,10 +12,10 @@ import android.widget.Toast
  */
 
 
-fun Context.showShortToast(message: String){
+fun Context.showShortToast(message: String) {
     Toast.makeText(applicationContext, message, Toast.LENGTH_SHORT).show()
 }
 
-fun Context.showLongToast(message: String){
+fun Context.showLongToast(message: String) {
     Toast.makeText(applicationContext, message, Toast.LENGTH_LONG).show()
 }

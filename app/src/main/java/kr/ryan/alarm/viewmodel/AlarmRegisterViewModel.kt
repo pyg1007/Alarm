@@ -1,6 +1,9 @@
 package kr.ryan.alarm.viewmodel
 
-import androidx.lifecycle.*
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.Transformations
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -19,18 +22,18 @@ class AlarmRegisterViewModel(private val repository: AlarmRepository) : ViewMode
 
     private val selectedItem = mutableListOf<Days>()
     private val _selectedDays = MutableLiveData<List<Days>>()
-    val selectedDays = Transformations.map(_selectedDays){
+    val selectedDays = Transformations.map(_selectedDays) {
         it.sortedBy { days -> days.calendarIndex }
     }
 
-    val dayClicked = fun(days: Days){
+    val dayClicked = fun(days: Days) {
         checkDuplicationDay(days)
     }
 
-    private fun checkDuplicationDay(days: Days) = viewModelScope.launch(Dispatchers.Default){
+    private fun checkDuplicationDay(days: Days) = viewModelScope.launch(Dispatchers.Default) {
         if (selectedItem.filter { it.day == days.day }.isNullOrEmpty()) addDay(days)
         else removeDay(days)
-        withContext(Dispatchers.Main){
+        withContext(Dispatchers.Main) {
             _selectedDays.value = selectedItem
         }
     }

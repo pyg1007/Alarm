@@ -23,13 +23,17 @@ abstract class ApplicationDatabase : RoomDatabase() {
 
     abstract fun alarmDao(): AlarmDao
 
-    companion object{
+    companion object {
 
         @Volatile
         private lateinit var INSTANCE: ApplicationDatabase
 
-        fun getInstance(context: Context): ApplicationDatabase{
-            if (!::INSTANCE.isInitialized) INSTANCE = Room.databaseBuilder(context.applicationContext, ApplicationDatabase::class.java, "Alarm_DB").build()
+        fun getInstance(context: Context): ApplicationDatabase {
+            if (!::INSTANCE.isInitialized) INSTANCE = Room.databaseBuilder(
+                context.applicationContext,
+                ApplicationDatabase::class.java,
+                "Alarm_DB"
+            ).build()
             return INSTANCE
         }
 
