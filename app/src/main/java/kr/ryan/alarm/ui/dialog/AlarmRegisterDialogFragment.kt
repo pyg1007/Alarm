@@ -3,12 +3,14 @@ package kr.ryan.alarm.ui.dialog
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.view.ViewGroup
 import android.view.Window
 import android.view.WindowManager
 import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
@@ -127,6 +129,7 @@ class AlarmRegisterDialogFragment :
         binding.apply {
             fragment = this@AlarmRegisterDialogFragment
             lifecycleOwner = viewLifecycleOwner
+            viewModel = alarmRegisterDialogViewModel
             includeDays.viewModel = alarmRegisterDialogViewModel
         }
 

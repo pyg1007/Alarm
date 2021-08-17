@@ -10,6 +10,8 @@ import kotlinx.coroutines.withContext
 import kr.ryan.alarm.data.Alarm
 import kr.ryan.alarm.data.Days
 import kr.ryan.alarm.repository.AlarmRepository
+import kr.ryan.alarm.utility.dateToString
+import java.util.*
 
 /**
  * Alarm
@@ -24,6 +26,11 @@ class AlarmRegisterViewModel(private val repository: AlarmRepository) : ViewMode
     private val _selectedDays = MutableLiveData<List<Days>>()
     val selectedDays = Transformations.map(_selectedDays) {
         it.sortedBy { days -> days.calendarIndex }
+    }
+
+    val selectedShowDays = Transformations.map(_selectedDays){
+        if (it.isNullOrEmpty()) Date().dateToString("MM월 dd일 (E)")
+        else it.sortedBy { days -> days.calendarIndex }.joinToString(", ") { days -> days.day }
     }
 
     val dayClicked = fun(days: Days) {

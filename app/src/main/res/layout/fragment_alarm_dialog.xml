@@ -9,6 +9,10 @@
             name="fragment"
             type="kr.ryan.alarm.ui.dialog.AlarmRegisterDialogFragment" />
 
+        <variable
+            name="viewModel"
+            type="kr.ryan.alarm.viewmodel.AlarmRegisterViewModel" />
+
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -52,6 +56,7 @@
                     android:gravity="center_vertical"
                     android:textSize="16dp"
                     android:textStyle="bold"
+                    android:text="@{viewModel.selectedShowDays}"
                     app:layout_constraintHeight_percent="0.2"
                     app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintRight_toLeftOf="@id/iv_calendar"
