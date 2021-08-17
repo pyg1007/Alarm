@@ -42,8 +42,6 @@ class AlarmRegisterDialogFragment :
         )
     }
 
-    private val multiDaysSelected = Array(7) { false }
-
     init {
 
         lifecycleScope.launch {
