@@ -23,14 +23,19 @@ import java.util.*
 class AlarmRegisterViewModel(private val repository: AlarmRepository) : ViewModel() {
 
     private val selectedItem = mutableListOf<Days>()
+    private var selectedDate = Date()
     private val _selectedDays = MutableLiveData<List<Days>>()
     val selectedDays = Transformations.map(_selectedDays) {
         it.sortedBy { days -> days.calendarIndex }
     }
 
+
     val selectedShowDays = Transformations.map(_selectedDays){
-        if (it.isNullOrEmpty()) Date().dateToString("MM월 dd일 (E)")
-        else it.sortedBy { days -> days.calendarIndex }.joinToString(", ") { days -> days.day }
+        if (!it.isNullOrEmpty()) it.sortedBy { days -> days.calendarIndex }.joinToString(", ") { days -> days.day }
+        else {
+            val currentDate = Date()
+
+        }
     }
 
     val dayClicked = fun(days: Days) {
