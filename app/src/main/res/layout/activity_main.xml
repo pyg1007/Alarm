@@ -38,9 +38,13 @@
                 android:id="@+id/tv_alarm_time"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:text="@{viewModel.alarmStatus}"
                 android:gravity="center"
                 android:maxLines="1"
-                android:textSize="45dp"
+                app:autoSizeMaxTextSize="45dp"
+                app:autoSizeMinTextSize="20dp"
+                app:autoSizeTextType="uniform"
+                app:autoSizeStepGranularity="5dp"
                 android:textStyle="bold" />
 
         </com.google.android.material.card.MaterialCardView>

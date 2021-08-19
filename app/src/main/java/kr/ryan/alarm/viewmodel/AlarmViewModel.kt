@@ -6,6 +6,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kr.ryan.alarm.data.Alarm
 import kr.ryan.alarm.repository.AlarmRepository
+import kr.ryan.alarm.utility.fastAlarm
 import java.util.*
 
 /**
@@ -24,14 +25,18 @@ class AlarmViewModel(private val repository: AlarmRepository) : ViewModel() {
     val alarmStatus: LiveData<String> = Transformations.map(_alarmList) {
 
         runCatching {
-            val current = Date()
-            val alarmDate =
-                it.filter { alarm -> alarm.alarmOnOff || alarm.alarmTimeList.size == 1 }
-            val alarmDay = it.filter { alarm -> alarm.alarmOnOff || alarm.alarmTimeList.size > 1 }
-            alarmDate?.alarm!!.fastAlarm()
+            val multipleAlarmDate =
+                it.filter { alarm -> alarm.alarmOnOff } // 켜저있는 알람만 필터
+                    .map { alarm -> // 리스트화
+                        alarm.alarmTimeList.filter { date -> Date() <= date }
+                            .minOrNull() // 등록되어있는 시간이 현재시간보다 같거나 큰경우만 필터링한 후 가장작은 값을 추출
+                    }.minByOrNull { date -> date!! }!! // 추출된 값중에서 가장 작은것을 지정
+
+            multipleAlarmDate.fastAlarm() // 시간 스트링으로 변환
+
         }.onFailure {
             Log.e("Transformations Error", "Exception -> ${it.message}")
-        }.getOrDefault("Empty")
+        }.getOrDefault("등록되어있는 알람이 없습니다.")
 
     }
 

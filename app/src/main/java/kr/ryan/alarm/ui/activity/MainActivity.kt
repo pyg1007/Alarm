@@ -47,6 +47,7 @@ class MainActivity : BaseActivity<ActivityMainBinding>(R.layout.activity_main) {
         binding.apply {
             activity = this@MainActivity
             viewModel = alarmViewModel
+            lifecycleOwner = this@MainActivity
         }
 
     }
