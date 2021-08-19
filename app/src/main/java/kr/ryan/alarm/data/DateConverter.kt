@@ -1,6 +1,7 @@
 package kr.ryan.alarm.data
 
 import androidx.room.TypeConverter
+import com.google.gson.Gson
 import java.util.*
 
 /**
@@ -13,12 +14,8 @@ import java.util.*
 
 class DateConverter {
     @TypeConverter
-    fun dateToLong(date: Date?): Long? {
-        return date?.time
-    }
+    fun dateToLong(value: List<Date>?): String? = Gson().toJson(value)
 
     @TypeConverter
-    fun longToDate(long: Long?): Date? {
-        return long?.let { Date(it) }
-    }
+    fun longToDate(value: String?): List<Date> = Gson().fromJson(value, Array<Date>::class.java).toList()
 }

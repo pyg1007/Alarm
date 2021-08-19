@@ -6,7 +6,6 @@ import androidx.recyclerview.widget.RecyclerView
 import kr.ryan.alarm.adapter.viewholder.DateViewHolder
 import kr.ryan.alarm.adapter.viewholder.MultiDayViewHolder
 import kr.ryan.alarm.data.Alarm
-import kr.ryan.alarm.data.AlarmStatus
 import kr.ryan.alarm.utility.AlarmDiffUtil
 
 /**
@@ -52,9 +51,10 @@ class AlarmAdapter : ListAdapter<Alarm, RecyclerView.ViewHolder>(AlarmDiffUtil()
     }
 
     override fun getItemViewType(position: Int): Int {
-        return when (getItem(position).alarmStatus) {
-            AlarmStatus.MULTIPLE_DAY -> MULTIPLE
-            AlarmStatus.DATE -> SINGLE
+        return when {
+            getItem(position).alarmTimeList.size > 1 -> MULTIPLE
+            getItem(position).alarmTimeList.size == 1 -> SINGLE
+            else -> throw IllegalStateException("Unknown Alarm Status")
         }
     }
 }

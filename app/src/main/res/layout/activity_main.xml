@@ -40,7 +40,6 @@
                 android:layout_height="match_parent"
                 android:gravity="center"
                 android:maxLines="1"
-                android:text="@{viewModel.alarmStatus}"
                 android:textSize="45dp"
                 android:textStyle="bold" />
 

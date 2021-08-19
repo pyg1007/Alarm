@@ -13,8 +13,7 @@ import java.util.*
  */
 @Entity(tableName = "Alarm_table")
 data class Alarm(
-    var alarmTime: Date,
-    var alarmStatus: AlarmStatus,
+    var alarmTimeList: List<Date>,
     var alarmOnOff: Boolean
 ) {
     @PrimaryKey

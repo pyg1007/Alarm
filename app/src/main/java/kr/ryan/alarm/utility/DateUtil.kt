@@ -1,5 +1,6 @@
 package kr.ryan.alarm.utility
 
+import kr.ryan.alarm.data.DateStatus
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -25,4 +26,14 @@ fun Date.addOneDayDate() : Date{
     calendar.add(Calendar.DAY_OF_MONTH, 1)
 
     return calendar.time
+}
+
+fun Date.compareDate(date: Date) : DateStatus{
+
+    return when {
+        this > date -> DateStatus.AFTER
+        this == date -> DateStatus.SAME
+        else -> DateStatus.BEFORE
+    }
+
 }

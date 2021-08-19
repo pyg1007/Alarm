@@ -35,6 +35,7 @@ class SplashActivity : BaseActivity<ActivitySplashBinding>(R.layout.activity_spl
 
         Intent(this@SplashActivity, MainActivity::class.java).also {
             startActivity(it)
+            finish()
         }
     }
 

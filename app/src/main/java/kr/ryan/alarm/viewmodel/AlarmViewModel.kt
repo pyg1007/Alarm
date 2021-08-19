@@ -5,9 +5,7 @@ import androidx.lifecycle.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kr.ryan.alarm.data.Alarm
-import kr.ryan.alarm.data.AlarmStatus
 import kr.ryan.alarm.repository.AlarmRepository
-import kr.ryan.alarm.utility.fastAlarm
 import java.util.*
 
 /**
@@ -28,10 +26,9 @@ class AlarmViewModel(private val repository: AlarmRepository) : ViewModel() {
         runCatching {
             val current = Date()
             val alarmDate =
-                it.filter { alarm -> alarm.alarmOnOff || current.after(alarm.alarmTime) || alarm.alarmStatus == AlarmStatus.DATE }
-                    .minByOrNull { alarm -> alarm.alarmTime }
-            val alarmDay = it.filter { alarm -> alarm.alarmOnOff }
-            alarmDate?.alarmTime!!.fastAlarm()
+                it.filter { alarm -> alarm.alarmOnOff || alarm.alarmTimeList.size == 1 }
+            val alarmDay = it.filter { alarm -> alarm.alarmOnOff || alarm.alarmTimeList.size > 1 }
+            alarmDate?.alarm!!.fastAlarm()
         }.onFailure {
             Log.e("Transformations Error", "Exception -> ${it.message}")
         }.getOrDefault("Empty")
