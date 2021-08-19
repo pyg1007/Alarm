@@ -8,14 +8,9 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import kr.ryan.alarm.data.Alarm
-import kr.ryan.alarm.data.DateStatus
 import kr.ryan.alarm.data.Days
 import kr.ryan.alarm.repository.AlarmRepository
-import kr.ryan.alarm.utility.addOneDayDate
-import kr.ryan.alarm.utility.compareDate
-import kr.ryan.alarm.utility.dateToString
 import java.util.*
-import kotlin.collections.ArrayList
 
 /**
  * Alarm
