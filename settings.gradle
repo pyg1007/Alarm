@@ -1,3 +1,4 @@
 rootProject.name = "Alarm"
 include ':app'
 include ':baseUI'
+include ':tedPermission'

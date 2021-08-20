@@ -30,10 +30,7 @@ class AlarmRegisterViewModel(private val repository: AlarmRepository) : ViewMode
 
 
     val selectedShowDays = Transformations.map(_selectedDays){
-        if (!it.isNullOrEmpty()) it.sortedBy { days -> days.calendarIndex }.joinToString(", ") { days -> days.day }
-        else {
-
-        }
+        it.sortedBy { days -> days.calendarIndex }.joinToString(", ") { days -> days.day }
     }
 
     val dayClicked = fun(days: Days) {

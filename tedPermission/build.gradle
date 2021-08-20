@@ -1,0 +1,13 @@
+plugins {
+    id 'com.android.library'
+    id 'kotlin-android'
+}
+apply from: "../android.gradle"
+
+dependencies{
+
+    //ted 퍼미션
+    def ted_permission = '2.2.3'
+    implementation "gun0912.ted:tedpermission:$ted_permission"
+
+}
