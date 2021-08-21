@@ -16,14 +16,14 @@ import kr.ryan.alarm.R
  * Description:
  */
 
-fun Context.createDraw(@DrawableRes drawableRes: Int, day: String): Drawable? {
+fun Context.createDraw(@DrawableRes drawableRes: Int, day: Int): Drawable? {
 
     return ContextCompat.getDrawable(this, drawableRes)?.let {
         it.mutate()
         DrawableCompat.wrap(it).also { wrapDrawable ->
             when (day) {
-                "일" -> (wrapDrawable as GradientDrawable).setStroke(8, ContextCompat.getColor(this, R.color.red))
-                "토" -> (wrapDrawable as GradientDrawable).setStroke(8, ContextCompat.getColor(this, R.color.blue))
+                1 -> (wrapDrawable as GradientDrawable).setStroke(8, ContextCompat.getColor(this, R.color.red))
+                7 -> (wrapDrawable as GradientDrawable).setStroke(8, ContextCompat.getColor(this, R.color.blue))
                 else -> (wrapDrawable as GradientDrawable).setStroke(8, ContextCompat.getColor(this, R.color.black))
             }
         }

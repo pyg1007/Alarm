@@ -3,7 +3,6 @@ package kr.ryan.alarm.adapter
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.databinding.BindingAdapter
 import kr.ryan.alarm.R
-import kr.ryan.alarm.data.Days
 
 /**
  * Alarm
@@ -17,29 +16,29 @@ object BindClass {
 
     @JvmStatic
     @BindingAdapter("onDayClick")
-    fun onDayClickListener(constraintLayout: ConstraintLayout, result: (Days) -> Unit) {
+    fun onDayClickListener(constraintLayout: ConstraintLayout, result: (Int) -> Unit) {
         constraintLayout.setOnClickListener {
             when (it.id) {
                 R.id.const_sunday -> {
-                    result(Days(1, "일"))
+                    result(1)
                 }
                 R.id.const_monday -> {
-                    result(Days(2, "월"))
+                    result(2)
                 }
                 R.id.const_tuesday -> {
-                    result(Days(3, "화"))
+                    result(3)
                 }
                 R.id.const_wednesday -> {
-                    result(Days(4, "수"))
+                    result(4)
                 }
                 R.id.const_thursday -> {
-                    result(Days(5, "목"))
+                    result(5)
                 }
                 R.id.const_friday -> {
-                    result(Days(6, "금"))
+                    result(6)
                 }
                 R.id.const_saturday -> {
-                    result(Days(7, "토"))
+                    result(7)
                 }
             }
         }

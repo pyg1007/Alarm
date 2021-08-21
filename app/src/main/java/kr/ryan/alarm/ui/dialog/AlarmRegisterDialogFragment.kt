@@ -3,14 +3,12 @@ package kr.ryan.alarm.ui.dialog
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.view.ViewGroup
 import android.view.Window
 import android.view.WindowManager
 import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.core.content.ContextCompat
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
@@ -19,7 +17,6 @@ import androidx.lifecycle.whenResumed
 import kotlinx.coroutines.launch
 import kr.ryan.alarm.R
 import kr.ryan.alarm.application.AlarmApplication
-import kr.ryan.alarm.data.Days
 import kr.ryan.alarm.databinding.FragmentAlarmDialogBinding
 import kr.ryan.alarm.utility.createDraw
 import kr.ryan.alarm.utility.dialogFragmentResize
@@ -73,7 +70,7 @@ class AlarmRegisterDialogFragment :
         alarmRegisterDialogViewModel.selectedDays.observe(viewLifecycleOwner) {
             clearView(binding.includeDays.rootViewGroup)
             if (!it.isNullOrEmpty()) {
-                it.forEach { days -> createCircle(days) }
+                it.forEach { day -> createCircle(day) }
             }
         }
     }
@@ -91,35 +88,35 @@ class AlarmRegisterDialogFragment :
         }
     }
 
-    private fun createCircle(days: Days) {
-        when (days.day) {
-            "일" -> {
+    private fun createCircle(day: Int) {
+        when (day) {
+            1 -> {
                 binding.includeDays.tvSunday.background =
-                    requireContext().createDraw(R.drawable.day_clicked_circle, days.day)
+                    requireContext().createDraw(R.drawable.day_clicked_circle, day)
             }
-            "월" -> {
+            2 -> {
                 binding.includeDays.tvMonday.background =
-                    requireContext().createDraw(R.drawable.day_clicked_circle, days.day)
+                    requireContext().createDraw(R.drawable.day_clicked_circle, day)
             }
-            "화" -> {
+            3 -> {
                 binding.includeDays.tvTuesday.background =
-                    requireContext().createDraw(R.drawable.day_clicked_circle, days.day)
+                    requireContext().createDraw(R.drawable.day_clicked_circle, day)
             }
-            "수" -> {
+            4 -> {
                 binding.includeDays.tvWednesday.background =
-                    requireContext().createDraw(R.drawable.day_clicked_circle, days.day)
+                    requireContext().createDraw(R.drawable.day_clicked_circle, day)
             }
-            "목" -> {
+            5 -> {
                 binding.includeDays.tvThursday.background =
-                    requireContext().createDraw(R.drawable.day_clicked_circle, days.day)
+                    requireContext().createDraw(R.drawable.day_clicked_circle, day)
             }
-            "금" -> {
+            6 -> {
                 binding.includeDays.tvFriday.background =
-                    requireContext().createDraw(R.drawable.day_clicked_circle, days.day)
+                    requireContext().createDraw(R.drawable.day_clicked_circle, day)
             }
-            "토" -> {
+            7 -> {
                 binding.includeDays.tvSaturday.background =
-                    requireContext().createDraw(R.drawable.day_clicked_circle, days.day)
+                    requireContext().createDraw(R.drawable.day_clicked_circle, day)
             }
         }
     }

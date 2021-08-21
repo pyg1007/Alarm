@@ -8,7 +8,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import kr.ryan.alarm.data.Alarm
-import kr.ryan.alarm.data.Days
 import kr.ryan.alarm.repository.AlarmRepository
 import java.util.*
 
@@ -21,36 +20,62 @@ import java.util.*
  */
 class AlarmRegisterViewModel(private val repository: AlarmRepository) : ViewModel() {
 
-    private val selectedItem = mutableListOf<Days>()
+    private val selectedItem = mutableListOf<Date>()
     private var selectedDate = Date()
-    private val _selectedDays = MutableLiveData<List<Days>>()
+    private val _selectedDays = MutableLiveData<List<Date>>()
     val selectedDays = Transformations.map(_selectedDays) {
-        it.sortedBy { days -> days.calendarIndex }
+        it.map { date ->
+            Calendar.getInstance().apply {
+                time = date
+            }.get(Calendar.DAY_OF_WEEK)
+        }.sorted()
     }
 
+    private val day = arrayOf("일", "월", "화", "수", "목", "금", "토")
 
-    val selectedShowDays = Transformations.map(_selectedDays){
-        it.sortedBy { days -> days.calendarIndex }.joinToString(", ") { days -> days.day }
+
+    val selectedShowDays = Transformations.map(_selectedDays) {
+        it.map { date ->
+            Calendar.getInstance().apply {
+                time = date
+            }.get(Calendar.DAY_OF_WEEK)
+        }.sorted().joinToString(", "){dayOfWeek -> day[dayOfWeek - 1]}
     }
 
-    val dayClicked = fun(days: Days) {
-        checkDuplicationDay(days)
+    val dayClicked = fun(day: Int) {
+        checkDuplicationDay(day)
     }
 
-    private fun checkDuplicationDay(days: Days) = viewModelScope.launch(Dispatchers.Default) {
-        if (selectedItem.filter { it.day == days.day }.isNullOrEmpty()) addDay(days)
-        else removeDay(days)
+    private fun checkDuplicationDay(day: Int) = viewModelScope.launch(Dispatchers.Default) {
+        val calendar = Calendar.getInstance().apply {
+            time = selectedDate
+            set(Calendar.DAY_OF_WEEK, day)
+        }
+
+        val currentDate = Date()
+
+        if (currentDate > calendar.time) calendar.add(Calendar.DAY_OF_MONTH, 7)
+
+        if (selectedItem.filter {
+                Calendar.getInstance().apply {
+                    time = it
+                }.get(Calendar.DAY_OF_WEEK) == calendar.get(Calendar.DAY_OF_WEEK)
+            }.isNullOrEmpty())
+            addDay(calendar.time)
+        else
+            removeDay(calendar.time)
+
         withContext(Dispatchers.Main) {
             _selectedDays.value = selectedItem
         }
     }
 
-    private fun addDay(days: Days) {
-        selectedItem.add(days)
+    private fun addDay(date: Date) {
+        selectedItem.add(date)
     }
 
-    private fun removeDay(days: Days) {
-        selectedItem.remove(days)
+    private fun removeDay(date: Date) {
+        selectedItem.remove(date)
     }
 
     fun insertAlarm(alarm: Alarm) = viewModelScope.launch(Dispatchers.IO) {
