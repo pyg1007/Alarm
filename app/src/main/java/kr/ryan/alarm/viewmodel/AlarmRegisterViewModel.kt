@@ -1,10 +1,7 @@
 package kr.ryan.alarm.viewmodel
 
 import android.util.Log
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.Transformations
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -45,6 +42,18 @@ class AlarmRegisterViewModel(private val repository: AlarmRepository) : ViewMode
 
     val dayClicked = fun(day: Int) {
         checkDuplicationDay(day)
+    }
+
+    private var _clickCalendarIcon = MutableLiveData<Boolean>()
+    val clickCalendarIcon: LiveData<Boolean>
+        get() = _clickCalendarIcon
+
+    fun calendarIconClick(){
+        _clickCalendarIcon.value = true
+    }
+
+    fun clearCalendarIconClick(){
+        _clickCalendarIcon.value = false
     }
 
     fun changeDate(hour: Int, min: Int) = viewModelScope.launch(Dispatchers.Default){

@@ -20,7 +20,6 @@ import kr.ryan.alarm.R
 import kr.ryan.alarm.application.AlarmApplication
 import kr.ryan.alarm.databinding.FragmentAlarmDialogBinding
 import kr.ryan.alarm.utility.createDraw
-import kr.ryan.alarm.utility.dateToString
 import kr.ryan.alarm.utility.dialogFragmentResize
 import kr.ryan.alarm.utility.showShortToast
 import kr.ryan.alarm.viewmodel.AlarmRegisterViewModel
@@ -49,7 +48,7 @@ class AlarmRegisterDialogFragment :
 
             whenCreated {
 
-                setInitDialog()
+                initDialog()
 
             }
 
@@ -78,34 +77,59 @@ class AlarmRegisterDialogFragment :
         }
     }
 
-    private fun initTime(){
+    private fun observeCalendarClicked() {
+        alarmRegisterDialogViewModel.clickCalendarIcon.observe(viewLifecycleOwner) {
+            if (it) {
+
+                val dialog = CalendarDialogFragment()
+                if (!dialog.isAdded)
+                    dialog.show(childFragmentManager, "Calendar")
+
+                alarmRegisterDialogViewModel.clearCalendarIconClick()
+            }
+        }
+    }
+
+    private fun initBinding() {
+
+        binding.apply {
+            fragment = this@AlarmRegisterDialogFragment
+            lifecycleOwner = viewLifecycleOwner
+            viewModel = alarmRegisterDialogViewModel
+            includeDays.viewModel = alarmRegisterDialogViewModel
+        }
+
+    }
+
+    private fun initDialog() {
+        val layoutParams = WindowManager.LayoutParams().apply {
+            flags = WindowManager.LayoutParams.FLAG_DIM_BEHIND
+            dimAmount = 0.8f
+        }
+
+        dialog?.window?.apply {
+            attributes = layoutParams
+            setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+            requestFeature(Window.FEATURE_NO_TITLE)
+        }
+
+        isCancelable = false
+    }
+
+    private fun initTime() {
         val hour = binding.tpSelect.hour
         val min = binding.tpSelect.minute
-        Log.e(TAG, "initTime hour -> $hour, min -> $min")
+
         alarmRegisterDialogViewModel.changeDate(hour, min)
     }
 
-
-    private fun initTimePicker(){
+    private fun initTimePicker() {
         initTime()
 
         binding.tpSelect.setOnTimeChangedListener { _, hourOfDay, minute ->
 
             Log.e(TAG, "hour -> $hourOfDay, min -> $minute")
             alarmRegisterDialogViewModel.changeDate(hourOfDay, minute)
-        }
-    }
-
-    private fun clearView(viewGroup: ViewGroup) {
-        for (i in 0 until viewGroup.childCount) {
-            when (val view = viewGroup.getChildAt(i)) {
-                is TextView -> {
-                    view.background = null
-                }
-                is ConstraintLayout -> {
-                    clearView(view)
-                }
-            }
         }
     }
 
@@ -142,30 +166,17 @@ class AlarmRegisterDialogFragment :
         }
     }
 
-    private fun initBinding() {
-
-        binding.apply {
-            fragment = this@AlarmRegisterDialogFragment
-            lifecycleOwner = viewLifecycleOwner
-            viewModel = alarmRegisterDialogViewModel
-            includeDays.viewModel = alarmRegisterDialogViewModel
+    private fun clearView(viewGroup: ViewGroup) {
+        for (i in 0 until viewGroup.childCount) {
+            when (val view = viewGroup.getChildAt(i)) {
+                is TextView -> {
+                    view.background = null
+                }
+                is ConstraintLayout -> {
+                    clearView(view)
+                }
+            }
         }
-
-    }
-
-    private fun setInitDialog() {
-        val layoutParams = WindowManager.LayoutParams().apply {
-            flags = WindowManager.LayoutParams.FLAG_DIM_BEHIND
-            dimAmount = 0.8f
-        }
-
-        dialog?.window?.apply {
-            attributes = layoutParams
-            setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
-            requestFeature(Window.FEATURE_NO_TITLE)
-        }
-
-        isCancelable = false
     }
 
     fun cancel() {

@@ -68,6 +68,7 @@
                     android:layout_height="0dp"
                     android:contentDescription="@string/calendar"
                     android:src="@drawable/calendar"
+                    android:onClick="@{() -> viewModel.calendarIconClick()}"
                     app:layout_constraintDimensionRatio="1"
                     app:layout_constraintHeight_percent="0.2"
                     app:layout_constraintRight_toRightOf="parent"
