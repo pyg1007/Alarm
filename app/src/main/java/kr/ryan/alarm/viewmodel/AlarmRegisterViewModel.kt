@@ -1,5 +1,6 @@
 package kr.ryan.alarm.viewmodel
 
+import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
 import androidx.lifecycle.ViewModel
@@ -9,6 +10,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import kr.ryan.alarm.data.Alarm
 import kr.ryan.alarm.repository.AlarmRepository
+import kr.ryan.alarm.utility.dateToString
 import java.util.*
 
 /**
@@ -20,7 +22,9 @@ import java.util.*
  */
 class AlarmRegisterViewModel(private val repository: AlarmRepository) : ViewModel() {
 
-    private val selectedItem = mutableListOf<Date>()
+    private val day = arrayOf("일", "월", "화", "수", "목", "금", "토") // 요일들 배열로 지정
+
+    private var selectedItem = mutableListOf<Date>()
     private var selectedDate = Date()
     private val _selectedDays = MutableLiveData<List<Date>>()
     val selectedDays = Transformations.map(_selectedDays) {
@@ -31,19 +35,42 @@ class AlarmRegisterViewModel(private val repository: AlarmRepository) : ViewMode
         }.sorted()
     }
 
-    private val day = arrayOf("일", "월", "화", "수", "목", "금", "토")
-
-
-    val selectedShowDays = Transformations.map(_selectedDays) {
+    val selectedShowDays = Transformations.map(_selectedDays) { // 요일 선택시 보여지는 요일들 (일, 월, 화) 등등
         it.map { date ->
             Calendar.getInstance().apply {
                 time = date
             }.get(Calendar.DAY_OF_WEEK)
-        }.sorted().joinToString(", "){dayOfWeek -> day[dayOfWeek - 1]}
+        }.sorted().joinToString(", ") { dayOfWeek -> day[dayOfWeek - 1] }
     }
 
     val dayClicked = fun(day: Int) {
         checkDuplicationDay(day)
+    }
+
+    fun changeDate(hour: Int, min: Int) = viewModelScope.launch(Dispatchers.Default){
+        selectedDate = Calendar.getInstance().apply {
+            set(Calendar.HOUR_OF_DAY, hour)
+            set(Calendar.MINUTE, min)
+        }.time
+        if (!selectedItem.isNullOrEmpty()) {
+            val item = mutableListOf<Date>()
+            selectedItem.forEach {
+                item.add(Calendar.getInstance().apply {
+                    time = it
+                    set(Calendar.HOUR_OF_DAY, hour)
+                    set(Calendar.MINUTE, min)
+                }.time)
+            }
+
+            selectedItem = item
+
+            selectedItem.forEach {
+                Log.e("ViewModel", it.dateToString("yyyy MM dd HH:mm"))
+            }
+            withContext(Dispatchers.Main){
+                _selectedDays.value = selectedItem
+            }
+        }
     }
 
     private fun checkDuplicationDay(day: Int) = viewModelScope.launch(Dispatchers.Default) {

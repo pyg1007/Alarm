@@ -3,6 +3,7 @@ package kr.ryan.alarm.ui.dialog
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.view.ViewGroup
 import android.view.Window
@@ -19,6 +20,7 @@ import kr.ryan.alarm.R
 import kr.ryan.alarm.application.AlarmApplication
 import kr.ryan.alarm.databinding.FragmentAlarmDialogBinding
 import kr.ryan.alarm.utility.createDraw
+import kr.ryan.alarm.utility.dateToString
 import kr.ryan.alarm.utility.dialogFragmentResize
 import kr.ryan.alarm.utility.showShortToast
 import kr.ryan.alarm.viewmodel.AlarmRegisterViewModel
@@ -63,15 +65,34 @@ class AlarmRegisterDialogFragment :
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         initBinding()
-        check()
+        initTimePicker()
+        observeSelectDay()
     }
 
-    private fun check() {
+    private fun observeSelectDay() {
         alarmRegisterDialogViewModel.selectedDays.observe(viewLifecycleOwner) {
             clearView(binding.includeDays.rootViewGroup)
             if (!it.isNullOrEmpty()) {
                 it.forEach { day -> createCircle(day) }
             }
+        }
+    }
+
+    private fun initTime(){
+        val hour = binding.tpSelect.hour
+        val min = binding.tpSelect.minute
+        Log.e(TAG, "initTime hour -> $hour, min -> $min")
+        alarmRegisterDialogViewModel.changeDate(hour, min)
+    }
+
+
+    private fun initTimePicker(){
+        initTime()
+
+        binding.tpSelect.setOnTimeChangedListener { _, hourOfDay, minute ->
+
+            Log.e(TAG, "hour -> $hourOfDay, min -> $minute")
+            alarmRegisterDialogViewModel.changeDate(hourOfDay, minute)
         }
     }
 
