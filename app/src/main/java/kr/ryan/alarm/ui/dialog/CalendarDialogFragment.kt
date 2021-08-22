@@ -14,6 +14,7 @@ import kr.ryan.alarm.R
 import kr.ryan.alarm.databinding.FragmentCalendarDialogBinding
 import kr.ryan.alarm.utility.dialogFragmentResize
 import kr.ryan.baseui.BaseDialogFragment
+import java.util.*
 
 /**
  * Alarm
@@ -43,6 +44,11 @@ class CalendarDialogFragment : BaseDialogFragment<FragmentCalendarDialogBinding>
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        previousDateDisable()
+    }
+
+    private fun previousDateDisable(){
+        binding.dtCalendar.minDate = Date().time
     }
 
     private fun initDialog() {

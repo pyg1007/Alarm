@@ -49,6 +49,7 @@ class AlarmRegisterViewModel(private val repository: AlarmRepository) : ViewMode
         get() = _clickCalendarIcon
 
     fun calendarIconClick(){
+        Log.e("TAG", "Click")
         _clickCalendarIcon.value = true
     }
 

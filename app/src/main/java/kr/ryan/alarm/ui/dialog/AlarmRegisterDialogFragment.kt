@@ -66,6 +66,7 @@ class AlarmRegisterDialogFragment :
         initBinding()
         initTimePicker()
         observeSelectDay()
+        observeCalendarClicked()
     }
 
     private fun observeSelectDay() {
