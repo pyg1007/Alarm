@@ -7,6 +7,7 @@ import android.view.Gravity
 import android.view.View
 import android.view.Window
 import android.view.WindowManager
+import android.widget.CalendarView
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.whenCreated
 import androidx.lifecycle.whenResumed
@@ -25,7 +26,10 @@ import java.util.*
  * Description:
  */
 class CalendarDialogFragment :
-    BaseDialogFragment<FragmentCalendarDialogBinding>(R.layout.fragment_calendar_dialog) {
+    BaseDialogFragment<FragmentCalendarDialogBinding>(R.layout.fragment_calendar_dialog),
+    CalendarView.OnDateChangeListener {
+
+    private var selectDate = Date()
 
     init {
         lifecycleScope.launch {
@@ -48,6 +52,7 @@ class CalendarDialogFragment :
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         changeMinDate()
+        initCalendarView()
     }
 
     private fun changeMinDate(){
@@ -71,6 +76,19 @@ class CalendarDialogFragment :
 
     private fun initBinding() {
 
+    }
+
+    private fun initCalendarView() {
+        binding.calendar.setOnDateChangeListener(this)
+    }
+
+    override fun onSelectedDayChange(view: CalendarView, year: Int, month: Int, dayOfMonth: Int) {
+        selectDate = Calendar.getInstance().apply {
+            time = selectDate
+            set(Calendar.YEAR, year)
+            set(Calendar.MONTH, month)
+            set(Calendar.DAY_OF_MONTH, dayOfMonth)
+        }.time
     }
 
     private fun closeFragmentDialog() {
