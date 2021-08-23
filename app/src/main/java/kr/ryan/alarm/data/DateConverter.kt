@@ -14,8 +14,8 @@ import java.util.*
 
 class DateConverter {
     @TypeConverter
-    fun dateToLong(value: List<Date>?): String? = Gson().toJson(value)
+    fun dateToLong(value: List<Date>?): String? = Gson().toJson(value?.map { it.time })
 
     @TypeConverter
-    fun longToDate(value: String?): List<Date> = Gson().fromJson(value, Array<Date>::class.java).toList()
+    fun longToDate(value: String?): List<Date> = Gson().fromJson(value, Array<Long>::class.java).map { Date(it) }
 }

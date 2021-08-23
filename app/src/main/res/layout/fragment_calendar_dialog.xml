@@ -6,11 +6,10 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <DatePicker
-            android:id="@+id/dt_calendar"
+        <CalendarView
+            android:id="@+id/calendar"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:datePickerMode="calendar"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toTopOf="@id/btn_add"/>
 
