@@ -1,8 +1,10 @@
 package kr.ryan.alarm.adapter
 
+import android.widget.CalendarView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.databinding.BindingAdapter
 import kr.ryan.alarm.R
+import java.util.*
 
 /**
  * Alarm
@@ -41,6 +43,19 @@ object BindClass {
                     result(7)
                 }
             }
+        }
+    }
+
+    @JvmStatic
+    @BindingAdapter("CalendarDateClick")
+    fun onCalendarDateClick(calendarView: CalendarView, result: (Date) -> Unit){
+        calendarView.setOnDateChangeListener { _, year, month, dayOfMonth ->
+            val date = Calendar.getInstance().apply {
+                set(Calendar.YEAR, year)
+                set(Calendar.MONTH, month)
+                set(Calendar.DAY_OF_MONTH, dayOfMonth)
+            }.time
+            result(date)
         }
     }
 }
