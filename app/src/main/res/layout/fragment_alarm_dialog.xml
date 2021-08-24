@@ -24,6 +24,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:timePickerMode="spinner"
+            onTimePickerClick="@{viewModel.changeTime}"
             app:layout_constraintBottom_toTopOf="@id/space_middle"
             app:layout_constraintTop_toTopOf="parent" />
 

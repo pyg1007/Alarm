@@ -1,6 +1,5 @@
 package kr.ryan.alarm.viewmodel
 
-import android.util.Log
 import androidx.lifecycle.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -22,7 +21,9 @@ class AlarmRegisterViewModel(private val repository: AlarmRepository) : ViewMode
     private val day = arrayOf("일", "월", "화", "수", "목", "금", "토") // 요일들 배열로 지정
 
     private var selectedItem = mutableListOf<Date>()
-    private var selectedDate = Date()
+
+    private var selectedDate = Date() // 날짜
+
     private val _selectedDays = MutableLiveData<List<Date>>()
     val selectedDays = Transformations.map(_selectedDays) {
         it.map { date ->
@@ -33,11 +34,25 @@ class AlarmRegisterViewModel(private val repository: AlarmRepository) : ViewMode
     }
 
     val selectedShowDays = Transformations.map(_selectedDays) { // 요일 선택시 보여지는 요일들 (일, 월, 화) 등등
-        it.map { date ->
-            Calendar.getInstance().apply {
-                time = date
-            }.get(Calendar.DAY_OF_WEEK)
-        }.sorted().joinToString(", ") { dayOfWeek -> day[dayOfWeek - 1] }
+        if (it.size == 1) {
+            it[0].dateToString("MM월 dd일 (E)")
+        } else {
+            it.map { date ->
+                Calendar.getInstance().apply {
+                    time = date
+                }.get(Calendar.DAY_OF_WEEK)
+            }.sorted().joinToString(", ") { dayOfWeek -> day[dayOfWeek - 1] }
+        }
+    }
+
+    init {
+
+        selectedItem.add(selectedDate)
+
+    }
+
+    val changeTime = fun(date: Date){
+        changeDate(date)
     }
 
     val dayClicked = fun(day: Int) {
@@ -48,39 +63,22 @@ class AlarmRegisterViewModel(private val repository: AlarmRepository) : ViewMode
     val clickCalendarIcon: LiveData<Boolean>
         get() = _clickCalendarIcon
 
-    fun calendarIconClick(){
-        Log.e("TAG", "Click")
+    fun calendarIconClick() {
         _clickCalendarIcon.value = true
     }
 
-    fun clearCalendarIconClick(){
+    fun clearCalendarIconClick() {
         _clickCalendarIcon.value = false
     }
 
-    fun changeDate(hour: Int, min: Int) = viewModelScope.launch(Dispatchers.Default){
-        selectedDate = Calendar.getInstance().apply {
-            set(Calendar.HOUR_OF_DAY, hour)
-            set(Calendar.MINUTE, min)
-        }.time
-        if (!selectedItem.isNullOrEmpty()) {
-            val item = mutableListOf<Date>()
-            selectedItem.forEach {
-                item.add(Calendar.getInstance().apply {
-                    time = it
-                    set(Calendar.HOUR_OF_DAY, hour)
-                    set(Calendar.MINUTE, min)
-                }.time)
-            }
-
-            selectedItem = item
-
-            selectedItem.forEach {
-                Log.e("ViewModel", it.dateToString("yyyy MM dd HH:mm"))
-            }
-            withContext(Dispatchers.Main){
-                _selectedDays.value = selectedItem
-            }
+    fun changeDate(date: Date) = viewModelScope.launch(Dispatchers.Default) {
+        selectedDate = date
+        selectedItem.clear()
+        selectedItem.add(selectedDate)
+        withContext(Dispatchers.Main) {
+            _selectedDays.value = selectedItem
         }
+
     }
 
     private fun checkDuplicationDay(day: Int) = viewModelScope.launch(Dispatchers.Default) {

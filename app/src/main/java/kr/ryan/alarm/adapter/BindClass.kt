@@ -1,10 +1,12 @@
 package kr.ryan.alarm.adapter
 
 import android.widget.CalendarView
+import android.widget.TimePicker
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.databinding.BindingAdapter
 import kr.ryan.alarm.R
 import java.util.*
+import kotlin.math.min
 
 /**
  * Alarm
@@ -47,7 +49,20 @@ object BindClass {
     }
 
     @JvmStatic
-    @BindingAdapter("CalendarDateClick")
+    @BindingAdapter("onTimePickerClick")
+    fun onTimePickerClick(timePicker: TimePicker, result: (Date) -> Unit){
+        timePicker.setOnTimeChangedListener { _, hourOfDay, minute ->
+            val date = Calendar.getInstance().apply {
+                set(Calendar.HOUR_OF_DAY, hourOfDay)
+                set(Calendar.MINUTE, minute)
+                set(Calendar.SECOND, 0)
+            }.time
+            result(date)
+        }
+    }
+
+    @JvmStatic
+    @BindingAdapter("onCalendarDateClick")
     fun onCalendarDateClick(calendarView: CalendarView, result: (Date) -> Unit){
         calendarView.setOnDateChangeListener { _, year, month, dayOfMonth ->
             val date = Calendar.getInstance().apply {

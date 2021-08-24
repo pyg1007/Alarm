@@ -20,6 +20,7 @@ import kr.ryan.alarm.R
 import kr.ryan.alarm.application.AlarmApplication
 import kr.ryan.alarm.databinding.FragmentAlarmDialogBinding
 import kr.ryan.alarm.utility.createDraw
+import kr.ryan.alarm.utility.dateToString
 import kr.ryan.alarm.utility.dialogFragmentResize
 import kr.ryan.alarm.utility.showShortToast
 import kr.ryan.alarm.viewmodel.AlarmRegisterViewModel
@@ -64,7 +65,6 @@ class AlarmRegisterDialogFragment :
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         initBinding()
-        initTimePicker()
         observeSelectDay()
         observeCalendarClicked()
     }
@@ -83,6 +83,9 @@ class AlarmRegisterDialogFragment :
             if (it) {
 
                 val dialog = CalendarDialogFragment()
+                CalendarDialogFragment.selectedDate = {date->
+                    alarmRegisterDialogViewModel.changeDate(date)
+                }
                 if (!dialog.isAdded)
                     dialog.show(childFragmentManager, "Calendar")
 
@@ -117,22 +120,6 @@ class AlarmRegisterDialogFragment :
         isCancelable = false
     }
 
-    private fun initTime() {
-        val hour = binding.tpSelect.hour
-        val min = binding.tpSelect.minute
-
-        alarmRegisterDialogViewModel.changeDate(hour, min)
-    }
-
-    private fun initTimePicker() {
-        initTime()
-
-        binding.tpSelect.setOnTimeChangedListener { _, hourOfDay, minute ->
-
-            Log.e(TAG, "hour -> $hourOfDay, min -> $minute")
-            alarmRegisterDialogViewModel.changeDate(hourOfDay, minute)
-        }
-    }
 
     private fun createCircle(day: Int) {
         when (day) {

@@ -3,6 +3,7 @@ package kr.ryan.alarm.ui.dialog
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
+import android.util.Log
 import android.view.Gravity
 import android.view.View
 import android.view.Window
@@ -15,6 +16,7 @@ import androidx.lifecycle.whenResumed
 import kotlinx.coroutines.launch
 import kr.ryan.alarm.R
 import kr.ryan.alarm.databinding.FragmentCalendarDialogBinding
+import kr.ryan.alarm.utility.dateToString
 import kr.ryan.alarm.utility.dialogFragmentResize
 import kr.ryan.alarm.viewmodel.AlarmDateSelectViewModel
 import kr.ryan.baseui.BaseDialogFragment
@@ -54,6 +56,8 @@ class CalendarDialogFragment :
         super.onViewCreated(view, savedInstanceState)
         changeMinDate()
         initBinding()
+        observeAddStatus()
+        observeCancelStatus()
     }
 
     private fun changeMinDate(){
@@ -79,10 +83,39 @@ class CalendarDialogFragment :
         binding.viewModel = calendarViewModel
     }
 
+    fun receiveDate(result: (Date) -> Unit){
+        result(calendarViewModel.selectDate)
+    }
+
+    private fun observeAddStatus(){
+        calendarViewModel.add.observe(viewLifecycleOwner){
+            if (it){
+                selectedDate(calendarViewModel.selectDate)
+                calendarViewModel.clearAddBtnStatus()
+                closeFragmentDialog()
+            }
+        }
+    }
+
+    private fun observeCancelStatus(){
+        calendarViewModel.cancel.observe(viewLifecycleOwner){
+            if (it){
+                calendarViewModel.clearCancelBtnStatus()
+                closeFragmentDialog()
+            }
+        }
+    }
+
     private fun closeFragmentDialog() {
         parentFragmentManager.findFragmentByTag("Calendar")?.let {
             (it as CalendarDialogFragment).dismiss()
         }
+    }
+
+    companion object{
+
+        lateinit var selectedDate: (Date) -> Unit
+
     }
 
 }

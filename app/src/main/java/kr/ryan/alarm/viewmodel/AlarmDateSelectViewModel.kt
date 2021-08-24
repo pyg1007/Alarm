@@ -1,8 +1,8 @@
 package kr.ryan.alarm.viewmodel
 
-import android.util.Log
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import kr.ryan.alarm.utility.dateToString
 import java.util.*
 
 /**
@@ -18,13 +18,32 @@ class AlarmDateSelectViewModel : ViewModel() {
     val selectDate: Date
         get() = _selectDate
 
+    private val _add = MutableLiveData(false)
+    val add: LiveData<Boolean>
+        get() = _add
+
+    private val _cancel = MutableLiveData(false)
+    val cancel: LiveData<Boolean>
+        get() = _cancel
+
     val calendarDateClick = fun(date: Date) {
         _selectDate = date
-        Log.e(TAG, _selectDate.dateToString("yyyy MM dd HH:mm"))
     }
 
-    companion object{
-        const val TAG = "AlarmDateSelectViewModel"
+    fun addBtnClick(){
+        _add.value = true
+    }
+
+    fun clearAddBtnStatus(){
+        _add.value = false
+    }
+
+    fun cancelBtnClick(){
+        _cancel.value = true
+    }
+
+    fun clearCancelBtnStatus(){
+        _cancel.value = false
     }
 
 }
