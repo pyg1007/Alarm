@@ -70,7 +70,7 @@ class AlarmRegisterDialogFragment :
     }
 
     private fun observeSelectDay() {
-        alarmRegisterDialogViewModel.selectedDays.observe(viewLifecycleOwner) {
+        alarmRegisterDialogViewModel.selectedDay.observe(viewLifecycleOwner) {
             clearView(binding.includeDays.rootViewGroup)
             if (!it.isNullOrEmpty()) {
                 it.forEach { day -> createCircle(day) }
@@ -79,17 +79,17 @@ class AlarmRegisterDialogFragment :
     }
 
     private fun observeCalendarClicked() {
-        alarmRegisterDialogViewModel.clickCalendarIcon.observe(viewLifecycleOwner) {
+        alarmRegisterDialogViewModel.iconClickStatus.observe(viewLifecycleOwner) {
             if (it) {
 
                 val dialog = CalendarDialogFragment()
                 CalendarDialogFragment.selectedDate = {date->
-                    alarmRegisterDialogViewModel.changeDate(date)
+                    alarmRegisterDialogViewModel.changedTime(date)
                 }
                 if (!dialog.isAdded)
                     dialog.show(childFragmentManager, "Calendar")
 
-                alarmRegisterDialogViewModel.clearCalendarIconClick()
+                alarmRegisterDialogViewModel.clearCalendarStatus()
             }
         }
     }
