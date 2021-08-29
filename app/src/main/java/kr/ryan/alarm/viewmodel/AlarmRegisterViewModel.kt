@@ -27,7 +27,7 @@ class AlarmRegisterViewModel(private val repository: AlarmRepository) : ViewMode
         val currentCalendar = Calendar.getInstance().apply {
             time = currentDate
         }
-        val selecteCalendar = Calendar.getInstance().apply { }
+        val selectCalendar = Calendar.getInstance().apply { }
     }
 
     private val _selectedDay = MutableLiveData<List<Date>>()
@@ -96,16 +96,30 @@ class AlarmRegisterViewModel(private val repository: AlarmRepository) : ViewMode
         checkDuplicationDay(day)
     }
 
-    private fun checkDuplicationDay(day: Int) {
-        _selectedDay.value?.let {
-            val existDate = it.map { date ->
+    private fun checkDuplicationDay(day: Int) = viewModelScope.launch(Dispatchers.Default) {
+        _selectedDay.value?.let { item ->
+            val exist = item.map {
                 Calendar.getInstance().apply {
-                    time = date
+                    time = it
                 }.get(Calendar.DAY_OF_WEEK)
-            }.find { i -> i == day }
+            }.find { i -> i == day } ?: 999
 
-            val item = it.toMutableList()
-            if (existDate == null) {
+            val dateList = item.toMutableList()
+
+            if (exist == 999) { // 존재하지않는다면 추가
+                dateList.add(Calendar.getInstance().apply {
+                    time = item.first()
+                    set(Calendar.DAY_OF_WEEK, day)
+                }.time)
+            } else { // 존재한다면 삭제
+                dateList.remove(Calendar.getInstance().apply {
+                    time = item.first()
+                    set(Calendar.DAY_OF_WEEK, day)
+                }.time)
+            }
+
+            withContext(Dispatchers.Main){
+                _selectedDay.value = dateList
             }
         }
     }
