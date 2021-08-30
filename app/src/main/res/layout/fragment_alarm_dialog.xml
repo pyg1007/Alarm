@@ -57,7 +57,7 @@
                     android:gravity="center_vertical"
                     android:textSize="16dp"
                     android:textStyle="bold"
-                    android:text="@{viewModel.selectedDay.size() == 0 ? viewModel.selectedDate : viewModel.showSelectedDay}"
+                    android:text="@{viewModel.selectedDay == null ? viewModel.selectedDate : (viewModel.selectedDay.empty ? viewModel.selectedDate : viewModel.showSelectedDay)}"
                     app:layout_constraintHeight_percent="0.2"
                     app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintRight_toLeftOf="@id/iv_calendar"

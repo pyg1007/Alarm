@@ -7,6 +7,8 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import kr.ryan.alarm.data.Alarm
 import kr.ryan.alarm.repository.AlarmRepository
+import kr.ryan.alarm.utility.compareDate
+import kr.ryan.alarm.utility.dateToString
 import java.util.*
 
 /**
@@ -18,17 +20,21 @@ import java.util.*
  */
 class AlarmRegisterViewModel(private val repository: AlarmRepository) : ViewModel() {
 
-    private val currentDate = Date()
-
     private val day = arrayOf("일", "월", "화", "수", "목", "금", "토")
 
-    private val _selectedDate = MutableLiveData(Date())
+    private val _selectedDate = MutableLiveData(Calendar.getInstance().apply {
+        set(Calendar.SECOND, 0)
+    }.time)
+
     val selectedDate = Transformations.map(_selectedDate) {
-        val currentCalendar = Calendar.getInstance().apply {
-            time = currentDate
-        }
-        val selectCalendar = Calendar.getInstance().apply { }
+        "${it.compareDate()}${it.dateToString("MM월 dd일 (E)")}"
     }
+
+    val checkDate
+        get() = _selectedDate
+
+    val checkDay
+        get() = _selectedDay
 
     private val _selectedDay = MutableLiveData<List<Date>>()
     val selectedDay = Transformations.map(_selectedDay) {
@@ -97,7 +103,7 @@ class AlarmRegisterViewModel(private val repository: AlarmRepository) : ViewMode
     }
 
     private fun checkDuplicationDay(day: Int) = viewModelScope.launch(Dispatchers.Default) {
-        _selectedDay.value?.let { item ->
+        _selectedDay.value?.also { item ->
             val exist = item.map {
                 Calendar.getInstance().apply {
                     time = it
@@ -108,15 +114,25 @@ class AlarmRegisterViewModel(private val repository: AlarmRepository) : ViewMode
 
             if (exist == 999) { // 존재하지않는다면 추가
                 dateList.add(Calendar.getInstance().apply {
-                    time = item.first()
+                    time = _selectedDate.value!! // 값을 바로넣어주기떄문에 널일수가 없음!
                     set(Calendar.DAY_OF_WEEK, day)
                 }.time)
             } else { // 존재한다면 삭제
                 dateList.remove(Calendar.getInstance().apply {
-                    time = item.first()
+                    time = _selectedDate.value!! // 값을 바로넣어주기떄문에 널일수가 없음!
                     set(Calendar.DAY_OF_WEEK, day)
                 }.time)
             }
+
+            withContext(Dispatchers.Main){
+                _selectedDay.value = dateList
+            }
+        } ?: run{ // 값이 비어있다면 아무것도 없는 경우기때문에 이쪽 구문을 타게됌
+            val dateList = mutableListOf<Date>()
+            dateList.add(Calendar.getInstance().apply {
+                time = _selectedDate.value!! // 값을 바로넣어주기떄문에 널일수가 없음!
+                set(Calendar.DAY_OF_WEEK, day)
+            }.time)
 
             withContext(Dispatchers.Main){
                 _selectedDay.value = dateList

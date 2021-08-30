@@ -67,6 +67,9 @@ class AlarmRegisterDialogFragment :
         initBinding()
         observeSelectDay()
         observeCalendarClicked()
+
+        checkDate()
+        checkDay()
     }
 
     private fun observeSelectDay() {
@@ -83,7 +86,7 @@ class AlarmRegisterDialogFragment :
             if (it) {
 
                 val dialog = CalendarDialogFragment()
-                CalendarDialogFragment.selectedDate = {date->
+                CalendarDialogFragment.selectedDate = { date ->
                     alarmRegisterDialogViewModel.changedTime(date)
                 }
                 if (!dialog.isAdded)
@@ -118,6 +121,18 @@ class AlarmRegisterDialogFragment :
         }
 
         isCancelable = false
+    }
+
+    private fun checkDate(){
+        alarmRegisterDialogViewModel.checkDate.observe(viewLifecycleOwner){
+            Log.e(TAG, "checkDate ${it.dateToString("yyyy MM dd HH:mm:ss")}")
+        }
+    }
+
+    private fun checkDay(){
+        alarmRegisterDialogViewModel.checkDay.observe(viewLifecycleOwner){
+            it.forEach {date -> Log.e(TAG, "checkDay ${date.dateToString("yyyy MM dd HH:mm:ss")}") }
+        }
     }
 
 

@@ -16,13 +16,20 @@ fun Date.dateToString(format: String, locale: Locale = Locale.getDefault()): Str
     return simpleDateFormat.format(this)
 }
 
-fun Date.addOneDayDate(): Date {
+fun Date.compareDate(): String{
+    val simpleDateFormat = SimpleDateFormat("yyyyMMdd", Locale.getDefault())
+    val current = simpleDateFormat.format(Date()).toInt()
+    val compare = simpleDateFormat.format(this).toInt()
 
-    val calendar = Calendar.getInstance().apply {
-        time = this@addOneDayDate
+    return when {
+        compare - current == 1 -> {
+            "내일 - "
+        }
+        compare - current == 0 -> {
+            "오늘 - "
+        }
+        else -> {
+            ""
+        }
     }
-
-    calendar.add(Calendar.DAY_OF_MONTH, 1)
-
-    return calendar.time
 }
