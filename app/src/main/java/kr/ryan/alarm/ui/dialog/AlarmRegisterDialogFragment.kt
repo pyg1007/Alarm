@@ -3,6 +3,8 @@ package kr.ryan.alarm.ui.dialog
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.util.Log
 import android.view.View
 import android.view.ViewGroup
@@ -18,6 +20,7 @@ import androidx.lifecycle.whenResumed
 import kotlinx.coroutines.launch
 import kr.ryan.alarm.R
 import kr.ryan.alarm.application.AlarmApplication
+import kr.ryan.alarm.data.AlarmStatus
 import kr.ryan.alarm.databinding.FragmentAlarmDialogBinding
 import kr.ryan.alarm.utility.createDraw
 import kr.ryan.alarm.utility.dateToString
@@ -67,7 +70,8 @@ class AlarmRegisterDialogFragment :
         initBinding()
         observeSelectDay()
         observeCalendarClicked()
-
+        observeEditText()
+        observeAlarmStatus()
         checkDate()
         checkDay()
     }
@@ -121,6 +125,25 @@ class AlarmRegisterDialogFragment :
         }
 
         isCancelable = false
+    }
+
+    private fun observeEditText(){
+        binding.etAlarmName.addTextChangedListener(object : TextWatcher{
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+
+            }
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+
+            }
+
+            override fun afterTextChanged(s: Editable?) {
+                s?.let {
+                    alarmRegisterDialogViewModel.changeAlarmTitle(it.toString())
+                }
+            }
+
+        })
     }
 
     private fun checkDate(){
@@ -182,14 +205,24 @@ class AlarmRegisterDialogFragment :
         }
     }
 
-    fun cancel() {
-        requireContext().showShortToast("알람 추가 취소")
-        dismissDialogFragment()
-    }
-
-    fun add() {
-        requireContext().showShortToast("알람 추가 성공")
-        dismissDialogFragment()
+    private fun observeAlarmStatus(){
+        alarmRegisterDialogViewModel.alarmStatus.observe(viewLifecycleOwner){status->
+            status?.let {
+                when(it){
+                    AlarmStatus.INIT -> requireContext().showShortToast("init")
+                    AlarmStatus.REGISTER ->{
+                        requireContext().showShortToast("알람 추가 성공")
+                        dismissDialogFragment()
+                        alarmRegisterDialogViewModel.initAlarmStatus()
+                    }
+                    AlarmStatus.CANCEL -> {
+                        requireContext().showShortToast("알람 추가 취소")
+                        dismissDialogFragment()
+                        alarmRegisterDialogViewModel.initAlarmStatus()
+                    }
+                }
+            }
+        }
     }
 
     private fun dismissDialogFragment() {
