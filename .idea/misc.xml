@@ -8,6 +8,9 @@
         <entry key="..\:/AndroidProject/Alarm/app/src/main/res/layout/fragment_alarm_dialog.xml" value="0.17806484295845998" />
         <entry key="..\:/AndroidProject/Alarm/app/src/main/res/layout/fragment_calendar_dialog.xml" value="0.13958333333333334" />
         <entry key="..\:/AndroidProject/Alarm/app/src/main/res/layout/include_alarm_add_days.xml" value="0.33" />
+        <entry key="..\:/AndroidProject/Alarm/app/src/main/res/layout/include_recycler_time.xml" value="0.1213768115942029" />
+        <entry key="..\:/AndroidProject/Alarm/app/src/main/res/layout/recycler_date.xml" value="0.1213768115942029" />
+        <entry key="..\:/AndroidProject/Alarm/app/src/main/res/layout/recycler_multi_day.xml" value="0.1213768115942029" />
       </map>
     </option>
   </component>

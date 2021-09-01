@@ -2,26 +2,35 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
+    <data>
+
+        <variable
+            name="title"
+            type="String" />
+
+        <variable
+            name="meridiem"
+            type="String" />
+
+        <variable
+            name="time"
+            type="String" />
+    </data>
+
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-
-        <Space
-            android:id="@+id/space_left"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintWidth_percent="0.1" />
 
         <TextView
             android:id="@+id/tv_alarm_title"
             android:layout_width="0dp"
             android:layout_height="0dp"
+            android:gravity="center_vertical"
+            android:text="@{title}"
             android:textSize="16dp"
             android:textStyle="bold"
-            android:gravity="center_vertical"
             app:layout_constraintHeight_percent="0.3"
-            app:layout_constraintLeft_toRightOf="@id/space_left"
+            app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -31,22 +40,25 @@
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:gravity="bottom|end"
-            android:textSize="20dp"
+            android:text="@{meridiem}"
+            android:textSize="12dp"
             android:textStyle="bold"
-            app:layout_constraintBottom_toBottomOf="@id/tv_alarm_time"
             app:layout_constraintHeight_percent="0.3"
-            app:layout_constraintLeft_toRightOf="@+id/space_left"
-            app:layout_constraintWidth_percent="0.3" />
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toTopOf="@id/tv_alarm_time"
+            app:layout_constraintBottom_toBottomOf="@id/tv_alarm_time"
+            app:layout_constraintWidth_percent="0.35" />
 
         <TextView
             android:id="@+id/tv_alarm_time"
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:gravity="center_vertical"
-            android:textSize="40dp"
+            android:text="@{time}"
+            android:textSize="22dp"
             android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintHeight_percent="0.6"
+            app:layout_constraintHeight_percent="0.45"
             app:layout_constraintLeft_toRightOf="@id/tv_meridiem"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toBottomOf="@id/tv_alarm_title" />

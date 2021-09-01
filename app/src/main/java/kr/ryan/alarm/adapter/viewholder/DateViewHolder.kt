@@ -7,6 +7,7 @@ import androidx.recyclerview.widget.RecyclerView
 import kr.ryan.alarm.R
 import kr.ryan.alarm.data.Alarm
 import kr.ryan.alarm.databinding.RecyclerDateBinding
+import kr.ryan.alarm.utility.dateToString
 
 /**
  * Alarm
@@ -19,6 +20,19 @@ class DateViewHolder private constructor(private val binding: RecyclerDateBindin
 
 
     fun bind(alarm: Alarm){
+
+        binding.apply {
+            alarmDate = alarm.alarmTimeList.first().dateToString("MM월 dd일 (E)")
+            alarmStatus = alarm.alarmOnOff
+        }
+
+        binding.alarmTime.apply {
+            title = alarm.title ?: ""
+            alarm.alarmTimeList.first().also {
+                meridiem = it.dateToString("a")
+                time = it.dateToString("hh:mm")
+            }
+        }
 
     }
 

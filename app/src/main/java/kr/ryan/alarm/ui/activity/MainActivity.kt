@@ -78,6 +78,7 @@ class MainActivity : BaseActivity<ActivityMainBinding>(R.layout.activity_main) {
     private fun observeRecyclerViewData() {
 
         alarmViewModel.alarmList.observe(this@MainActivity) {
+            Log.e(TAG, "RecyclerView Data -> $it")
             if (::alarmAdapter.isInitialized)
                 alarmAdapter.submitList(it.toMutableList())
         }
