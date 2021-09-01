@@ -165,7 +165,7 @@ class AlarmRegisterViewModel(private val repository: AlarmRepository) : ViewMode
         setLiveDataValue(_alarmStatus, AlarmStatus.INIT)
     }
 
-    private fun insertAlarm(alarm: Alarm) = viewModelScope.launch(Dispatchers.IO) {
+    private fun insertAlarm(alarm: Alarm) = viewModelScope.launch {
         repository.insertAlarm(alarm)
     }
 

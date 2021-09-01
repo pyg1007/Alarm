@@ -40,7 +40,7 @@ class AlarmViewModel(private val repository: AlarmRepository) : ViewModel() {
 
     }
 
-    fun deleteAlarm(alarm: Alarm) = viewModelScope.launch(Dispatchers.IO) {
+    fun deleteAlarm(alarm: Alarm) = viewModelScope.launch {
         repository.deleteAlarm(alarm)
     }
 
