@@ -22,13 +22,13 @@ class DateViewHolder private constructor(private val binding: RecyclerDateBindin
     fun bind(alarm: Alarm){
 
         binding.apply {
-            alarmDate = alarm.alarmTimeList.first().dateToString("MM월 dd일 (E)")
+            alarmDate = alarm.alarmTimeList[0].dateToString("MM월 dd일 (E)")
             alarmStatus = alarm.alarmOnOff
         }
 
         binding.alarmTime.apply {
             title = alarm.title ?: ""
-            alarm.alarmTimeList.first().also {
+            alarm.alarmTimeList[0].also {
                 meridiem = it.dateToString("a")
                 time = it.dateToString("hh:mm")
             }
