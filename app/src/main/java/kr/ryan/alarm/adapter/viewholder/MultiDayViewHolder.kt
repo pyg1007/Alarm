@@ -7,6 +7,7 @@ import androidx.recyclerview.widget.RecyclerView
 import kr.ryan.alarm.R
 import kr.ryan.alarm.data.Alarm
 import kr.ryan.alarm.databinding.RecyclerMultiDayBinding
+import kr.ryan.alarm.utility.dateToString
 
 /**
  * Alarm
@@ -19,9 +20,15 @@ class MultiDayViewHolder private constructor(private val binding: RecyclerMultiD
 
     fun bind(alarm: Alarm){
 
+        binding.alarmTime.apply {
+            title = alarm.title ?: ""
+            meridiem = alarm.alarmTimeList[0].dateToString("a")
+            time = alarm.alarmTimeList[0].dateToString("hh:mm")
+        }
+
         binding.root.setOnClickListener {
-            itemClickEvent?.let {
-                it(alarm)
+            itemClickEvent?.let {event->
+                event(alarm)
             }
         }
 

@@ -34,6 +34,13 @@ class DateViewHolder private constructor(private val binding: RecyclerDateBindin
             }
         }
 
+        binding.root.setOnClickListener {
+            itemClickEvent?.let{event ->
+                event(alarm)
+            }
+
+        }
+
     }
 
     companion object{
