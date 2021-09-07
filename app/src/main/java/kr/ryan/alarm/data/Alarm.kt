@@ -13,6 +13,7 @@ import java.util.*
  */
 @Entity(tableName = "Alarm_table")
 data class Alarm(
+    var isSingleAlarm: Boolean,
     var title: String?,
     var alarmTimeList: List<Date>,
     var alarmOnOff: Boolean

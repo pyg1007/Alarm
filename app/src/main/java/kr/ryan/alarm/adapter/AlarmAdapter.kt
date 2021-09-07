@@ -52,8 +52,8 @@ class AlarmAdapter : ListAdapter<Alarm, RecyclerView.ViewHolder>(AlarmDiffUtil()
 
     override fun getItemViewType(position: Int): Int {
         return when {
-            getItem(position).alarmTimeList.size > 1 -> MULTIPLE
-            getItem(position).alarmTimeList.size == 1 -> SINGLE
+            !getItem(position).isSingleAlarm -> MULTIPLE
+            getItem(position).isSingleAlarm -> SINGLE
             else -> throw IllegalStateException("Unknown Alarm Status")
         }
     }

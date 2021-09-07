@@ -2,6 +2,8 @@ package kr.ryan.alarm.viewmodel
 
 import androidx.lifecycle.*
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -22,10 +24,20 @@ import java.util.*
 class AlarmRegisterViewModel(private val repository: AlarmRepository) : ViewModel() {
 
     private val day = arrayOf("일", "월", "화", "수", "목", "금", "토")
+    private var isDateAlarm = 0
 
-    private val _selectedDate = MutableLiveData(Calendar.getInstance().apply {
+    private val _selectedDate = MutableStateFlow(Calendar.getInstance().apply {
         set(Calendar.SECOND, 0)
     }.time)
+
+
+    init {
+        viewModelScope.launch {
+            _selectedDate.collect {
+                
+            }
+        }
+    }
 
     val selectedDate = Transformations.map(_selectedDate) {
         "${it.compareDate()}${it.dateToString("MM월 dd일 (E)")}"
@@ -127,11 +139,13 @@ class AlarmRegisterViewModel(private val repository: AlarmRepository) : ViewMode
                     time = _selectedDate.value!! // 값을 바로넣어주기떄문에 널일수가 없음!
                     set(Calendar.DAY_OF_WEEK, day)
                 }.time)
+                isDateAlarm++
             } else { // 존재한다면 삭제
                 dateList.remove(Calendar.getInstance().apply {
                     time = _selectedDate.value!! // 값을 바로넣어주기떄문에 널일수가 없음!
                     set(Calendar.DAY_OF_WEEK, day)
                 }.time)
+                isDateAlarm--
             }
 
             setLiveDataValue(_selectedDay, dateList)
@@ -141,6 +155,7 @@ class AlarmRegisterViewModel(private val repository: AlarmRepository) : ViewMode
                 time = _selectedDate.value!! // 값을 바로넣어주기떄문에 널일수가 없음!
                 set(Calendar.DAY_OF_WEEK, day)
             }.time)
+            isDateAlarm++
 
             setLiveDataValue(_selectedDay, dateList)
         }
@@ -151,7 +166,8 @@ class AlarmRegisterViewModel(private val repository: AlarmRepository) : ViewMode
             _selectedDay.value!!
         }.getOrDefault(mutableListOf(_selectedDate.value!!))
 
-        val alarm = Alarm(_alarmTitle, alarmDate, true)
+        val isSingle = isDateAlarm == 1
+        val alarm = Alarm(isSingle, _alarmTitle, alarmDate, true)
         insertAlarm(alarm)
 
         setLiveDataValue(_alarmStatus, AlarmStatus.REGISTER)
