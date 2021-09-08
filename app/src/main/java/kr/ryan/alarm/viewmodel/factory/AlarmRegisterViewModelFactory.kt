@@ -15,7 +15,7 @@ import kr.ryan.alarm.viewmodel.AlarmRegisterViewModel
 class AlarmRegisterViewModelFactory(private val repository: AlarmRepository) :
     ViewModelProvider.Factory {
 
-    override fun <T : ViewModel?> create(modelClass: Class<T>): T {
+    override fun <T : ViewModel> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(AlarmRegisterViewModel::class.java))
             return AlarmRegisterViewModel(repository) as T
         throw IllegalStateException("Unknown ViewModel Class")

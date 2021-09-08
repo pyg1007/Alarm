@@ -1,12 +1,12 @@
 package kr.ryan.alarm.viewmodel
 
+import android.util.Log
 import androidx.lifecycle.*
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import kr.ryan.alarm.data.Alarm
 import kr.ryan.alarm.data.AlarmStatus
 import kr.ryan.alarm.repository.AlarmRepository
@@ -26,18 +26,9 @@ class AlarmRegisterViewModel(private val repository: AlarmRepository) : ViewMode
     private val day = arrayOf("일", "월", "화", "수", "목", "금", "토")
     private var isDateAlarm = 0
 
-    private val _selectedDate = MutableStateFlow(Calendar.getInstance().apply {
+    private val _selectedDate = MutableLiveData(Calendar.getInstance().apply {
         set(Calendar.SECOND, 0)
     }.time)
-
-
-    init {
-        viewModelScope.launch {
-            _selectedDate.collect {
-                
-            }
-        }
-    }
 
     val selectedDate = Transformations.map(_selectedDate) {
         "${it.compareDate()}${it.dateToString("MM월 dd일 (E)")}"
@@ -49,7 +40,7 @@ class AlarmRegisterViewModel(private val repository: AlarmRepository) : ViewMode
 
     private var _alarmTitle = ""
 
-    fun changeAlarmTitle(value: String){
+    fun changeAlarmTitle(value: String) {
         _alarmTitle = value
     }
 
@@ -149,7 +140,7 @@ class AlarmRegisterViewModel(private val repository: AlarmRepository) : ViewMode
             }
 
             setLiveDataValue(_selectedDay, dateList)
-        } ?: run{ // 값이 비어있다면 아무것도 없는 경우기때문에 이쪽 구문을 타게됌
+        } ?: run { // 값이 비어있다면 아무것도 없는 경우기때문에 이쪽 구문을 타게됌
             val dateList = mutableListOf<Date>()
             dateList.add(Calendar.getInstance().apply {
                 time = _selectedDate.value!! // 값을 바로넣어주기떄문에 널일수가 없음!
@@ -161,7 +152,7 @@ class AlarmRegisterViewModel(private val repository: AlarmRepository) : ViewMode
         }
     }
 
-    fun registerAlarm() = viewModelScope.launch(Dispatchers.Default){
+    fun registerAlarm() = viewModelScope.launch(Dispatchers.Default) {
         val alarmDate = runCatching {
             _selectedDay.value!!
         }.getOrDefault(mutableListOf(_selectedDate.value!!))
@@ -173,7 +164,7 @@ class AlarmRegisterViewModel(private val repository: AlarmRepository) : ViewMode
         setLiveDataValue(_alarmStatus, AlarmStatus.REGISTER)
     }
 
-    fun cancelAlarm(){
+    fun cancelAlarm() {
         setLiveDataValue(_alarmStatus, AlarmStatus.CANCEL)
     }
 
@@ -185,8 +176,9 @@ class AlarmRegisterViewModel(private val repository: AlarmRepository) : ViewMode
         repository.insertAlarm(alarm)
     }
 
-    private fun <T> setLiveDataValue(liveData: MutableLiveData<T>, value: T) = viewModelScope.launch(Dispatchers.Main) {
-        liveData.value = value
-    }
+    private fun <T> setLiveDataValue(liveData: MutableLiveData<T>, value: T) =
+        viewModelScope.launch(Dispatchers.Main) {
+            liveData.value = value
+        }
 
 }

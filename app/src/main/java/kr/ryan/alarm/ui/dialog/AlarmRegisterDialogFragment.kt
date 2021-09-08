@@ -17,6 +17,9 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.whenCreated
 import androidx.lifecycle.whenResumed
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import kr.ryan.alarm.R
 import kr.ryan.alarm.application.AlarmApplication
@@ -27,6 +30,7 @@ import kr.ryan.alarm.utility.dateToString
 import kr.ryan.alarm.utility.dialogFragmentResize
 import kr.ryan.alarm.utility.showShortToast
 import kr.ryan.alarm.viewmodel.AlarmRegisterViewModel
+import kr.ryan.alarm.viewmodel.FlowViewModel
 import kr.ryan.alarm.viewmodel.factory.AlarmRegisterViewModelFactory
 import kr.ryan.baseui.BaseDialogFragment
 
@@ -45,6 +49,8 @@ class AlarmRegisterDialogFragment :
             (requireActivity().application as AlarmApplication).repository
         )
     }
+
+    private val flowViewModel by viewModels<FlowViewModel>()
 
     init {
 
@@ -74,6 +80,7 @@ class AlarmRegisterDialogFragment :
         observeAlarmStatus()
         checkDate()
         checkDay()
+        check()
     }
 
     private fun observeSelectDay() {
@@ -98,6 +105,12 @@ class AlarmRegisterDialogFragment :
 
                 alarmRegisterDialogViewModel.clearCalendarStatus()
             }
+        }
+    }
+
+    private fun check() = CoroutineScope(Dispatchers.Default).launch{
+        flowViewModel.showSelectDay.collect {
+            Log.e(TAG, it)
         }
     }
 
