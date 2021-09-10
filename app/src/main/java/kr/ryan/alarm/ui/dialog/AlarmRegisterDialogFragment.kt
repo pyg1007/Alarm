@@ -24,6 +24,7 @@ import kotlinx.coroutines.launch
 import kr.ryan.alarm.R
 import kr.ryan.alarm.application.AlarmApplication
 import kr.ryan.alarm.data.AlarmStatus
+import kr.ryan.alarm.data.UiStatus
 import kr.ryan.alarm.databinding.FragmentAlarmDialogBinding
 import kr.ryan.alarm.utility.createDraw
 import kr.ryan.alarm.utility.dateToString
@@ -81,6 +82,15 @@ class AlarmRegisterDialogFragment :
         checkDate()
         checkDay()
         check()
+    }
+
+    private fun observeUiStatus() = CoroutineScope(Dispatchers.Default).launch{
+        flowViewModel.clickedInsertAlarm.collect { status->
+            when(status){
+                is UiStatus.Loading -> {}
+                is UiStatus.Complete -> {}
+            }
+        }
     }
 
     private fun observeSelectDay() {
