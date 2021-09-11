@@ -2,6 +2,9 @@ package kr.ryan.alarm.utility
 
 import android.content.Context
 import android.widget.Toast
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 /**
  * Alarm
@@ -12,10 +15,10 @@ import android.widget.Toast
  */
 
 
-fun Context.showShortToast(message: String) {
+fun Context.showShortToast(message: String) = CoroutineScope(Dispatchers.Main).launch{
     Toast.makeText(applicationContext, message, Toast.LENGTH_SHORT).show()
 }
 
-fun Context.showLongToast(message: String) {
+fun Context.showLongToast(message: String) = CoroutineScope(Dispatchers.Main).launch{
     Toast.makeText(applicationContext, message, Toast.LENGTH_LONG).show()
 }

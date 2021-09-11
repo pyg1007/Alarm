@@ -9,6 +9,7 @@ package kr.ryan.alarm.data
  */
 sealed class UiStatus{
 
+    data class Init(val unit: Unit) : UiStatus()
     data class Loading(val unit: Unit) : UiStatus()
     data class Complete(val unit: Unit) : UiStatus()
 

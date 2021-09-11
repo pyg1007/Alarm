@@ -23,15 +23,12 @@ import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import kr.ryan.alarm.R
 import kr.ryan.alarm.application.AlarmApplication
-import kr.ryan.alarm.data.AlarmStatus
 import kr.ryan.alarm.data.UiStatus
 import kr.ryan.alarm.databinding.FragmentAlarmDialogBinding
 import kr.ryan.alarm.utility.createDraw
-import kr.ryan.alarm.utility.dateToString
 import kr.ryan.alarm.utility.dialogFragmentResize
 import kr.ryan.alarm.utility.showShortToast
 import kr.ryan.alarm.viewmodel.AlarmRegisterViewModel
-import kr.ryan.alarm.viewmodel.FlowViewModel
 import kr.ryan.alarm.viewmodel.factory.AlarmRegisterViewModelFactory
 import kr.ryan.baseui.BaseDialogFragment
 
@@ -50,8 +47,6 @@ class AlarmRegisterDialogFragment :
             (requireActivity().application as AlarmApplication).repository
         )
     }
-
-    private val flowViewModel by viewModels<FlowViewModel>()
 
     init {
 
@@ -76,25 +71,12 @@ class AlarmRegisterDialogFragment :
         super.onViewCreated(view, savedInstanceState)
         initBinding()
         observeSelectDay()
-        observeCalendarClicked()
         observeEditText()
-        observeAlarmStatus()
-        checkDate()
-        checkDay()
-        check()
+        observeUiStatus()
     }
 
-    private fun observeUiStatus() = CoroutineScope(Dispatchers.Default).launch{
-        flowViewModel.clickedInsertAlarm.collect { status->
-            when(status){
-                is UiStatus.Loading -> {}
-                is UiStatus.Complete -> {}
-            }
-        }
-    }
-
-    private fun observeSelectDay() {
-        alarmRegisterDialogViewModel.selectedDay.observe(viewLifecycleOwner) {
+    private fun observeSelectDay() = CoroutineScope(Dispatchers.Default).launch {
+        alarmRegisterDialogViewModel.createCircleDay.collect {
             clearView(binding.includeDays.rootViewGroup)
             if (!it.isNullOrEmpty()) {
                 it.forEach { day -> createCircle(day) }
@@ -102,25 +84,21 @@ class AlarmRegisterDialogFragment :
         }
     }
 
-    private fun observeCalendarClicked() {
-        alarmRegisterDialogViewModel.iconClickStatus.observe(viewLifecycleOwner) {
-            if (it) {
-
-                val dialog = CalendarDialogFragment()
-                CalendarDialogFragment.selectedDate = { date ->
-                    alarmRegisterDialogViewModel.changedTime(date)
+    private fun observeUiStatus() = CoroutineScope(Dispatchers.Default).launch {
+        alarmRegisterDialogViewModel.uiStatus.collect { status ->
+            when (status) {
+                is UiStatus.Init -> {
+                    Log.e(TAG, "init")
                 }
-                if (!dialog.isAdded)
-                    dialog.show(childFragmentManager, "Calendar")
-
-                alarmRegisterDialogViewModel.clearCalendarStatus()
+                is UiStatus.Loading -> {
+                    Log.e(TAG, "Loading")
+                }
+                is UiStatus.Complete -> {
+                    Log.e(TAG, "Complete")
+                    dismissDialogFragment()
+                    //alarmRegisterDialogViewModel.initUiStatus()
+                }
             }
-        }
-    }
-
-    private fun check() = CoroutineScope(Dispatchers.Default).launch{
-        flowViewModel.showSelectDay.collect {
-            Log.e(TAG, it)
         }
     }
 
@@ -150,8 +128,8 @@ class AlarmRegisterDialogFragment :
         isCancelable = false
     }
 
-    private fun observeEditText(){
-        binding.etAlarmName.addTextChangedListener(object : TextWatcher{
+    private fun observeEditText() {
+        binding.etAlarmName.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
 
             }
@@ -162,25 +140,12 @@ class AlarmRegisterDialogFragment :
 
             override fun afterTextChanged(s: Editable?) {
                 s?.let {
-                    alarmRegisterDialogViewModel.changeAlarmTitle(it.toString())
+                    alarmRegisterDialogViewModel.changeTitle(it.toString())
                 }
             }
 
         })
     }
-
-    private fun checkDate(){
-        alarmRegisterDialogViewModel.checkDate.observe(viewLifecycleOwner){
-            Log.e(TAG, "checkDate ${it.dateToString("yyyy MM dd HH:mm:ss")}")
-        }
-    }
-
-    private fun checkDay(){
-        alarmRegisterDialogViewModel.checkDay.observe(viewLifecycleOwner){
-            it.forEach {date -> Log.e(TAG, "checkDay ${date.dateToString("yyyy MM dd HH:mm:ss")}") }
-        }
-    }
-
 
     private fun createCircle(day: Int) {
         when (day) {
@@ -223,26 +188,6 @@ class AlarmRegisterDialogFragment :
                 }
                 is ConstraintLayout -> {
                     clearView(view)
-                }
-            }
-        }
-    }
-
-    private fun observeAlarmStatus(){
-        alarmRegisterDialogViewModel.alarmStatus.observe(viewLifecycleOwner){status->
-            status?.let {
-                when(it){
-                    AlarmStatus.INIT -> requireContext().showShortToast("init")
-                    AlarmStatus.REGISTER ->{
-                        requireContext().showShortToast("알람 추가 성공")
-                        dismissDialogFragment()
-                        alarmRegisterDialogViewModel.initAlarmStatus()
-                    }
-                    AlarmStatus.CANCEL -> {
-                        requireContext().showShortToast("알람 추가 취소")
-                        dismissDialogFragment()
-                        alarmRegisterDialogViewModel.initAlarmStatus()
-                    }
                 }
             }
         }

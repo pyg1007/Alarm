@@ -1,5 +1,6 @@
 package kr.ryan.alarm.viewmodel
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -32,12 +33,27 @@ class AlarmRegisterViewModel(private val repository: AlarmRepository) : ViewMode
     private val _title = MutableStateFlow("")
 
     private val _showSelectDay = MutableStateFlow("")
-    val showSelectDay = _showSelectDay.asStateFlow()
+    private val _createCircleDay = MutableStateFlow(listOf<Int>())
+    val createCircleDay = _createCircleDay.asStateFlow()
 
-    val clickedInsertAlarm = flow {
-        emit(UiStatus.Loading(Unit))
+    private val _uiStatus = MutableStateFlow<UiStatus>(UiStatus.Init(Unit))
+    val uiStatus = _uiStatus.asStateFlow()
+
+    fun onClickInsertAlarm() = viewModelScope.launch {
+        _uiStatus.emit(UiStatus.Loading(Unit))
+        Log.e("ViewModel", "${uiStatus.value}")
         insertAlarm()
-        emit(UiStatus.Complete(Unit))
+        Log.e("ViewModel", "Insert")
+        _uiStatus.emit(UiStatus.Complete(Unit))
+        Log.e("ViewModel", "${uiStatus.value}")
+    }
+
+    fun onClickCancelAlarm() = viewModelScope.launch {
+        _uiStatus.emit(UiStatus.Complete(Unit))
+    }
+
+    fun initUiStatus() = viewModelScope.launch {
+        _uiStatus.emit(UiStatus.Init(Unit))
     }
 
     init {
@@ -65,11 +81,14 @@ class AlarmRegisterViewModel(private val repository: AlarmRepository) : ViewMode
     private fun showingSelectedDay() = viewModelScope.launch {
 
         _selectedDay.collect {
-            _showSelectDay.emit(it.map { date ->
+            val dateToInt = it.map { date ->
                 Calendar.getInstance().apply {
                     time = date
                 }.get(Calendar.DAY_OF_WEEK) - 1
-            }.sorted().joinToString(", ") { date -> arrayDay[date - 1] })
+            }.sorted()
+
+            _createCircleDay.emit(dateToInt)
+            _showSelectDay.emit(dateToInt.joinToString(", ") { date -> arrayDay[date - 1] })
         }
 
     }
