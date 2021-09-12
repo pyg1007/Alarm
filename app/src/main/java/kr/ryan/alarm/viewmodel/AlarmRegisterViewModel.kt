@@ -6,11 +6,12 @@ import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.launch
 import kr.ryan.alarm.data.Alarm
 import kr.ryan.alarm.data.UiStatus
 import kr.ryan.alarm.repository.AlarmRepository
+import kr.ryan.alarm.utility.compareDate
+import kr.ryan.alarm.utility.dateToString
 import java.util.*
 
 /**
@@ -30,14 +31,23 @@ class AlarmRegisterViewModel(private val repository: AlarmRepository) : ViewMode
 
     private val _selectedDate = MutableStateFlow(Date())
 
+    private val _showSelectDate = MutableStateFlow("")
+    val showSelectedDate
+        get() = _showSelectDate.asStateFlow()
+
     private val _title = MutableStateFlow("")
 
     private val _showSelectDay = MutableStateFlow("")
+    val showSelectDay
+        get() = _showSelectDay.asStateFlow()
+
     private val _createCircleDay = MutableStateFlow(listOf<Int>())
-    val createCircleDay = _createCircleDay.asStateFlow()
+    val createCircleDay
+        get() = _createCircleDay.asStateFlow()
 
     private val _uiStatus = MutableStateFlow<UiStatus>(UiStatus.Init(Unit))
-    val uiStatus = _uiStatus.asStateFlow()
+    val uiStatus
+        get() = _uiStatus.asStateFlow()
 
     fun onClickInsertAlarm() = viewModelScope.launch {
         _uiStatus.emit(UiStatus.Loading(Unit))
@@ -52,13 +62,10 @@ class AlarmRegisterViewModel(private val repository: AlarmRepository) : ViewMode
         _uiStatus.emit(UiStatus.Complete(Unit))
     }
 
-    fun initUiStatus() = viewModelScope.launch {
-        _uiStatus.emit(UiStatus.Init(Unit))
-    }
-
     init {
 
         showingSelectedDay()
+        showingSelectedDate()
 
     }
 
@@ -74,6 +81,13 @@ class AlarmRegisterViewModel(private val repository: AlarmRepository) : ViewMode
         checkDuplicationDay(day)
     }
 
+    private fun showingSelectedDate() = viewModelScope.launch {
+        _selectedDate.collect {
+            "${it.compareDate()}${it.dateToString("MM월 dd일 (E)")}"
+        }
+
+    }
+
     private fun changeSelectedDate(date: Date) = viewModelScope.launch {
         _selectedDate.emit(date)
     }
@@ -84,7 +98,7 @@ class AlarmRegisterViewModel(private val repository: AlarmRepository) : ViewMode
             val dateToInt = it.map { date ->
                 Calendar.getInstance().apply {
                     time = date
-                }.get(Calendar.DAY_OF_WEEK) - 1
+                }.get(Calendar.DAY_OF_WEEK)
             }.sorted()
 
             _createCircleDay.emit(dateToInt)
@@ -107,7 +121,8 @@ class AlarmRegisterViewModel(private val repository: AlarmRepository) : ViewMode
                 _selectedDay.emit(dateList)
             } else {
 
-                val existDay = it.filter { date ->
+                dateList = it.toMutableList()
+                val existDay = dateList.filter { date ->
                     Calendar.getInstance().apply {
                         time = date
                     }.get(Calendar.DAY_OF_WEEK) == day
@@ -122,9 +137,9 @@ class AlarmRegisterViewModel(private val repository: AlarmRepository) : ViewMode
 
                     _selectedDay.emit(dateList)
                 } else { // 선택된 날짜가 있는경우 삭제
-                    dateList = it.toMutableList()
 
                     dateList.remove(Calendar.getInstance().apply {
+                        time = existDay[0]
                         set(Calendar.DAY_OF_WEEK, day)
                     }.time)
 
@@ -147,5 +162,4 @@ class AlarmRegisterViewModel(private val repository: AlarmRepository) : ViewMode
         repository.insertAlarm(alarm)
 
     }
-
 }

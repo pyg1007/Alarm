@@ -21,13 +21,13 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import kr.ryan.alarm.R
 import kr.ryan.alarm.application.AlarmApplication
 import kr.ryan.alarm.data.UiStatus
 import kr.ryan.alarm.databinding.FragmentAlarmDialogBinding
 import kr.ryan.alarm.utility.createDraw
 import kr.ryan.alarm.utility.dialogFragmentResize
-import kr.ryan.alarm.utility.showShortToast
 import kr.ryan.alarm.viewmodel.AlarmRegisterViewModel
 import kr.ryan.alarm.viewmodel.factory.AlarmRegisterViewModelFactory
 import kr.ryan.baseui.BaseDialogFragment
@@ -77,9 +77,11 @@ class AlarmRegisterDialogFragment :
 
     private fun observeSelectDay() = CoroutineScope(Dispatchers.Default).launch {
         alarmRegisterDialogViewModel.createCircleDay.collect {
-            clearView(binding.includeDays.rootViewGroup)
-            if (!it.isNullOrEmpty()) {
-                it.forEach { day -> createCircle(day) }
+            withContext(Dispatchers.Main) {
+                clearView(binding.includeDays.rootViewGroup)
+                if (!it.isNullOrEmpty()) {
+                    it.forEach { day -> createCircle(day) }
+                }
             }
         }
     }
@@ -147,7 +149,7 @@ class AlarmRegisterDialogFragment :
         })
     }
 
-    private fun createCircle(day: Int) {
+    private suspend fun createCircle(day: Int) {
         when (day) {
             1 -> {
                 binding.includeDays.tvSunday.background =
@@ -180,7 +182,7 @@ class AlarmRegisterDialogFragment :
         }
     }
 
-    private fun clearView(viewGroup: ViewGroup) {
+    private suspend fun clearView(viewGroup: ViewGroup) {
         for (i in 0 until viewGroup.childCount) {
             when (val view = viewGroup.getChildAt(i)) {
                 is TextView -> {
