@@ -1,6 +1,5 @@
 package kr.ryan.alarm.viewmodel
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -49,13 +48,14 @@ class AlarmRegisterViewModel(private val repository: AlarmRepository) : ViewMode
     val uiStatus
         get() = _uiStatus.asStateFlow()
 
+    private val _onClickCalendar = MutableStateFlow(false)
+    val onClickCalendar
+        get() = _onClickCalendar.asStateFlow()
+
     fun onClickInsertAlarm() = viewModelScope.launch {
         _uiStatus.emit(UiStatus.Loading(Unit))
-        Log.e("ViewModel", "${uiStatus.value}")
         insertAlarm()
-        Log.e("ViewModel", "Insert")
         _uiStatus.emit(UiStatus.Complete(Unit))
-        Log.e("ViewModel", "${uiStatus.value}")
     }
 
     fun onClickCancelAlarm() = viewModelScope.launch {
@@ -67,6 +67,14 @@ class AlarmRegisterViewModel(private val repository: AlarmRepository) : ViewMode
         showingSelectedDay()
         showingSelectedDate()
 
+    }
+
+    fun onClickCalendarEvent() = viewModelScope.launch {
+        _onClickCalendar.emit(true)
+    }
+
+    fun initCalendarEvent() = viewModelScope.launch {
+        _onClickCalendar.emit(false)
     }
 
     fun changeTitle(title: String) = viewModelScope.launch {
@@ -83,12 +91,12 @@ class AlarmRegisterViewModel(private val repository: AlarmRepository) : ViewMode
 
     private fun showingSelectedDate() = viewModelScope.launch {
         _selectedDate.collect {
-            "${it.compareDate()}${it.dateToString("MM월 dd일 (E)")}"
+            _showSelectDate.emit("${it.compareDate()}${it.dateToString("MM월 dd일 (E)")}")
         }
 
     }
 
-    private fun changeSelectedDate(date: Date) = viewModelScope.launch {
+    fun changeSelectedDate(date: Date) = viewModelScope.launch {
         _selectedDate.emit(date)
     }
 

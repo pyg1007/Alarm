@@ -73,6 +73,7 @@ class AlarmRegisterDialogFragment :
         observeSelectDay()
         observeEditText()
         observeUiStatus()
+        observeCalenderEvent()
     }
 
     private fun observeSelectDay() = CoroutineScope(Dispatchers.Default).launch {
@@ -84,6 +85,23 @@ class AlarmRegisterDialogFragment :
                 }
             }
         }
+    }
+
+    private fun observeCalenderEvent() = CoroutineScope(Dispatchers.Default).launch{
+
+        alarmRegisterDialogViewModel.onClickCalendar.collect {
+            if(it){
+
+                val dialogFragment = CalendarDialogFragment()
+                CalendarDialogFragment.setOnAddClickListener { date->
+                    alarmRegisterDialogViewModel.changeSelectedDate(date)
+                }
+                dialogFragment.show(parentFragmentManager, "Calendar")
+
+                alarmRegisterDialogViewModel.initCalendarEvent()
+            }
+        }
+
     }
 
     private fun observeUiStatus() = CoroutineScope(Dispatchers.Default).launch {

@@ -116,6 +116,10 @@ class CalendarDialogFragment :
 
         lateinit var selectedDate: (Date) -> Unit
 
+        fun setOnAddClickListener(listener: (Date) -> Unit){
+            selectedDate = listener
+        }
+
     }
 
 }
