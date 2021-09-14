@@ -1,6 +1,7 @@
 package kr.ryan.alarm.adapter.viewholder
 
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.RecyclerView
@@ -28,13 +29,13 @@ class MultiDayViewHolder private constructor(private val binding: RecyclerMultiD
 
         binding.root.setOnClickListener {
             itemClickEvent?.let {event->
-                event(alarm)
+                event(alarm, it)
             }
         }
 
         binding.root.setOnLongClickListener {
             itemLongClickEvent?.let {event->
-                event(alarm)
+                event(alarm, it)
                 true
             }
             false
@@ -44,10 +45,10 @@ class MultiDayViewHolder private constructor(private val binding: RecyclerMultiD
 
     companion object{
 
-        private var itemClickEvent: ((Alarm) -> Unit)? = null
-        private var itemLongClickEvent: ((Alarm) -> Unit)? = null
+        private var itemClickEvent: ((Alarm, View) -> Unit)? = null
+        private var itemLongClickEvent: ((Alarm, View) -> Unit)? = null
 
-        fun from(parent: ViewGroup, onItemClickEventListener: ((Alarm) -> Unit)?, onItemLongClickEventListener: ((Alarm) -> Unit)?): MultiDayViewHolder{
+        fun from(parent: ViewGroup, onItemClickEventListener: ((Alarm, View) -> Unit)?, onItemLongClickEventListener: ((Alarm, View) -> Unit)?): MultiDayViewHolder{
             itemClickEvent = onItemClickEventListener
             itemLongClickEvent = onItemLongClickEventListener
             return MultiDayViewHolder(DataBindingUtil.inflate(LayoutInflater.from(parent.context), R.layout.recycler_multi_day, parent, false))

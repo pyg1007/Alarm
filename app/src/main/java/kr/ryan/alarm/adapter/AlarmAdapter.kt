@@ -1,5 +1,6 @@
 package kr.ryan.alarm.adapter
 
+import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
@@ -20,13 +21,13 @@ const val SINGLE = 1
 
 class AlarmAdapter : ListAdapter<Alarm, RecyclerView.ViewHolder>(AlarmDiffUtil()) {
 
-    private var onItemClickEvent: ((Alarm) -> Unit)? = null
-    private var onItemLongClickEvent: ((Alarm) -> Unit)? = null
-    fun setOnItemClickEvent(listener: (Alarm) -> Unit) {
+    private var onItemClickEvent: ((Alarm, View) -> Unit)? = null
+    private var onItemLongClickEvent: ((Alarm, View) -> Unit)? = null
+    fun setOnItemClickEvent(listener: (Alarm, View) -> Unit) {
         onItemClickEvent = listener
     }
 
-    fun setOnItemLongClickEvent(listener: (Alarm) -> Unit){
+    fun setOnItemLongClickEvent(listener: (Alarm, View) -> Unit){
         onItemLongClickEvent = listener
     }
 

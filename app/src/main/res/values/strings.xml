@@ -14,4 +14,5 @@
     <string name="friday">금</string>
     <string name="saturday">토</string>
     <string name="alarm_name">알람 이름</string>
+    <string name="delete">삭제</string>
 </resources>

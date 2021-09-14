@@ -1,6 +1,8 @@
 package kr.ryan.alarm.ui.activity
 
 import android.util.Log
+import android.view.Gravity
+import android.widget.PopupMenu
 import androidx.activity.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.whenCreated
@@ -71,17 +73,26 @@ class MainActivity : BaseActivity<ActivityMainBinding>(R.layout.activity_main) {
     private fun recyclerViewItemClick() {
         if (!::alarmAdapter.isInitialized) return
 
-        alarmAdapter.setOnItemClickEvent {
+        alarmAdapter.setOnItemClickEvent {alarm, _->
             Log.e(TAG, "onClicked")
             //TODO To Edit Mode Alarm Screen
         }
     }
 
-    private fun recyclerViewItemLongClick(){
+    private fun recyclerViewItemLongClick() {
         if (!::alarmAdapter.isInitialized) return
 
-        alarmAdapter.setOnItemLongClickEvent {
-            alarmViewModel.deleteAlarm(it)
+        alarmAdapter.setOnItemLongClickEvent { alarm, view ->
+            val menu = PopupMenu(this@MainActivity, view, Gravity.END)
+            menuInflater.inflate(R.menu.popup_menu, menu.menu)
+            menu.setOnMenuItemClickListener {
+                if (it.itemId == R.id.popup_del){
+                    alarmViewModel.deleteAlarm(alarm)
+                }
+
+                false
+            }
+            menu.show()
         }
     }
 

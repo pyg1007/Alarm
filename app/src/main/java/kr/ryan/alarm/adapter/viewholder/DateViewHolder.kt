@@ -1,6 +1,7 @@
 package kr.ryan.alarm.adapter.viewholder
 
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.RecyclerView
@@ -36,14 +37,14 @@ class DateViewHolder private constructor(private val binding: RecyclerDateBindin
 
         binding.root.setOnClickListener {
             itemClickEvent?.let{event ->
-                event(alarm)
+                event(alarm, it)
             }
 
         }
 
         binding.root.setOnLongClickListener {
             itemLongClickEvent?.let { event->
-                event(alarm)
+                event(alarm, it)
                 true
             }
             false
@@ -54,10 +55,10 @@ class DateViewHolder private constructor(private val binding: RecyclerDateBindin
 
     companion object{
 
-        private var itemClickEvent: ((Alarm) -> Unit)? = null
-        private var itemLongClickEvent: ((Alarm) -> Unit)? = null
+        private var itemClickEvent: ((Alarm, View) -> Unit)? = null
+        private var itemLongClickEvent: ((Alarm, View) -> Unit)? = null
 
-        fun from(parent: ViewGroup, onItemClickEventListener: ((Alarm) -> Unit)?, onItemLongClickEventListener: ((Alarm) -> Unit)?) : DateViewHolder{
+        fun from(parent: ViewGroup, onItemClickEventListener: ((Alarm, View) -> Unit)?, onItemLongClickEventListener: ((Alarm, View) -> Unit)?) : DateViewHolder{
             itemClickEvent = onItemClickEventListener
             itemLongClickEvent = onItemLongClickEventListener
             return DateViewHolder(DataBindingUtil.inflate(LayoutInflater.from(parent.context), R.layout.recycler_date, parent, false))
