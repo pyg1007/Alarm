@@ -41,14 +41,25 @@ class DateViewHolder private constructor(private val binding: RecyclerDateBindin
 
         }
 
+        binding.root.setOnLongClickListener {
+            itemLongClickEvent?.let { event->
+                event(alarm)
+                true
+            }
+            false
+
+        }
+
     }
 
     companion object{
 
         private var itemClickEvent: ((Alarm) -> Unit)? = null
+        private var itemLongClickEvent: ((Alarm) -> Unit)? = null
 
-        fun from(parent: ViewGroup, onItemClickEventListener: ((Alarm) -> Unit)?) : DateViewHolder{
+        fun from(parent: ViewGroup, onItemClickEventListener: ((Alarm) -> Unit)?, onItemLongClickEventListener: ((Alarm) -> Unit)?) : DateViewHolder{
             itemClickEvent = onItemClickEventListener
+            itemLongClickEvent = onItemLongClickEventListener
             return DateViewHolder(DataBindingUtil.inflate(LayoutInflater.from(parent.context), R.layout.recycler_date, parent, false))
         }
     }

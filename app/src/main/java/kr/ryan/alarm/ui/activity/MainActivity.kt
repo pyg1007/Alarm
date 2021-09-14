@@ -33,6 +33,8 @@ class MainActivity : BaseActivity<ActivityMainBinding>(R.layout.activity_main) {
 
                 recyclerViewItemClick()
 
+                recyclerViewItemLongClick()
+
                 observeRecyclerViewData()
 
             }
@@ -75,10 +77,17 @@ class MainActivity : BaseActivity<ActivityMainBinding>(R.layout.activity_main) {
         }
     }
 
+    private fun recyclerViewItemLongClick(){
+        if (!::alarmAdapter.isInitialized) return
+
+        alarmAdapter.setOnItemLongClickEvent {
+            alarmViewModel.deleteAlarm(it)
+        }
+    }
+
     private fun observeRecyclerViewData() {
 
         alarmViewModel.alarmList.observe(this@MainActivity) {
-            Log.e(TAG, "RecyclerView Data -> $it")
             if (::alarmAdapter.isInitialized)
                 alarmAdapter.submitList(it.toMutableList())
         }

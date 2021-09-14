@@ -21,17 +21,22 @@ const val SINGLE = 1
 class AlarmAdapter : ListAdapter<Alarm, RecyclerView.ViewHolder>(AlarmDiffUtil()) {
 
     private var onItemClickEvent: ((Alarm) -> Unit)? = null
+    private var onItemLongClickEvent: ((Alarm) -> Unit)? = null
     fun setOnItemClickEvent(listener: (Alarm) -> Unit) {
         onItemClickEvent = listener
+    }
+
+    fun setOnItemLongClickEvent(listener: (Alarm) -> Unit){
+        onItemLongClickEvent = listener
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return when (viewType) {
             MULTIPLE -> {
-                MultiDayViewHolder.from(parent, onItemClickEvent)
+                MultiDayViewHolder.from(parent, onItemClickEvent, onItemLongClickEvent)
             }
             SINGLE -> {
-                DateViewHolder.from(parent, onItemClickEvent)
+                DateViewHolder.from(parent, onItemClickEvent, onItemLongClickEvent)
             }
             else -> throw IllegalStateException("unKnwon Type")
         }
