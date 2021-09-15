@@ -28,7 +28,7 @@ class DateViewHolder private constructor(private val binding: RecyclerDateBindin
         }
 
         binding.alarmTime.apply {
-            title = alarm.title ?: ""
+            title = alarm.title
             alarm.alarmTimeList[0].also {
                 meridiem = it.dateToString("a")
                 time = it.dateToString("hh:mm")

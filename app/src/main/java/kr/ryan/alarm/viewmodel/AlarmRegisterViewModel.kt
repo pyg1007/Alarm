@@ -58,6 +58,12 @@ class AlarmRegisterViewModel(private val repository: AlarmRepository) : ViewMode
         _uiStatus.emit(UiStatus.Complete(Unit))
     }
 
+    fun onClickUpdateAlarm() = viewModelScope.launch {
+        _uiStatus.emit(UiStatus.Loading(Unit))
+        updateAlarm()
+        _uiStatus.emit(UiStatus.Complete(Unit))
+    }
+
     fun onClickCancelAlarm() = viewModelScope.launch {
         _uiStatus.emit(UiStatus.Complete(Unit))
     }
@@ -94,6 +100,10 @@ class AlarmRegisterViewModel(private val repository: AlarmRepository) : ViewMode
             _showSelectDate.emit("${it.compareDate()}${it.dateToString("MM월 dd일 (E)")}")
         }
 
+    }
+
+    fun changeSelectedDay(day: List<Date>) = viewModelScope.launch{
+        _selectedDay.emit(day)
     }
 
     fun changeSelectedDate(date: Date) = viewModelScope.launch {
@@ -160,12 +170,19 @@ class AlarmRegisterViewModel(private val repository: AlarmRepository) : ViewMode
         }
     }
 
+    private suspend fun updateAlarm() = viewModelScope.launch {
+
+
+        //repository.updateAlarm()
+
+    }
+
     private suspend fun insertAlarm() = viewModelScope.launch {
 
         val date =
             if (_selectedDay.value.isNullOrEmpty()) listOf(_selectedDate.value) else _selectedDay.value
 
-        val alarm = Alarm(isDateAlarm == 0, _title.value, date, true)
+        val alarm = Alarm(0,isDateAlarm == 0, _title.value, date, true)
 
         repository.insertAlarm(alarm)
 

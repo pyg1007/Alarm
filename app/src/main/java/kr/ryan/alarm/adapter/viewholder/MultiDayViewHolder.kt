@@ -22,7 +22,7 @@ class MultiDayViewHolder private constructor(private val binding: RecyclerMultiD
     fun bind(alarm: Alarm){
 
         binding.alarmTime.apply {
-            title = alarm.title ?: ""
+            title = alarm.title
             meridiem = alarm.alarmTimeList[0].dateToString("a")
             time = alarm.alarmTimeList[0].dateToString("hh:mm")
         }

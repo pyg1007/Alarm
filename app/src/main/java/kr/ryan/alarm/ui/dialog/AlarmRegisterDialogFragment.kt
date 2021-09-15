@@ -24,6 +24,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import kr.ryan.alarm.R
 import kr.ryan.alarm.application.AlarmApplication
+import kr.ryan.alarm.data.Alarm
 import kr.ryan.alarm.data.UiStatus
 import kr.ryan.alarm.databinding.FragmentAlarmDialogBinding
 import kr.ryan.alarm.utility.createDraw
@@ -48,6 +49,8 @@ class AlarmRegisterDialogFragment :
         )
     }
 
+    private var editAlarm: Alarm? = null
+
     init {
 
         lifecycleScope.launch {
@@ -55,6 +58,7 @@ class AlarmRegisterDialogFragment :
             whenCreated {
 
                 initDialog()
+                getEditModeDate()
 
             }
 
@@ -70,10 +74,28 @@ class AlarmRegisterDialogFragment :
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         initBinding()
+        initEditMode()
         observeSelectDay()
         observeEditText()
         observeUiStatus()
         observeCalenderEvent()
+    }
+
+    private fun getEditModeDate(){
+        arguments?.let {
+            editAlarm = it.getParcelable("Alarm")
+        }
+    }
+
+    private fun initEditMode(){
+
+        editAlarm?.let {
+            alarmRegisterDialogViewModel.changeTitle(it.title)
+            if (!it.isSingleAlarm)
+                alarmRegisterDialogViewModel.changeSelectedDay(it.alarmTimeList)
+            alarmRegisterDialogViewModel.changeSelectedDate(it.alarmTimeList[0])
+        }
+
     }
 
     private fun observeSelectDay() = CoroutineScope(Dispatchers.Default).launch {
@@ -116,7 +138,6 @@ class AlarmRegisterDialogFragment :
                 is UiStatus.Complete -> {
                     Log.e(TAG, "Complete")
                     dismissDialogFragment()
-                    //alarmRegisterDialogViewModel.initUiStatus()
                 }
             }
         }
@@ -125,7 +146,6 @@ class AlarmRegisterDialogFragment :
     private fun initBinding() {
 
         binding.apply {
-            fragment = this@AlarmRegisterDialogFragment
             lifecycleOwner = viewLifecycleOwner
             viewModel = alarmRegisterDialogViewModel
             includeDays.viewModel = alarmRegisterDialogViewModel
@@ -167,7 +187,7 @@ class AlarmRegisterDialogFragment :
         })
     }
 
-    private suspend fun createCircle(day: Int) {
+    private fun createCircle(day: Int) {
         when (day) {
             1 -> {
                 binding.includeDays.tvSunday.background =
@@ -200,7 +220,7 @@ class AlarmRegisterDialogFragment :
         }
     }
 
-    private suspend fun clearView(viewGroup: ViewGroup) {
+    private fun clearView(viewGroup: ViewGroup) {
         for (i in 0 until viewGroup.childCount) {
             when (val view = viewGroup.getChildAt(i)) {
                 is TextView -> {

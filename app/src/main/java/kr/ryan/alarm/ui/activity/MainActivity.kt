@@ -1,5 +1,6 @@
 package kr.ryan.alarm.ui.activity
 
+import android.os.Bundle
 import android.util.Log
 import android.view.Gravity
 import android.widget.PopupMenu
@@ -75,7 +76,13 @@ class MainActivity : BaseActivity<ActivityMainBinding>(R.layout.activity_main) {
 
         alarmAdapter.setOnItemClickEvent {alarm, _->
             Log.e(TAG, "onClicked")
-            //TODO To Edit Mode Alarm Screen
+            val dialog = AlarmRegisterDialogFragment()
+            val bundle = Bundle().apply {
+                putParcelable("Alarm", alarm)
+            }
+            dialog.arguments = bundle
+            if (!dialog.isAdded)
+                dialog.show(supportFragmentManager, "AlarmAdd")
         }
     }
 

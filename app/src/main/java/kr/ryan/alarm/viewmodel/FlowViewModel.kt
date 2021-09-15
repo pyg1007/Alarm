@@ -120,7 +120,7 @@ class FlowViewModel(private val repository: AlarmRepository) : ViewModel() {
 
         val date = if (_selectedDay.value.isNullOrEmpty()) listOf(_selectedDate.value) else _selectedDay.value
 
-        val alarm = Alarm(isDateAlarm == 0, _title.value, date, true)
+        val alarm = Alarm(0, isDateAlarm == 0, _title.value, date, true)
 
         repository.insertAlarm(alarm)
 

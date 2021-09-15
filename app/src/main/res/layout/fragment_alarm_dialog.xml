@@ -6,10 +6,6 @@
     <data>
 
         <import type="android.text.TextUtils"/>
-        
-        <variable
-            name="fragment"
-            type="kr.ryan.alarm.ui.dialog.AlarmRegisterDialogFragment" />
 
         <variable
             name="viewModel"
