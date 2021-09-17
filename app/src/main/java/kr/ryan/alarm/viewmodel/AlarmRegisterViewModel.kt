@@ -1,5 +1,6 @@
 package kr.ryan.alarm.viewmodel
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -52,17 +53,16 @@ class AlarmRegisterViewModel(private val repository: AlarmRepository) : ViewMode
     val onClickCalendar
         get() = _onClickCalendar.asStateFlow()
 
-    fun onClickInsertAlarm() = viewModelScope.launch {
+    fun onClickAlarm(alarm: Alarm?) = viewModelScope.launch {
         _uiStatus.emit(UiStatus.Loading(Unit))
-        insertAlarm()
+        if (alarm == null)
+            insertAlarm()
+        else
+            updateAlarm(alarm)
         _uiStatus.emit(UiStatus.Complete(Unit))
     }
 
-    fun onClickUpdateAlarm() = viewModelScope.launch {
-        _uiStatus.emit(UiStatus.Loading(Unit))
-        updateAlarm()
-        _uiStatus.emit(UiStatus.Complete(Unit))
-    }
+
 
     fun onClickCancelAlarm() = viewModelScope.launch {
         _uiStatus.emit(UiStatus.Complete(Unit))
@@ -170,15 +170,15 @@ class AlarmRegisterViewModel(private val repository: AlarmRepository) : ViewMode
         }
     }
 
-    private suspend fun updateAlarm() = viewModelScope.launch {
+    private suspend fun updateAlarm(alarm: Alarm) = viewModelScope.launch {
 
-
-        //repository.updateAlarm()
+        repository.updateAlarm(alarm)
 
     }
 
     private suspend fun insertAlarm() = viewModelScope.launch {
 
+        Log.e("ViewModel", "insert")
         val date =
             if (_selectedDay.value.isNullOrEmpty()) listOf(_selectedDate.value) else _selectedDay.value
 

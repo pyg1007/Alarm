@@ -81,13 +81,13 @@ class AlarmRegisterDialogFragment :
         observeCalenderEvent()
     }
 
-    private fun getEditModeDate(){
+    private fun getEditModeDate() {
         arguments?.let {
             editAlarm = it.getParcelable("Alarm")
         }
     }
 
-    private fun initEditMode(){
+    private fun initEditMode() {
 
         editAlarm?.let {
             alarmRegisterDialogViewModel.changeTitle(it.title)
@@ -109,13 +109,13 @@ class AlarmRegisterDialogFragment :
         }
     }
 
-    private fun observeCalenderEvent() = CoroutineScope(Dispatchers.Default).launch{
+    private fun observeCalenderEvent() = CoroutineScope(Dispatchers.Default).launch {
 
         alarmRegisterDialogViewModel.onClickCalendar.collect {
-            if(it){
+            if (it) {
 
                 val dialogFragment = CalendarDialogFragment()
-                CalendarDialogFragment.setOnAddClickListener { date->
+                CalendarDialogFragment.setOnAddClickListener { date ->
                     alarmRegisterDialogViewModel.changeSelectedDate(date)
                 }
                 dialogFragment.show(parentFragmentManager, "Calendar")
@@ -146,6 +146,7 @@ class AlarmRegisterDialogFragment :
     private fun initBinding() {
 
         binding.apply {
+            alarm = editAlarm
             lifecycleOwner = viewLifecycleOwner
             viewModel = alarmRegisterDialogViewModel
             includeDays.viewModel = alarmRegisterDialogViewModel

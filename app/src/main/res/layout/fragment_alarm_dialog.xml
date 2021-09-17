@@ -8,6 +8,10 @@
         <import type="android.text.TextUtils"/>
 
         <variable
+            name="alarm"
+            type="kr.ryan.alarm.data.Alarm" />
+
+        <variable
             name="viewModel"
             type="kr.ryan.alarm.viewmodel.AlarmRegisterViewModel" />
 
@@ -122,8 +126,8 @@
             android:layout_height="0dp"
             android:background="@color/white"
             android:gravity="center"
-            android:onClick="@{() -> viewModel.onClickInsertAlarm()}"
-            android:text="@string/add"
+            android:onClick="@{() -> viewModel.onClickAlarm(alarm)}"
+            android:text="@{alarm == null ? @string/add : @string/edit}"
             android:textColor="@color/black"
             android:textSize="18dp"
             android:textStyle="bold"
