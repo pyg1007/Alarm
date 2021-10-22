@@ -87,6 +87,5 @@
             app:layout_constraintTop_toBottomOf="@id/alarm_setting"
             app:layout_constraintWidth_percent="0.85" />
 
-
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

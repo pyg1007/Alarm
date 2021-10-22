@@ -57,6 +57,12 @@ class MainActivity : BaseActivity<ActivityMainBinding>(R.layout.activity_main) {
 
     }
 
+    private fun initBottomNavi(){
+        binding.bottomNavi.setOnItemSelectedListener {
+            true
+        }
+    }
+
     fun showAlarmAddDialogFragment() {
 
         val dialog = AlarmRegisterDialogFragment()

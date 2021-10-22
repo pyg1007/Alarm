@@ -24,6 +24,7 @@ import java.util.*
 class AlarmRegisterViewModel(private val repository: AlarmRepository) : ViewModel() {
 
     private var isDateAlarm = 0
+    private var alarmIndex = 0
 
     private val arrayDay = arrayOf("일", "월", "화", "수", "목", "금", "토")
 
@@ -172,6 +173,12 @@ class AlarmRegisterViewModel(private val repository: AlarmRepository) : ViewMode
 
     private suspend fun updateAlarm(alarm: Alarm) = viewModelScope.launch {
 
+        alarm.also{
+            if (it.isSingleAlarm)
+                it.alarmTimeList = mutableListOf(_selectedDate.value)
+            else
+                it.alarmTimeList = _selectedDay.value
+        }
         repository.updateAlarm(alarm)
 
     }
@@ -182,7 +189,7 @@ class AlarmRegisterViewModel(private val repository: AlarmRepository) : ViewMode
         val date =
             if (_selectedDay.value.isNullOrEmpty()) listOf(_selectedDate.value) else _selectedDay.value
 
-        val alarm = Alarm(0,isDateAlarm == 0, _title.value, date, true)
+        val alarm = Alarm(alarmIndex,isDateAlarm == 0, _title.value, date, true)
 
         repository.insertAlarm(alarm)
 
