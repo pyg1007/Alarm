@@ -1,17 +1,11 @@
 package kr.ryan.weatheralarm.future.activity
 
-import androidx.appcompat.app.AppCompatActivity
-import android.os.Bundle
 import dagger.hilt.android.AndroidEntryPoint
+import kr.ryan.baseui.BaseActivity
 import kr.ryan.weatheralarm.R
+import kr.ryan.weatheralarm.databinding.ActivityMainBinding
 
 @AndroidEntryPoint
-class MainActivity : AppCompatActivity() {
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+class MainActivity : BaseActivity<ActivityMainBinding>(R.layout.activity_main) {
 
-
-
-    }
 }

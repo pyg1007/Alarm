@@ -8,3 +8,4 @@ dependencyResolutionManagement {
 }
 rootProject.name = "WeatherAlarm"
 include ':app'
+include ':BaseUi'
