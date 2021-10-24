@@ -24,5 +24,4 @@ data class Alarm(
     @PrimaryKey(autoGenerate = true)
     var index: Long = 0
 
-
 }
