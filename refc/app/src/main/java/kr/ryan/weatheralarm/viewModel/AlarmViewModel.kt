@@ -10,6 +10,7 @@ import kr.ryan.weatheralarm.repository.SelectRepository
 import kr.ryan.weatheralarm.usecase.AlarmDeleteUseCase
 import kr.ryan.weatheralarm.usecase.AlarmInsertUseCase
 import kr.ryan.weatheralarm.usecase.AlarmSelectUseCase
+import kr.ryan.weatheralarm.usecase.AlarmUpdateUseCase
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -24,7 +25,8 @@ import javax.inject.Inject
 class AlarmViewModel @Inject constructor(
     selectUseCase: AlarmSelectUseCase,
     insertUseCase: AlarmInsertUseCase,
-    deleteUseCase: AlarmDeleteUseCase
+    deleteUseCase: AlarmDeleteUseCase,
+    updateUseCase: AlarmUpdateUseCase
 ) : ViewModel() {
 
 

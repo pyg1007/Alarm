@@ -1,5 +1,8 @@
 package kr.ryan.weatheralarm.repository
 
+import androidx.annotation.WorkerThread
+import kotlinx.coroutines.flow.Flow
+import kr.ryan.weatheralarm.data.Alarm
 import kr.ryan.weatheralarm.room.AlarmDao
 import javax.inject.Inject
 
@@ -11,7 +14,8 @@ import javax.inject.Inject
  * Description:
  */
 class SelectRepository @Inject constructor(
-    alarmDao: AlarmDao
+    private val alarmDao: AlarmDao
 ) {
-
+    @WorkerThread
+    suspend fun provideAlarmList(): Flow<List<Alarm>> = alarmDao.getAllAlarm()
 }

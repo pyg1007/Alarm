@@ -1,5 +1,7 @@
 package kr.ryan.weatheralarm.usecase
 
+import kr.ryan.weatheralarm.data.Alarm
+import kr.ryan.weatheralarm.repository.InsertRepository
 import javax.inject.Inject
 
 /**
@@ -9,5 +11,10 @@ import javax.inject.Inject
  * Created On 2021-10-24.
  * Description:
  */
-class AlarmInsertUseCase @Inject constructor() {
+class AlarmInsertUseCase @Inject constructor(
+    private val insertRepository: InsertRepository
+) {
+
+    suspend fun insertAlarm(alarm:Alarm): Long = insertRepository.provideInsertAlarm(alarm)
+
 }

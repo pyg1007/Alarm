@@ -18,10 +18,10 @@ interface AlarmDao {
     suspend fun getAllAlarm(): Flow<List<Alarm>>
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
-    suspend fun insertAlarm(): Long
+    suspend fun insertAlarm(alarm: Alarm): Long
 
     @Delete
-    suspend fun deleteAlarm(): Long
+    suspend fun deleteAlarm(alarm: Alarm): Long
 
     @Update
     suspend fun updateAlarm(alarm: Alarm): Long

@@ -7,16 +7,16 @@ import javax.inject.Inject
 
 /**
  * WeatherAlarm
- * Class: InsertRepository
+ * Class: UpdateRepository
  * Created by pyg10.
  * Created On 2021-10-24.
  * Description:
  */
-class InsertRepository @Inject constructor(
+class UpdateRepository @Inject constructor(
     private val alarmDao: AlarmDao
 ) {
 
     @WorkerThread
-    suspend fun provideInsertAlarm(alarm: Alarm): Long = alarmDao.insertAlarm(alarm)
+    suspend fun provideUpdateAlarm(alarm: Alarm) : Long = alarmDao.updateAlarm(alarm)
 
 }

@@ -1,5 +1,7 @@
 package kr.ryan.weatheralarm.repository
 
+import androidx.annotation.WorkerThread
+import kr.ryan.weatheralarm.data.Alarm
 import kr.ryan.weatheralarm.room.AlarmDao
 import javax.inject.Inject
 
@@ -11,9 +13,10 @@ import javax.inject.Inject
  * Description:
  */
 class DeleteRepository @Inject constructor(
-    alarmDao: AlarmDao
+    private val alarmDao: AlarmDao
 ) {
 
-
+    @WorkerThread
+    suspend fun provideDeleteAlarm(alarm: Alarm): Long = alarmDao.deleteAlarm(alarm)
 
 }

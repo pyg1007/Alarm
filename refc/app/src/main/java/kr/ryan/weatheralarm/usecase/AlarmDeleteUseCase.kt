@@ -1,5 +1,7 @@
 package kr.ryan.weatheralarm.usecase
 
+import kr.ryan.weatheralarm.data.Alarm
+import kr.ryan.weatheralarm.repository.DeleteRepository
 import javax.inject.Inject
 
 /**
@@ -10,6 +12,9 @@ import javax.inject.Inject
  * Description:
  */
 class AlarmDeleteUseCase @Inject constructor(
-
+    private val deleteRepository: DeleteRepository
 ) {
+
+    suspend fun deleteAlarm(alarm: Alarm) : Long = deleteRepository.provideDeleteAlarm(alarm)
+
 }
