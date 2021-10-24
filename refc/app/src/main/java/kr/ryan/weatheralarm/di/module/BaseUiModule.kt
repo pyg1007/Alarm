@@ -1,4 +1,4 @@
-package kr.ryan.weatheralarm.di
+package kr.ryan.weatheralarm.di.module
 
 import android.app.Activity
 import androidx.databinding.ViewDataBinding
@@ -22,8 +22,8 @@ import javax.inject.Singleton
 //
 //    @Provides
 //    @Singleton
-//    fun provideBaseActivity(VDB: ViewDataBinding, activity: Activity) {
-//        check(activity as BaseActivity<VDB>())
+//    fun provideBaseActivity(VDB: ViewDataBinding, activity: Activity) : Int{
+//        return 1
 //    }
 //
 //}
