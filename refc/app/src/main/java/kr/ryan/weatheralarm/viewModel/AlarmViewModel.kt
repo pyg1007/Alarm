@@ -4,6 +4,12 @@ import androidx.lifecycle.ViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kr.ryan.weatheralarm.repository.DeleteRepository
+import kr.ryan.weatheralarm.repository.InsertRepository
+import kr.ryan.weatheralarm.repository.SelectRepository
+import kr.ryan.weatheralarm.usecase.AlarmDeleteUseCase
+import kr.ryan.weatheralarm.usecase.AlarmInsertUseCase
+import kr.ryan.weatheralarm.usecase.AlarmSelectUseCase
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -15,7 +21,11 @@ import javax.inject.Inject
  * Description:
  */
 @HiltViewModel
-class AlarmViewModel @Inject constructor() : ViewModel() {
+class AlarmViewModel @Inject constructor(
+    selectUseCase: AlarmSelectUseCase,
+    insertUseCase: AlarmInsertUseCase,
+    deleteUseCase: AlarmDeleteUseCase
+) : ViewModel() {
 
 
 }
