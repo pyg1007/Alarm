@@ -17,11 +17,15 @@ import java.util.*
 @Parcelize
 @Entity
 data class Alarm(
-    var time: Long?, var days: List<Date>?, var switch: Boolean
+    var title: String?, var time: Long?, var days: List<Date>?, var switch: Boolean?
 ) : Parcelable {
 
     @IgnoredOnParcel
     @PrimaryKey(autoGenerate = true)
     var index: Long = 0
+
+    companion object{
+        val EMPTY = Alarm(null, null, null, null)
+    }
 
 }
