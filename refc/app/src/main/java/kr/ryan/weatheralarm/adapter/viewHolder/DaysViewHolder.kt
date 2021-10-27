@@ -13,7 +13,7 @@ import kr.ryan.weatheralarm.databinding.RecyclerDaysBinding
  */
 class DaysViewHolder constructor(private val binding: RecyclerDaysBinding) : RecyclerView.ViewHolder(binding.root){
 
-    fun bind(){
+    fun bind(alarm: Alarm){
 
     }
 

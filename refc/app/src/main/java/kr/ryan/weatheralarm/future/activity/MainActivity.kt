@@ -9,6 +9,7 @@ import kr.ryan.weatheralarm.R
 import kr.ryan.weatheralarm.adapter.AlarmAdapter
 import kr.ryan.weatheralarm.databinding.ActivityMainBinding
 import kr.ryan.weatheralarm.viewModel.AlarmViewModel
+import timber.log.Timber
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -29,7 +30,7 @@ class MainActivity : BaseActivity<ActivityMainBinding>(R.layout.activity_main) {
             }
 
             whenCreated {
-
+                recyclerViewItemClick()
             }
 
             whenResumed {
@@ -43,6 +44,12 @@ class MainActivity : BaseActivity<ActivityMainBinding>(R.layout.activity_main) {
         }
 
 
+    }
+
+    private fun recyclerViewItemClick(){
+        alarmAdapter.setOnClickListener {
+            Timber.d("recyclerView Click")
+        }
     }
 
 }

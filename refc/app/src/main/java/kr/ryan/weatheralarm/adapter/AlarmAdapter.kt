@@ -44,7 +44,10 @@ class AlarmAdapter: ListAdapter<Alarm, RecyclerView.ViewHolder>(AlarmDiffUtil())
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-        TODO("Not yet implemented")
+        when(getItemViewType(position)){
+            DATE -> (holder as DateViewHolder).bind(getItem(position))
+            DAYS -> (holder as DaysViewHolder).bind(getItem(position))
+        }
     }
 
     override fun getItemViewType(position: Int): Int {

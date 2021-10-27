@@ -13,6 +13,10 @@ import kr.ryan.weatheralarm.databinding.RecyclerDateBinding
  */
 class DateViewHolder constructor(private val binding: RecyclerDateBinding) : RecyclerView.ViewHolder(binding.root) {
 
+    fun bind(alarm: Alarm){
+
+    }
+
     companion object{
 
         private lateinit var onItemClick: (Alarm) -> Unit
