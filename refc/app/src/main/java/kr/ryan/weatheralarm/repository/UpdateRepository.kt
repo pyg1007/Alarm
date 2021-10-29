@@ -17,6 +17,6 @@ class UpdateRepository @Inject constructor(
 ) {
 
     @WorkerThread
-    suspend fun provideUpdateAlarm(alarm: Alarm) : Long = alarmDao.updateAlarm(alarm)
+    suspend fun provideUpdateAlarm(alarm: Alarm) = alarmDao.updateAlarm(alarm)
 
 }

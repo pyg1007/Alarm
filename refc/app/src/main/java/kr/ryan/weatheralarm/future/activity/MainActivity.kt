@@ -21,6 +21,9 @@ class MainActivity : BaseActivity<ActivityMainBinding>(R.layout.activity_main) {
     @Inject
     lateinit var alarmAdapter: AlarmAdapter
 
+
+
+
     init {
 
         lifecycleScope.launch {

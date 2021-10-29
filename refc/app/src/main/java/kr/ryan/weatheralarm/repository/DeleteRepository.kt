@@ -17,6 +17,6 @@ class DeleteRepository @Inject constructor(
 ) {
 
     @WorkerThread
-    suspend fun provideDeleteAlarm(alarm: Alarm): Long = alarmDao.deleteAlarm(alarm)
+    suspend fun provideDeleteAlarm(alarm: Alarm) = alarmDao.deleteAlarm(alarm)
 
 }

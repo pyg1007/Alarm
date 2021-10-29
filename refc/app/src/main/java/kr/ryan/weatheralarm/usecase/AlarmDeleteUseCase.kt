@@ -15,6 +15,6 @@ class AlarmDeleteUseCase @Inject constructor(
     private val deleteRepository: DeleteRepository
 ) {
 
-    suspend fun deleteAlarm(alarm: Alarm) : Long = deleteRepository.provideDeleteAlarm(alarm)
+    suspend fun deleteAlarm(alarm: Alarm) = deleteRepository.provideDeleteAlarm(alarm)
 
 }

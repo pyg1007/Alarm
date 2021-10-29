@@ -15,15 +15,15 @@ import kr.ryan.weatheralarm.data.Alarm
 interface AlarmDao {
 
     @Query("Select * from Alarm")
-    suspend fun getAllAlarm(): Flow<List<Alarm>>
+    fun getAllAlarm(): Flow<List<Alarm>>
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insertAlarm(alarm: Alarm): Long
 
     @Delete
-    suspend fun deleteAlarm(alarm: Alarm): Long
+    suspend fun deleteAlarm(alarm: Alarm)
 
     @Update
-    suspend fun updateAlarm(alarm: Alarm): Long
+    suspend fun updateAlarm(alarm: Alarm)
 
 }

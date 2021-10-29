@@ -15,6 +15,6 @@ class AlarmUpdateUseCase @Inject constructor(
     private val updateRepository: UpdateRepository
 ) {
 
-    suspend fun updateAlarm(alarm: Alarm): Long = updateRepository.provideUpdateAlarm(alarm)
+    suspend fun updateAlarm(alarm: Alarm) = updateRepository.provideUpdateAlarm(alarm)
 
 }
