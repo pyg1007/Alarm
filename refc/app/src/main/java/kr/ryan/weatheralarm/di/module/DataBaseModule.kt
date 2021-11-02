@@ -2,6 +2,8 @@ package kr.ryan.weatheralarm.di.module
 
 import android.content.Context
 import androidx.room.Room
+import androidx.room.RoomDatabase
+import androidx.sqlite.db.SupportSQLiteDatabase
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -9,6 +11,7 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import kr.ryan.weatheralarm.room.AlarmDao
 import kr.ryan.weatheralarm.room.AlarmDatabase
+import java.util.concurrent.Executors
 import javax.inject.Singleton
 
 /**
@@ -25,7 +28,7 @@ object DataBaseModule {
     @Provides
     @Singleton
     fun provideDataBase(@ApplicationContext context: Context) : AlarmDatabase {
-        return Room.databaseBuilder(context, AlarmDatabase::class.java, "Alarm.db").build()
+        return AlarmDatabase.getInstance(context)
     }
 
     @Provides

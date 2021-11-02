@@ -3,10 +3,7 @@ package kr.ryan.weatheralarm.viewModel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import kr.ryan.weatheralarm.data.Alarm
 import kr.ryan.weatheralarm.repository.DeleteRepository
@@ -32,18 +29,17 @@ class AlarmViewModel @Inject constructor(
     private val deleteUseCase: AlarmDeleteUseCase
 ) : ViewModel() {
 
-    private val _alarmList = MutableStateFlow(listOf<Alarm>())
-    val alarmList = _alarmList.asStateFlow()
+    private val _alarmList = flow<List<Alarm>> {
+        selectUseCase.selectAlarm()
+    }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(), listOf())
+
+    val alarmList
+        get() = _alarmList
 
     init {
-        selectAlarm()
+        _alarmList
     }
 
-    private fun selectAlarm() = viewModelScope.launch {
-        selectUseCase.selectAlarm().collect {
-            _alarmList.emit(it)
-        }
-    }
 
     fun deleteAlarm(alarm: Alarm) = viewModelScope.launch{
         deleteUseCase.deleteAlarm(alarm)

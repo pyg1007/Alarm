@@ -18,7 +18,6 @@ class AlarmApplication : Application(){
     override fun onCreate() {
         super.onCreate()
 
-        if(BuildConfig.DEBUG)
-            Timber.plant(Timber.asTree())
+        Timber.plant(Timber.DebugTree())
     }
 }

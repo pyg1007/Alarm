@@ -3,6 +3,7 @@ package kr.ryan.weatheralarm.future.activity
 import androidx.activity.viewModels
 import androidx.lifecycle.*
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import kr.ryan.baseui.BaseActivity
 import kr.ryan.weatheralarm.R
@@ -22,8 +23,6 @@ class MainActivity : BaseActivity<ActivityMainBinding>(R.layout.activity_main) {
     lateinit var alarmAdapter: AlarmAdapter
 
 
-
-
     init {
 
         lifecycleScope.launch {
@@ -40,8 +39,8 @@ class MainActivity : BaseActivity<ActivityMainBinding>(R.layout.activity_main) {
 
             }
 
-            repeatOnLifecycle(Lifecycle.State.STARTED){
-
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                observeAlarmData()
             }
 
         }
@@ -49,9 +48,18 @@ class MainActivity : BaseActivity<ActivityMainBinding>(R.layout.activity_main) {
 
     }
 
-    private fun recyclerViewItemClick(){
+    private fun recyclerViewItemClick() {
         alarmAdapter.setOnClickListener {
             Timber.d("recyclerView Click")
+        }
+    }
+
+    private suspend fun observeAlarmData() {
+        alarmViewModel.alarmList.collect {
+
+            Timber.d("${it.size}")
+
+            alarmAdapter.submitList(it.toMutableList())
         }
     }
 
