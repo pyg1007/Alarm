@@ -27,33 +27,7 @@ abstract class AlarmDatabase : RoomDatabase() {
     companion object {
 
         fun getInstance(context: Context): AlarmDatabase =
-            Room.databaseBuilder(context, AlarmDatabase::class.java, "Alarm.db")
-                .addCallback(object : RoomDatabase.Callback() {
-                    override fun onCreate(db: SupportSQLiteDatabase) {
-                        super.onCreate(db)
-
-                        Executors.newSingleThreadExecutor().execute {
-                            runBlocking {
-
-                                Timber.d("Active")
-                                val calendar = Calendar.getInstance().apply {
-                                    set(Calendar.MONTH, 11)
-                                    set(Calendar.DAY_OF_MONTH, 9)
-                                }
-                                getInstance(context).alarmDao().insertAlarm(
-                                    Alarm(
-                                        0,
-                                        "알람 1",
-                                        calendar.timeInMillis,
-                                        listOf(calendar.time),
-                                        true
-                                    )
-                                )
-                            }
-                        }
-
-                    }
-                }).build()
+            Room.databaseBuilder(context, AlarmDatabase::class.java, "Alarm.db").build()
 
     }
 

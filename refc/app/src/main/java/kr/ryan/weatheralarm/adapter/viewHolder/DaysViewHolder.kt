@@ -14,7 +14,9 @@ import kr.ryan.weatheralarm.databinding.RecyclerDaysBinding
 class DaysViewHolder constructor(private val binding: RecyclerDaysBinding) : RecyclerView.ViewHolder(binding.root){
 
     fun bind(alarm: Alarm){
-
+        binding.root.setOnClickListener {
+            onItemClick(alarm)
+        }
     }
 
     companion object{

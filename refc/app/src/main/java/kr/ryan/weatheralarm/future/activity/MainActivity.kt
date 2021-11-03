@@ -32,6 +32,7 @@ class MainActivity : BaseActivity<ActivityMainBinding>(R.layout.activity_main) {
             }
 
             whenCreated {
+                initRecyclerView()
                 recyclerViewItemClick()
             }
 
@@ -46,6 +47,12 @@ class MainActivity : BaseActivity<ActivityMainBinding>(R.layout.activity_main) {
         }
 
 
+    }
+
+    private fun initRecyclerView(){
+        binding.recyclerAlarm.apply {
+            adapter = alarmAdapter
+        }
     }
 
     private fun recyclerViewItemClick() {

@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools">
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
+
         <variable
             name="viewModel"
             type="kr.ryan.weatheralarm.viewModel.AlarmViewModel" />
@@ -13,14 +13,16 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Hello World!"
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recycler_alarm"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:orientation="vertical"
+            dividerHeight="@{5f}"
+            dividerColor="@{@color/gray_400}"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintHeight_percent="0.6" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
