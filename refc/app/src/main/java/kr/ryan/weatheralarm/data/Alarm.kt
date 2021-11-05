@@ -18,5 +18,5 @@ import java.util.*
 @Entity
 data class Alarm(
     @PrimaryKey(autoGenerate = true)
-    var index: Long = 0, var title: String?, var time: Long, var days: List<Date>, var onOff: Boolean
+    var index: Long = 0, var title: String?, var days: List<Date>, var onOff: Boolean
 ) : Parcelable

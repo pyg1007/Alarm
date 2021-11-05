@@ -29,16 +29,7 @@ class AlarmEditViewModel @Inject constructor(
     val isEditMode = _isEditMode.asStateFlow()
 
     private val _alarm = MutableStateFlow<Alarm?>(null)
-
-    val alarmTitle = _alarm.transform<Alarm?, String> {
-        it?.title
-    }
-
-    val alarmTime = _alarm.transform<Alarm?, String> {
-        it?.time?.let {time ->
-            SimpleDateFormat("HH : mm", Locale.getDefault()).format(Date(time))
-        }
-    }
+    val alarm = _alarm.asStateFlow()
 
     fun changeAlarm(alarm: Alarm) = viewModelScope.launch {
         _alarm.emit(alarm)

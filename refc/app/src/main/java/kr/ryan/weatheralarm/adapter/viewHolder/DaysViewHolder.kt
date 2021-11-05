@@ -14,17 +14,30 @@ import kr.ryan.weatheralarm.databinding.RecyclerDaysBinding
 class DaysViewHolder constructor(private val binding: RecyclerDaysBinding) : RecyclerView.ViewHolder(binding.root){
 
     fun bind(alarm: Alarm){
+
+
+
+        binding.root.setOnLongClickListener {
+            onLongItemClick(adapterPosition, alarm)
+            true
+        }
+
         binding.root.setOnClickListener {
-            onItemClick(alarm)
+            onItemClick(adapterPosition, alarm)
         }
     }
 
     companion object{
 
-        private lateinit var onItemClick: (Alarm) -> Unit
+        private lateinit var onItemClick: (Int, Alarm) -> Unit
+        private lateinit var onLongItemClick: (Int, Alarm) -> Unit
 
-        fun setOnItemClick(itemClick: (Alarm) -> Unit){
+        fun setOnItemClick(itemClick: (Int, Alarm) -> Unit){
             onItemClick = itemClick
+        }
+
+        fun setOnLongItemClick(itemClick: (Int, Alarm) -> Unit){
+            onLongItemClick = itemClick
         }
 
     }

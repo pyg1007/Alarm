@@ -56,7 +56,6 @@ class AlarmViewModel @Inject constructor(
                     Alarm(
                         0,
                         "알람 1",
-                        calendar.timeInMillis,
                         listOf(calendar.time),
                         true
                     )

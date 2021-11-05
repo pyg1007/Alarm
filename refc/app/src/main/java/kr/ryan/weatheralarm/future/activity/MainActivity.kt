@@ -34,6 +34,7 @@ class MainActivity : BaseActivity<ActivityMainBinding>(R.layout.activity_main) {
             whenCreated {
                 initRecyclerView()
                 recyclerViewItemClick()
+                recyclerViewItemLongClick()
             }
 
             whenResumed {
@@ -55,9 +56,15 @@ class MainActivity : BaseActivity<ActivityMainBinding>(R.layout.activity_main) {
         }
     }
 
+    private fun recyclerViewItemLongClick() {
+        alarmAdapter.setOnLongClickListener { position, alarm ->
+            Timber.d("$position recyclerView Long Click")
+        }
+    }
+
     private fun recyclerViewItemClick() {
-        alarmAdapter.setOnClickListener {
-            Timber.d("recyclerView Click")
+        alarmAdapter.setOnClickListener {position, alarm ->
+            Timber.d("$position recyclerView Click")
         }
     }
 

@@ -23,20 +23,27 @@ const val DATE = 2
 
 class AlarmAdapter: ListAdapter<Alarm, RecyclerView.ViewHolder>(AlarmDiffUtil()) {
 
-    private lateinit var _onClickEvent: (Alarm) -> Unit
+    private lateinit var _onClickEvent: (Int, Alarm) -> Unit
+    private lateinit var _onLongClickEvent: (Int, Alarm) -> Unit
 
-    fun setOnClickListener(clickListener: (Alarm) -> Unit){
+    fun setOnClickListener(clickListener: (Int, Alarm) -> Unit){
         _onClickEvent = clickListener
+    }
+
+    fun setOnLongClickListener(longClickListener: (Int, Alarm) -> Unit){
+        _onLongClickEvent = longClickListener
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return when(viewType){
             DAYS -> {
                 DaysViewHolder.setOnItemClick(_onClickEvent)
+                DaysViewHolder.setOnLongItemClick(_onLongClickEvent)
                 DaysViewHolder(DataBindingUtil.inflate(LayoutInflater.from(parent.context), R.layout.recycler_days, parent, false))
             }
             DATE -> {
                 DateViewHolder.setOnItemClick(_onClickEvent)
+                DateViewHolder.setOnLongItemClick(_onLongClickEvent)
                 DateViewHolder(DataBindingUtil.inflate(LayoutInflater.from(parent.context), R.layout.recycler_date, parent, false))
             }
             else -> throw IllegalStateException("unKnown ViewHolder")
