@@ -1,6 +1,7 @@
 package kr.ryan.weatheralarm.adapter
 
 import android.widget.TextView
+import androidx.appcompat.widget.SwitchCompat
 import androidx.core.content.ContextCompat
 import androidx.databinding.BindingAdapter
 import kr.ryan.weatheralarm.R

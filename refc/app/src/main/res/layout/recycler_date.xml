@@ -11,29 +11,62 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="150dp"
-        android:background="@color/teal_200">
+        android:layout_height="150dp">
 
         <TextView
             android:id="@+id/tv_alarm_title"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:text="@{alarm.title}"
             android:gravity="center_vertical"
-            android:textStyle="bold"
+            android:text="@{alarm.title}"
             android:textSize="16sp"
+            android:textStyle="bold"
             app:layout_constraintHeight_percent="0.35"
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
             android:id="@+id/tv_meridiem"
+            Meridiem="@{alarm.days.get(0)}"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:gravity="bottom|start"
-            app:layout_constraintTop_toBottomOf="@id/tv_alarm_title"
+            android:gravity="bottom|center_horizontal"
             app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintHeight_percent="0.3"
             app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintWidth_percent="0.2"/>
+            app:layout_constraintTop_toBottomOf="@id/tv_alarm_title"
+            app:layout_constraintWidth_percent="0.15" />
+
+        <TextView
+            android:id="@+id/tv_time"
+            time="@{alarm.days.get(0)}"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:gravity="center_vertical"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toRightOf="@id/tv_meridiem"
+            app:layout_constraintTop_toBottomOf="@id/tv_alarm_title"
+            app:layout_constraintWidth_percent="0.25" />
+
+        <TextView
+            android:id="@+id/tv_date"
+            date="@{alarm.days.get(0)}"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:gravity="center_vertical"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toRightOf="@id/tv_time"
+            app:layout_constraintTop_toBottomOf="@id/tv_alarm_title"
+            app:layout_constraintWidth_percent="0.3" />
+
+        <androidx.appcompat.widget.SwitchCompat
+            android:id="@+id/switch_alarm_state"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:checked="@{alarm.onOff}"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toRightOf="@id/tv_date"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tv_alarm_title" />
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>
