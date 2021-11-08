@@ -19,19 +19,55 @@ object TimeAdapter {
 
     @JvmStatic
     @BindingAdapter("Meridiem")
-    fun TextView.convertTimeToMeridiem(date: Date) {
+    fun TextView.convertTimeToMeridiem(dayList: List<Date>) {
+        var date = Date()
+        if (dayList.size == 1) date = dayList.sorted()[0]
+        else {
+            val currentTime = Calendar.getInstance().time
+            dayList.sorted().forEach {
+                if (currentTime < it) {
+                    date = it
+                    return
+                }
+            }
+        }
+
         text = SimpleDateFormat("a", Locale.getDefault()).format(date)
     }
 
     @JvmStatic
     @BindingAdapter("time")
-    fun TextView.convertTime(date: Date) {
+    fun TextView.convertTime(dayList: List<Date>) {
+        var date = Date()
+        if (dayList.size == 1) date = dayList.sorted()[0]
+        else {
+            val currentTime = Calendar.getInstance().time
+            dayList.sorted().forEach {
+                if (currentTime < it) {
+                    date = it
+                    return
+                }
+            }
+        }
+
         text = SimpleDateFormat("hh : mm", Locale.getDefault()).format(date)
     }
 
     @JvmStatic
     @BindingAdapter("date")
-    fun TextView.convertDate(date: Date) {
+    fun TextView.convertDate(dayList: List<Date>) {
+        var date = Date()
+        if (dayList.size == 1) date = dayList.sorted()[0]
+        else {
+            val currentTime = Calendar.getInstance().time
+            dayList.sorted().forEach {
+                if (currentTime < it) {
+                    date = it
+                    return
+                }
+            }
+        }
+
         text = SimpleDateFormat("yyyy년 MM월 dd일 (E)", Locale.getDefault()).format(date)
     }
 

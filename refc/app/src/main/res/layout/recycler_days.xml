@@ -26,7 +26,7 @@
 
         <TextView
             android:id="@+id/tv_meridiem"
-            Meridiem="@{alarm.days.get(0)}"
+            Meridiem="@{alarm.days}"
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:gravity="bottom|center_horizontal"
@@ -38,7 +38,7 @@
 
         <TextView
             android:id="@+id/tv_time"
-            time="@{alarm.days.get(0)}"
+            time="@{alarm.days}"
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:gravity="center_vertical"
@@ -49,7 +49,7 @@
 
         <TextView
             android:id="@+id/tv_date"
-            date="@{alarm.days.get(0)}"
+            date="@{alarm.days}"
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:gravity="center_vertical"
