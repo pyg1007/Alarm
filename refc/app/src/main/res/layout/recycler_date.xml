@@ -6,7 +6,7 @@
 
         <variable
             name="alarm"
-            type="kr.ryan.weatheralarm.data.Alarm" />
+            type="kr.ryan.weatheralarm.data.AlarmStatus.DateAlarm" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -26,7 +26,7 @@
 
         <TextView
             android:id="@+id/tv_meridiem"
-            Meridiem="@{alarm.days}"
+            Meridiem="@{alarm}"
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:gravity="bottom|center_horizontal"
@@ -38,7 +38,7 @@
 
         <TextView
             android:id="@+id/tv_time"
-            time="@{alarm.days}"
+            time="@{alarm}"
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:gravity="center_vertical"
@@ -49,7 +49,7 @@
 
         <TextView
             android:id="@+id/tv_date"
-            date="@{alarm.days}"
+            date="@{alarm}"
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:gravity="center_vertical"
@@ -62,7 +62,7 @@
             android:id="@+id/switch_alarm_state"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:checked="@{alarm.onOff}"
+            android:checked="@{alarm.status}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toRightOf="@id/tv_date"
             app:layout_constraintRight_toRightOf="parent"

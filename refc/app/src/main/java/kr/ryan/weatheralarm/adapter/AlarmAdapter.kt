@@ -9,6 +9,8 @@ import kr.ryan.weatheralarm.R
 import kr.ryan.weatheralarm.adapter.viewHolder.DateViewHolder
 import kr.ryan.weatheralarm.adapter.viewHolder.DaysViewHolder
 import kr.ryan.weatheralarm.data.Alarm
+import kr.ryan.weatheralarm.data.AlarmStatus
+import kr.ryan.weatheralarm.data.convertAlarmStatus
 import kr.ryan.weatheralarm.util.AlarmDiffUtil
 
 /**
@@ -23,14 +25,14 @@ const val DATE = 2
 
 class AlarmAdapter: ListAdapter<Alarm, RecyclerView.ViewHolder>(AlarmDiffUtil()) {
 
-    private lateinit var _onClickEvent: (Int, Alarm) -> Unit
-    private lateinit var _onLongClickEvent: (Int, Alarm) -> Unit
+    private lateinit var _onClickEvent: (Int, AlarmStatus) -> Unit
+    private lateinit var _onLongClickEvent: (Int, AlarmStatus) -> Unit
 
-    fun setOnClickListener(clickListener: (Int, Alarm) -> Unit){
+    fun setOnClickListener(clickListener: (Int, AlarmStatus) -> Unit){
         _onClickEvent = clickListener
     }
 
-    fun setOnLongClickListener(longClickListener: (Int, Alarm) -> Unit){
+    fun setOnLongClickListener(longClickListener: (Int, AlarmStatus) -> Unit){
         _onLongClickEvent = longClickListener
     }
 
@@ -52,8 +54,8 @@ class AlarmAdapter: ListAdapter<Alarm, RecyclerView.ViewHolder>(AlarmDiffUtil())
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         when(getItemViewType(position)){
-            DATE -> (holder as DateViewHolder).bind(getItem(position))
-            DAYS -> (holder as DaysViewHolder).bind(getItem(position))
+            DATE -> (holder as DateViewHolder).bind(convertAlarmStatus(getItem(position)))
+            DAYS -> (holder as DaysViewHolder).bind(convertAlarmStatus(getItem(position)))
         }
     }
 

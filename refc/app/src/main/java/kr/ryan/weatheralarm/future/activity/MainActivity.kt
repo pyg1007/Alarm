@@ -8,10 +8,13 @@ import kotlinx.coroutines.launch
 import kr.ryan.baseui.BaseActivity
 import kr.ryan.weatheralarm.R
 import kr.ryan.weatheralarm.adapter.AlarmAdapter
+import kr.ryan.weatheralarm.data.Alarm
 import kr.ryan.weatheralarm.databinding.ActivityMainBinding
 import kr.ryan.weatheralarm.viewModel.AlarmViewModel
 import timber.log.Timber
 import javax.inject.Inject
+
+typealias AlarmListener = (Int, Alarm) -> Unit
 
 @AndroidEntryPoint
 class MainActivity : BaseActivity<ActivityMainBinding>(R.layout.activity_main) {
@@ -50,7 +53,7 @@ class MainActivity : BaseActivity<ActivityMainBinding>(R.layout.activity_main) {
 
     }
 
-    private fun initRecyclerView(){
+    private fun initRecyclerView() {
         binding.recyclerAlarm.apply {
             adapter = alarmAdapter
         }
@@ -63,7 +66,7 @@ class MainActivity : BaseActivity<ActivityMainBinding>(R.layout.activity_main) {
     }
 
     private fun recyclerViewItemClick() {
-        alarmAdapter.setOnClickListener {position, alarm ->
+        alarmAdapter.setOnClickListener { position, alarm ->
             Timber.d("$position recyclerView Click")
         }
     }

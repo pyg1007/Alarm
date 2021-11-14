@@ -2,6 +2,7 @@ package kr.ryan.weatheralarm.adapter.viewHolder
 
 import androidx.recyclerview.widget.RecyclerView
 import kr.ryan.weatheralarm.data.Alarm
+import kr.ryan.weatheralarm.data.AlarmStatus
 import kr.ryan.weatheralarm.databinding.RecyclerDateBinding
 
 /**
@@ -13,33 +14,33 @@ import kr.ryan.weatheralarm.databinding.RecyclerDateBinding
  */
 class DateViewHolder constructor(private val binding: RecyclerDateBinding) : RecyclerView.ViewHolder(binding.root) {
 
-    fun bind(alarm: Alarm){
-        initBinding(alarm)
+    fun bind(status: AlarmStatus){
+        initBinding(status)
 
         binding.root.setOnLongClickListener {
-            onLongItemClick(adapterPosition, alarm)
+            onLongItemClick(adapterPosition, status)
             true
         }
 
         binding.root.setOnClickListener {
-            onItemClick(adapterPosition, alarm)
+            onItemClick(adapterPosition, status)
         }
     }
 
-    private fun initBinding(alarm: Alarm){
-        binding.alarm = alarm
+    private fun initBinding(status: AlarmStatus){
+        binding.alarm = status as AlarmStatus.DateAlarm
     }
 
     companion object{
 
-        private lateinit var onItemClick: (Int, Alarm) -> Unit
-        private lateinit var onLongItemClick: (Int, Alarm) -> Unit
+        private lateinit var onItemClick: (Int, AlarmStatus) -> Unit
+        private lateinit var onLongItemClick: (Int, AlarmStatus) -> Unit
 
-        fun setOnItemClick(itemClick: (Int, Alarm) -> Unit){
+        fun setOnItemClick(itemClick: (Int, AlarmStatus) -> Unit){
             onItemClick = itemClick
         }
 
-        fun setOnLongItemClick(itemClick: (Int, Alarm) -> Unit){
+        fun setOnLongItemClick(itemClick: (Int, AlarmStatus) -> Unit){
             onLongItemClick = itemClick
         }
 
