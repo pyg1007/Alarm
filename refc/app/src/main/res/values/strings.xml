@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">WeatherAlarm</string>
+    <string name="add">add</string>
+    <string name="more">more</string>
 </resources>

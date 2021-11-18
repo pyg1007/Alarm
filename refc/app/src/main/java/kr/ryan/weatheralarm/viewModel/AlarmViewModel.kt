@@ -33,6 +33,14 @@ class AlarmViewModel @Inject constructor(
     val alarmList
         get() = _alarmList.asStateFlow()
 
+    private val _onClickAdd = MutableStateFlow(false)
+    val onClickAdd
+        get() = _onClickAdd.asStateFlow()
+
+    private val _onClickMore = MutableStateFlow(false)
+    val onClickMore
+        get() = _onClickMore.asStateFlow()
+
     init {
         observeAlarmList()
     }
@@ -43,27 +51,25 @@ class AlarmViewModel @Inject constructor(
         }
     }
 
-    private fun mockData() = viewModelScope.launch {
-
-        val calendar = Calendar.getInstance().apply {
-            set(Calendar.MONTH, 11)
-            set(Calendar.DAY_OF_MONTH, 9)
-        }
-
-        Timber.d(
-            "${
-                insertUseCase.insertAlarm(
-                    Alarm(
-                        0,
-                        "알람 1",
-                        listOf(calendar.time),
-                        true
-                    )
-                )
-            }"
-        )
+    fun activeAddBtn() = viewModelScope.launch {
+        Timber.d("add")
+        _onClickAdd.emit(true)
+        Timber.d("${onClickAdd.value}")
     }
 
+    fun activeMoreBtn() = viewModelScope.launch {
+        Timber.d("more")
+        _onClickMore.emit(true)
+        Timber.d("${onClickMore.value}")
+    }
+
+    fun initAddState() = viewModelScope.launch {
+        _onClickAdd.emit(false)
+    }
+
+    fun initMoreState() = viewModelScope.launch {
+        _onClickMore.emit(false)
+    }
 
     fun deleteAlarm(alarm: Alarm) = viewModelScope.launch {
         deleteUseCase.deleteAlarm(alarm)

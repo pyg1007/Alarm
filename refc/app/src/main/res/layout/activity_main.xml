@@ -13,13 +13,50 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
+        <TextView
+            android:id="@+id/tv_remain_time"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:gravity="center"
+            android:maxLines="1"
+            android:textSize="25sp"
+            android:textStyle="bold"
+            app:layout_constraintHeight_percent="0.25"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageView
+            android:id="@+id/iv_add"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:src="@drawable/ic_add"
+            android:onClick="@{() -> viewModel.activeAddBtn()}"
+            app:layout_constraintWidth_percent="0.15"
+            app:layout_constraintDimensionRatio="1"
+            app:layout_constraintRight_toLeftOf="@id/iv_more"
+            app:layout_constraintTop_toBottomOf="@id/tv_remain_time"
+            app:layout_constraintBottom_toTopOf="@id/recycler_alarm"
+            android:contentDescription="@string/add"/>
+
+        <ImageView
+            android:id="@+id/iv_more"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:src="@drawable/ic_more_vert"
+            android:onClick="@{() -> viewModel.activeMoreBtn()}"
+            app:layout_constraintWidth_percent="0.15"
+            app:layout_constraintDimensionRatio="1"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tv_remain_time"
+            app:layout_constraintBottom_toTopOf="@id/recycler_alarm"
+            android:contentDescription="@string/more"/>
+
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recycler_alarm"
+            dividerColor="@{@color/gray_400}"
+            dividerHeight="@{5f}"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:orientation="vertical"
-            dividerHeight="@{5f}"
-            dividerColor="@{@color/gray_400}"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintHeight_percent="0.6" />

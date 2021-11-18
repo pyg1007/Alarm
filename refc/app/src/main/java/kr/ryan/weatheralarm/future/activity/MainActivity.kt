@@ -3,8 +3,11 @@ package kr.ryan.weatheralarm.future.activity
 import androidx.activity.viewModels
 import androidx.lifecycle.*
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import kr.ryan.baseui.BaseActivity
 import kr.ryan.weatheralarm.R
 import kr.ryan.weatheralarm.adapter.AlarmAdapter
@@ -13,8 +16,6 @@ import kr.ryan.weatheralarm.databinding.ActivityMainBinding
 import kr.ryan.weatheralarm.viewModel.AlarmViewModel
 import timber.log.Timber
 import javax.inject.Inject
-
-typealias AlarmListener = (Int, Alarm) -> Unit
 
 @AndroidEntryPoint
 class MainActivity : BaseActivity<ActivityMainBinding>(R.layout.activity_main) {
@@ -35,6 +36,7 @@ class MainActivity : BaseActivity<ActivityMainBinding>(R.layout.activity_main) {
             }
 
             whenCreated {
+                initBinding()
                 initRecyclerView()
                 recyclerViewItemClick()
                 recyclerViewItemLongClick()
@@ -45,12 +47,30 @@ class MainActivity : BaseActivity<ActivityMainBinding>(R.layout.activity_main) {
             }
 
             repeatOnLifecycle(Lifecycle.State.STARTED) {
-                observeAlarmData()
+                launch {
+                    observeAlarmData()
+                }
+
+                launch {
+                    observeAddBtn()
+                }
+
+                launch {
+                    observeMoreBtn()
+                }
+
             }
 
         }
 
 
+    }
+
+    private fun initBinding(){
+        binding.apply {
+            viewModel = alarmViewModel
+            lifecycleOwner = this@MainActivity
+        }
     }
 
     private fun initRecyclerView() {
@@ -71,7 +91,29 @@ class MainActivity : BaseActivity<ActivityMainBinding>(R.layout.activity_main) {
         }
     }
 
-    private suspend fun observeAlarmData() {
+    private suspend fun observeAddBtn() {
+
+        alarmViewModel.onClickAdd.collect {
+            if (it){
+                Timber.d("OnClick Add")
+                alarmViewModel.initAddState()
+            }
+        }
+
+    }
+
+    private suspend fun observeMoreBtn() {
+
+        alarmViewModel.onClickMore.collect {
+            if (it){
+                Timber.d("OnClick More")
+                alarmViewModel.initMoreState()
+            }
+        }
+
+    }
+
+    private suspend fun observeAlarmData(){
         alarmViewModel.alarmList.collect {
 
             Timber.d("${it.size}")
