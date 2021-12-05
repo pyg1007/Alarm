@@ -1,5 +1,6 @@
 package kr.ryan.weatheralarm.adapter.viewHolder
 
+import android.view.View
 import androidx.recyclerview.widget.RecyclerView
 import kr.ryan.weatheralarm.data.Alarm
 import kr.ryan.weatheralarm.data.AlarmStatus
@@ -18,12 +19,12 @@ class DateViewHolder constructor(private val binding: RecyclerDateBinding) : Rec
         initBinding(status)
 
         binding.root.setOnLongClickListener {
-            onLongItemClick(adapterPosition, status)
+            onLongItemClick(it, adapterPosition, status)
             true
         }
 
         binding.root.setOnClickListener {
-            onItemClick(adapterPosition, status)
+            onItemClick(it, adapterPosition, status)
         }
     }
 
@@ -33,14 +34,14 @@ class DateViewHolder constructor(private val binding: RecyclerDateBinding) : Rec
 
     companion object{
 
-        private lateinit var onItemClick: (Int, AlarmStatus) -> Unit
-        private lateinit var onLongItemClick: (Int, AlarmStatus) -> Unit
+        private lateinit var onItemClick: (View, Int, AlarmStatus) -> Unit
+        private lateinit var onLongItemClick: (View, Int, AlarmStatus) -> Unit
 
-        fun setOnItemClick(itemClick: (Int, AlarmStatus) -> Unit){
+        fun setOnItemClick(itemClick: (View, Int, AlarmStatus) -> Unit){
             onItemClick = itemClick
         }
 
-        fun setOnLongItemClick(itemClick: (Int, AlarmStatus) -> Unit){
+        fun setOnLongItemClick(itemClick: (View, Int, AlarmStatus) -> Unit){
             onLongItemClick = itemClick
         }
 

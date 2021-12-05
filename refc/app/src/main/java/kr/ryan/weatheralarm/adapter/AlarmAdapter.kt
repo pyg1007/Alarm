@@ -1,6 +1,7 @@
 package kr.ryan.weatheralarm.adapter
 
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.ListAdapter
@@ -25,14 +26,14 @@ const val DATE = 2
 
 class AlarmAdapter: ListAdapter<Alarm, RecyclerView.ViewHolder>(AlarmDiffUtil()) {
 
-    private lateinit var _onClickEvent: (Int, AlarmStatus) -> Unit
-    private lateinit var _onLongClickEvent: (Int, AlarmStatus) -> Unit
+    private lateinit var _onClickEvent: (View, Int, AlarmStatus) -> Unit
+    private lateinit var _onLongClickEvent: (View, Int, AlarmStatus) -> Unit
 
-    fun setOnClickListener(clickListener: (Int, AlarmStatus) -> Unit){
+    fun setOnClickListener(clickListener: (View, Int, AlarmStatus) -> Unit){
         _onClickEvent = clickListener
     }
 
-    fun setOnLongClickListener(longClickListener: (Int, AlarmStatus) -> Unit){
+    fun setOnLongClickListener(longClickListener: (View, Int, AlarmStatus) -> Unit){
         _onLongClickEvent = longClickListener
     }
 
