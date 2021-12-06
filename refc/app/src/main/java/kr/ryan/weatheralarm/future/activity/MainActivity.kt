@@ -1,5 +1,6 @@
 package kr.ryan.weatheralarm.future.activity
 
+import android.view.Gravity
 import android.view.MenuItem
 import android.widget.PopupMenu
 import androidx.activity.viewModels
@@ -11,6 +12,7 @@ import kr.ryan.baseui.BaseActivity
 import kr.ryan.weatheralarm.R
 import kr.ryan.weatheralarm.adapter.AlarmAdapter
 import kr.ryan.weatheralarm.databinding.ActivityMainBinding
+import kr.ryan.weatheralarm.util.convertAlarm
 import kr.ryan.weatheralarm.viewModel.AlarmViewModel
 import timber.log.Timber
 import javax.inject.Inject
@@ -79,11 +81,11 @@ class MainActivity : BaseActivity<ActivityMainBinding>(R.layout.activity_main) {
 
     private fun recyclerViewItemLongClick() {
         alarmAdapter.setOnLongClickListener { view, position, alarm ->
-            val popup = PopupMenu(this@MainActivity, view)
+            val popup = PopupMenu(this@MainActivity, view, Gravity.END)
             menuInflater.inflate(R.menu.item_popup_alarm, popup.menu)
             popup.setOnMenuItemClickListener {
                 if (it.itemId == R.id.action_delete){
-                    Timber.d("$position delete")
+                    alarmViewModel.deleteAlarm(alarm.convertAlarm())
                 }
                 false
             }
