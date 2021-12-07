@@ -1,7 +1,5 @@
 package kr.ryan.weatheralarm.future.dialog
 
-import android.os.Bundle
-import android.view.View
 import androidx.fragment.app.viewModels
 import dagger.hilt.android.AndroidEntryPoint
 import kr.ryan.baseui.BaseDialogFragment
@@ -21,6 +19,7 @@ class AlarmDialogFragment : BaseDialogFragment<DialogAlarmBinding>(R.layout.dial
 
     private val alarmEditViewModel by viewModels<AlarmEditViewModel>()
 
+    init{
 
-
+    }
 }
