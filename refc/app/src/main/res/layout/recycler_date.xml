@@ -10,8 +10,10 @@
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:background="?attr/colorPrimaryVariant"
+        android:elevation="15dp"
         android:layout_width="match_parent"
-        android:layout_height="150dp">
+        android:layout_height="@dimen/item_alarm_height">
 
         <TextView
             android:id="@+id/tv_alarm_title"

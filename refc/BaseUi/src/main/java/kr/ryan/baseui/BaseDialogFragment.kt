@@ -20,7 +20,8 @@ import androidx.fragment.app.DialogFragment
 abstract class BaseDialogFragment<VDB: ViewDataBinding>(@LayoutRes private val layoutRes: Int) : DialogFragment(){
 
     private var _binding: VDB? = null
-    protected val binding = _binding!!
+    protected val binding: VDB
+        get() = _binding!!
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

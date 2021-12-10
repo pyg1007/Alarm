@@ -30,4 +30,6 @@ dependencies {
     implementation("androidx.room:room-ktx:$room_version")
 
     implementation "com.google.code.gson:gson:$gson_version"
+
+    implementation "androidx.window:window:$window_manager_version"
 }

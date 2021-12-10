@@ -20,6 +20,13 @@
             android:layout_height="0dp"
             app:layout_constraintHeight_percent="0.4"/>
 
+        <TextView
+            android:id="@+id/tv_selected_date"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            app:layout_constraintHeight_percent="0.1"
+            app:layout_constraintTop_toBottomOf="@id/date_picker"/>
+
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>
