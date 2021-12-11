@@ -1,10 +1,13 @@
 package kr.ryan.baseui
 
 import android.app.Dialog
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.WindowManager
 import androidx.annotation.LayoutRes
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
@@ -25,7 +28,20 @@ abstract class BaseDialogFragment<VDB: ViewDataBinding>(@LayoutRes private val l
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        isCancelable = false
+        //initDialog()
+        //isCancelable = false
+    }
+
+    private fun initDialog() {
+        val layoutParams = WindowManager.LayoutParams().apply {
+            flags = WindowManager.LayoutParams.FLAG_DIM_BEHIND // 뒤의 배경이 흐려지게 표시
+            dimAmount = 0.8f
+        }
+
+        dialog?.window?.apply {
+            attributes = layoutParams
+            setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT)) // 투명하게
+        }
     }
 
     override fun onCreateView(
