@@ -29,7 +29,8 @@ class MainActivity : BaseActivity<ActivityMainBinding>(R.layout.activity_main) {
     @Inject
     lateinit var alarmAdapter: AlarmAdapter
 
-    private lateinit var dialogFragment: AlarmDialogFragment
+    @Inject
+    lateinit var dialogFragment: AlarmDialogFragment
 
     init {
 
@@ -100,20 +101,27 @@ class MainActivity : BaseActivity<ActivityMainBinding>(R.layout.activity_main) {
     private fun recyclerViewItemClick() {
         alarmAdapter.setOnClickListener { _, position, alarm ->
             openAlarmDialog(alarm.convertAlarm())
-            Timber.d("$position recyclerView Click")
         }
     }
 
     private fun openAlarmDialog(alarm: Alarm?){
-        dialogFragment = AlarmDialogFragment()
+        //dialogFragment = AlarmDialogFragment()
         alarm?.let { data ->
             val bundle = Bundle().also {
                 it.putParcelable("alarm", data)
             }
             dialogFragment.arguments = bundle
         }
+        Timber.d("$dialogFragment")
+
+        if (dialogFragment.isAdded)
+            Timber.d("Dialog already add")
+
+        supportFragmentManager.findFragmentByTag("Alarm")?.let {
+            Timber.d("Dialog already")
+        }
+
         dialogFragment.show(supportFragmentManager, "Alarm")
-        //supportFragmentManager.executePendingTransactions()
     }
 
     private suspend fun observeAddBtn() {
@@ -131,7 +139,6 @@ class MainActivity : BaseActivity<ActivityMainBinding>(R.layout.activity_main) {
 
         alarmViewModel.onClickMore.collect {
             if (it) {
-                Timber.d("OnClick More")
                 alarmViewModel.initMoreState()
             }
         }
@@ -140,9 +147,6 @@ class MainActivity : BaseActivity<ActivityMainBinding>(R.layout.activity_main) {
 
     private suspend fun observeAlarmData() {
         alarmViewModel.alarmList.collect {
-
-            Timber.d("${it.size}")
-
             alarmAdapter.submitList(it.toMutableList())
         }
     }

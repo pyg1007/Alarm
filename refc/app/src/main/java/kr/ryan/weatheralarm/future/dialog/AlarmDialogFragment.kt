@@ -1,22 +1,22 @@
 package kr.ryan.weatheralarm.future.dialog
 
-import android.graphics.Color
-import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
+import android.view.LayoutInflater
 import android.view.View
-import android.view.WindowManager
+import android.view.ViewGroup
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.whenCreated
 import androidx.lifecycle.whenResumed
+import androidx.lifecycle.whenStarted
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import kr.ryan.baseui.BaseDialogFragment
 import kr.ryan.weatheralarm.R
-import kr.ryan.weatheralarm.data.Alarm
 import kr.ryan.weatheralarm.databinding.DialogAlarmBinding
 import kr.ryan.weatheralarm.util.dialogFragmentResize
 import kr.ryan.weatheralarm.viewModel.AlarmEditViewModel
+import timber.log.Timber
 
 /**
  * WeatherAlarm
@@ -25,34 +25,40 @@ import kr.ryan.weatheralarm.viewModel.AlarmEditViewModel
  * Created On 2021-11-18.
  * Description:
  */
+@AndroidEntryPoint
 class AlarmDialogFragment : BaseDialogFragment<DialogAlarmBinding>(R.layout.dialog_alarm) {
 
-    private val alarmEditViewModel by viewModels<AlarmEditViewModel>()
-    private var alarmData: Alarm? = null
+    private val viewModel by viewModels<AlarmEditViewModel>()
 
     init {
         lifecycleScope.launch {
             whenResumed {
-                requireActivity().dialogFragmentResize(this@AlarmDialogFragment, 0.8f, 0.8f)
+                Timber.d("init Resumed")
             }
-
+            whenStarted {
+                Timber.d("init started")
+            }
             whenCreated {
-                getAlarmData()
+                Timber.d("init Created")
             }
         }
+    }
+
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        viewLifecycleOwner.lifecycleScope.launch {
+            whenResumed {
+                Timber.d("when Resumed")
+                requireActivity().dialogFragmentResize(this@AlarmDialogFragment, 0.8f, 0.8f)
+            }
+        }
+        return super.onCreateView(inflater, container, savedInstanceState)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-    }
-
-    private fun getAlarmData() {
-        alarmData = arguments?.getParcelable("alarm")
-    }
-
-    private fun initViewModel() {
-        alarmData?.let {
-            it.title
-        }
     }
 }

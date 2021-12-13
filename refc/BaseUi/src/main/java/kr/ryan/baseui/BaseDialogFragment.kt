@@ -1,6 +1,5 @@
 package kr.ryan.baseui
 
-import android.app.Dialog
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
@@ -12,6 +11,7 @@ import androidx.annotation.LayoutRes
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
 import androidx.fragment.app.DialogFragment
+import timber.log.Timber
 
 /**
  * WeatherAlarm
@@ -20,7 +20,8 @@ import androidx.fragment.app.DialogFragment
  * Created On 2021-11-18.
  * Description:
  */
-abstract class BaseDialogFragment<VDB: ViewDataBinding>(@LayoutRes private val layoutRes: Int) : DialogFragment(){
+abstract class BaseDialogFragment<VDB : ViewDataBinding>(@LayoutRes private val layoutRes: Int) :
+    DialogFragment() {
 
     private var _binding: VDB? = null
     protected val binding: VDB
@@ -28,7 +29,7 @@ abstract class BaseDialogFragment<VDB: ViewDataBinding>(@LayoutRes private val l
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        //initDialog()
+        initDialog()
         //isCancelable = false
     }
 
@@ -50,11 +51,13 @@ abstract class BaseDialogFragment<VDB: ViewDataBinding>(@LayoutRes private val l
         savedInstanceState: Bundle?
     ): View? {
         _binding = DataBindingUtil.inflate(inflater, layoutRes, container, false)
+        Timber.d("onCreateView $_binding")
         return binding.root
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
-        binding.unbind()
+        _binding = null
+        Timber.d("onDestroyView $_binding")
     }
 }
