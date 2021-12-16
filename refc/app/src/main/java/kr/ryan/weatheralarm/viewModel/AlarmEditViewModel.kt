@@ -8,6 +8,7 @@ import kotlinx.coroutines.launch
 import kr.ryan.weatheralarm.data.Alarm
 import kr.ryan.weatheralarm.usecase.AlarmInsertUseCase
 import kr.ryan.weatheralarm.usecase.AlarmUpdateUseCase
+import timber.log.Timber
 import java.text.SimpleDateFormat
 import java.util.*
 import javax.inject.Inject
@@ -28,8 +29,30 @@ class AlarmEditViewModel @Inject constructor(
     private val _isEditMode = MutableStateFlow(false)
     val isEditMode = _isEditMode.asStateFlow()
 
+    private val _cancelEvent = MutableStateFlow(false)
+    val cancelEvent = _cancelEvent.asStateFlow()
+
+    private val _saveEvent = MutableStateFlow(false)
+    val saveEvent = _saveEvent.asStateFlow()
+
     private val _alarm = MutableStateFlow<Alarm?>(null)
     val alarm = _alarm.asStateFlow()
+
+    fun onClickCancelEvent() = viewModelScope.launch {
+        _cancelEvent.emit(true)
+    }
+
+    fun initCancelEvent() = viewModelScope.launch {
+        _cancelEvent.emit(false)
+    }
+
+    fun onClickSaveEvent() = viewModelScope.launch {
+        _saveEvent.emit(true)
+    }
+
+    fun initSaveEvent() = viewModelScope.launch {
+        _saveEvent.emit(false)
+    }
 
     fun changeAlarm(alarm: Alarm) = viewModelScope.launch {
         _alarm.emit(alarm)

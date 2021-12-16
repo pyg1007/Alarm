@@ -105,23 +105,25 @@ class MainActivity : BaseActivity<ActivityMainBinding>(R.layout.activity_main) {
     }
 
     private fun openAlarmDialog(alarm: Alarm?){
-        //dialogFragment = AlarmDialogFragment()
         alarm?.let { data ->
             val bundle = Bundle().also {
                 it.putParcelable("alarm", data)
             }
             dialogFragment.arguments = bundle
         }
-        Timber.d("$dialogFragment")
-
-        if (dialogFragment.isAdded)
-            Timber.d("Dialog already add")
-
-        supportFragmentManager.findFragmentByTag("Alarm")?.let {
-            Timber.d("Dialog already")
-        }
 
         dialogFragment.show(supportFragmentManager, "Alarm")
+        responseAlarmDialog()
+    }
+
+    private fun responseAlarmDialog(){
+        AlarmDialogFragment.setOnCancelEvent {
+            Timber.d("Cancel")
+        }
+
+        AlarmDialogFragment.setOnSaveEvent {
+            Timber.d("Save")
+        }
     }
 
     private suspend fun observeAddBtn() {
