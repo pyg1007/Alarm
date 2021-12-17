@@ -29,8 +29,7 @@ class MainActivity : BaseActivity<ActivityMainBinding>(R.layout.activity_main) {
     @Inject
     lateinit var alarmAdapter: AlarmAdapter
 
-    @Inject
-    lateinit var dialogFragment: AlarmDialogFragment
+    private var dialogFragment: AlarmDialogFragment? = null
 
     init {
 
@@ -105,14 +104,15 @@ class MainActivity : BaseActivity<ActivityMainBinding>(R.layout.activity_main) {
     }
 
     private fun openAlarmDialog(alarm: Alarm?){
+        dialogFragment = AlarmDialogFragment()
         alarm?.let { data ->
             val bundle = Bundle().also {
                 it.putParcelable("alarm", data)
             }
-            dialogFragment.arguments = bundle
+            dialogFragment?.arguments = bundle
         }
 
-        dialogFragment.show(supportFragmentManager, "Alarm")
+        dialogFragment?.show(supportFragmentManager, "Alarm")
         responseAlarmDialog()
     }
 

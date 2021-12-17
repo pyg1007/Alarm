@@ -53,7 +53,7 @@ class AlarmDialogFragment : BaseDialogFragment<DialogAlarmBinding>(R.layout.dial
                 requireActivity().dialogFragmentResize(this@AlarmDialogFragment, 0.8f, 0.8f)
             }
 
-            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED){
+            lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED){
                 launch {
                     onClickCancelBtn()
                 }
