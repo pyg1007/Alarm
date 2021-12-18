@@ -3,6 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
+
         <variable
             name="viewModel"
             type="kr.ryan.weatheralarm.viewModel.AlarmEditViewModel" />
@@ -17,48 +18,67 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:timePickerMode="spinner"
-            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintHeight_percent="0.35"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintHeight_percent="0.4"
-            />
+            app:layout_constraintTop_toTopOf="parent" />
 
         <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            app:layout_constraintHeight_percent="0.5"
-            app:layout_constraintBottom_toTopOf="@id/btn_cancel">
+            app:layout_constraintBottom_toTopOf="@id/btn_cancel"
+            app:layout_constraintHeight_percent="0.55">
 
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <TextView
+                    android:id="@+id/tv_selected_date"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:gravity="center_vertical"
+                    app:layout_constraintHeight_percent="0.15"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <include
+                    android:id="@+id/include_day"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    layout="@layout/include_days"
+                    app:layout_constraintHeight_percent="0.15"
+                    app:layout_constraintTop_toBottomOf="@id/tv_selected_date"
+                    />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
         </androidx.cardview.widget.CardView>
 
         <Button
             android:id="@+id/btn_cancel"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:text="@string/cancel"
             android:background="@color/cyan_200"
-            app:backgroundTint="@null"
             android:onClick="@{() -> viewModel.onClickCancelEvent()}"
-            app:layout_constraintHeight_percent="0.1"
-            app:layout_constraintWidth_percent="0.5"
+            android:text="@string/cancel"
+            app:backgroundTint="@null"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintLeft_toLeftOf="parent"/>
+            app:layout_constraintHeight_percent="0.1"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintWidth_percent="0.5" />
 
         <Button
             android:id="@+id/btn_save"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:text="@string/save"
-            android:gravity="center"
             android:background="@color/cyan_200"
-            app:backgroundTint="@null"
+            android:gravity="center"
             android:onClick="@{() -> viewModel.onClickSaveEvent()}"
-            app:layout_constraintHeight_percent="0.1"
-            app:layout_constraintWidth_percent="0.5"
+            android:text="@string/save"
+            app:backgroundTint="@null"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintRight_toRightOf="parent"/>
-
-
+            app:layout_constraintHeight_percent="0.1"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintWidth_percent="0.5" />
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>
