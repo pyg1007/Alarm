@@ -60,16 +60,4 @@ object TimeAdapter {
         }
     }
 
-    @JvmStatic
-    @BindingAdapter(value = ["day", "dayList"], requireAll = true)
-    fun TextView.drawCircle(day: Int, dayList: List<Date>) {
-        dayList.find { Calendar.getInstance().apply { time = it }.get(Calendar.DAY_OF_WEEK) == day }
-            ?.let {
-                background =
-                    ContextCompat.getDrawable(rootView.context, R.drawable.ic_launcher_background)
-            } ?: run {
-            background = null
-        }
-    }
-
 }

@@ -61,6 +61,10 @@ class AlarmDialogFragment : BaseDialogFragment<DialogAlarmBinding>(R.layout.dial
                 launch {
                     onClickSaveBtn()
                 }
+
+                launch {
+                    observeStatus()
+                }
             }
         }
         return super.onCreateView(inflater, container, savedInstanceState)
@@ -75,6 +79,17 @@ class AlarmDialogFragment : BaseDialogFragment<DialogAlarmBinding>(R.layout.dial
         binding.apply {
             lifecycleOwner = viewLifecycleOwner
             viewModel = this@AlarmDialogFragment.viewModel
+
+            includeDay.apply {
+                viewModel = this@AlarmDialogFragment.viewModel
+                lifecycleOwner = viewLifecycleOwner
+            }
+        }
+    }
+
+    private suspend fun observeStatus() {
+        viewModel.dayStatus.collect {
+            Timber.d("$it")
         }
     }
 

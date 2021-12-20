@@ -9,7 +9,6 @@ import kr.ryan.weatheralarm.data.Alarm
 import kr.ryan.weatheralarm.usecase.AlarmInsertUseCase
 import kr.ryan.weatheralarm.usecase.AlarmUpdateUseCase
 import timber.log.Timber
-import java.text.SimpleDateFormat
 import java.util.*
 import javax.inject.Inject
 
@@ -24,7 +23,12 @@ import javax.inject.Inject
 class AlarmEditViewModel @Inject constructor(
     private val insertUseCase: AlarmInsertUseCase,
     private val updateUseCase: AlarmUpdateUseCase
-) : ViewModel(){
+) : ViewModel() {
+
+    private var selectedDaysStatus = mutableListOf(false, false, false, false, false, false, false)
+
+    private val _dayStatus = MutableStateFlow(selectedDaysStatus)
+    val dayStatus = _dayStatus.asStateFlow()
 
     private val _isEditMode = MutableStateFlow(false)
     val isEditMode = _isEditMode.asStateFlow()
@@ -37,6 +41,25 @@ class AlarmEditViewModel @Inject constructor(
 
     private val _alarm = MutableStateFlow<Alarm?>(null)
     val alarm = _alarm.asStateFlow()
+
+    val title = _alarm.map {
+        it?.title
+    }
+
+    val date = _alarm.map {
+        it?.days
+    }
+
+    fun changeSelectedDaysStatus(index: Int) = viewModelScope.launch {
+        val changeDayStatus = selectedDaysStatus.toMutableList()
+        changeDayStatus[index] = !changeDayStatus[index]
+        selectedDaysStatus = changeDayStatus
+        _dayStatus.emit(changeDayStatus)
+    }
+
+    fun initAlarm(alarm: Alarm) = viewModelScope.launch {
+        _alarm.emit(alarm)
+    }
 
     fun onClickCancelEvent() = viewModelScope.launch {
         _cancelEvent.emit(true)
