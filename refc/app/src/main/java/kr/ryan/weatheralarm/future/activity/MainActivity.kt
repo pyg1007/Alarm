@@ -6,6 +6,7 @@ import android.view.MenuItem
 import android.widget.PopupMenu
 import androidx.activity.viewModels
 import androidx.lifecycle.*
+import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
@@ -118,11 +119,17 @@ class MainActivity : BaseActivity<ActivityMainBinding>(R.layout.activity_main) {
 
     private fun responseAlarmDialog(){
         AlarmDialogFragment.setOnCancelEvent {
-            Timber.d("Cancel")
+            val snackBar = Snackbar.make(binding.constRoot, "취소하셨습니다.", Snackbar.LENGTH_SHORT)
+            Timber.d("${snackBar.isShown}")
+            if (snackBar.isShown) return@setOnCancelEvent
+            else snackBar.show()
         }
 
         AlarmDialogFragment.setOnSaveEvent {
-            Timber.d("Save")
+            val snackBar = Snackbar.make(binding.constRoot, "새로운 알람이 등록되었습니다.", Snackbar.LENGTH_SHORT)
+            Timber.d("${snackBar.isShown}")
+            if (snackBar.isShown) return@setOnSaveEvent
+            else snackBar.show()
         }
     }
 

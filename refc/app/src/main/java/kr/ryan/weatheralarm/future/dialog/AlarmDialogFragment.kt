@@ -29,16 +29,18 @@ class AlarmDialogFragment : BaseDialogFragment<DialogAlarmBinding>(R.layout.dial
 
     private val viewModel by viewModels<AlarmEditViewModel>()
 
+    private var alarm: Alarm? = null
+
     companion object{
 
         private lateinit var cancelEvent: () -> Unit
-        private lateinit var saveEvent: (Alarm) -> Unit
+        private lateinit var saveEvent: () -> Unit
 
         fun setOnCancelEvent(onClick : () -> Unit){
             cancelEvent = onClick
         }
 
-        fun setOnSaveEvent(onClick: (Alarm) -> Unit){
+        fun setOnSaveEvent(onClick: () -> Unit){
             saveEvent = onClick
         }
     }
@@ -51,6 +53,10 @@ class AlarmDialogFragment : BaseDialogFragment<DialogAlarmBinding>(R.layout.dial
         viewLifecycleOwner.lifecycleScope.launch {
             whenResumed {
                 requireActivity().dialogFragmentResize(this@AlarmDialogFragment, 0.8f, 0.8f)
+            }
+
+            whenCreated {
+                initAlarm()
             }
 
             lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED){
@@ -73,6 +79,14 @@ class AlarmDialogFragment : BaseDialogFragment<DialogAlarmBinding>(R.layout.dial
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         initBinding()
+        initViewModel()
+        changeTimePicker()
+    }
+
+    private fun initAlarm(){
+        arguments?.let {
+            alarm = it.getParcelable("Alarm")
+        }
     }
 
     private fun initBinding(){
@@ -87,6 +101,18 @@ class AlarmDialogFragment : BaseDialogFragment<DialogAlarmBinding>(R.layout.dial
         }
     }
 
+    private fun initViewModel(){
+        alarm?.let {
+            viewModel.insertAlarm(it)
+        }
+    }
+
+    private fun changeTimePicker(){
+        binding.timePick.setOnTimeChangedListener { timePicker, hour, min ->
+
+        }
+    }
+
     private suspend fun observeStatus() {
         viewModel.dayStatus.collect {
             Timber.d("$it")
@@ -96,7 +122,7 @@ class AlarmDialogFragment : BaseDialogFragment<DialogAlarmBinding>(R.layout.dial
     private suspend fun onClickCancelBtn() {
         viewModel.cancelEvent.collect {
             if (it){
-                cancelEvent
+                cancelEvent()
                 viewModel.initCancelEvent()
                 dismiss()
             }
@@ -106,7 +132,10 @@ class AlarmDialogFragment : BaseDialogFragment<DialogAlarmBinding>(R.layout.dial
     private suspend fun onClickSaveBtn() {
         viewModel.saveEvent.collect {
             if (it){
-                Timber.d("save")
+                alarm?.let{ alarm ->
+                    viewModel.insertAlarm(alarm)
+                }
+                saveEvent()
                 viewModel.initSaveEvent()
                 dismiss()
             }

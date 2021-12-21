@@ -3,13 +3,15 @@ package kr.ryan.weatheralarm.viewModel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import kr.ryan.weatheralarm.data.Alarm
 import kr.ryan.weatheralarm.usecase.AlarmInsertUseCase
 import kr.ryan.weatheralarm.usecase.AlarmUpdateUseCase
-import timber.log.Timber
-import java.util.*
+import kr.ryan.weatheralarm.util.convertDateString
+import kr.ryan.weatheralarm.util.convertDayString
 import javax.inject.Inject
 
 /**
@@ -30,9 +32,6 @@ class AlarmEditViewModel @Inject constructor(
     private val _dayStatus = MutableStateFlow(selectedDaysStatus)
     val dayStatus = _dayStatus.asStateFlow()
 
-    private val _isEditMode = MutableStateFlow(false)
-    val isEditMode = _isEditMode.asStateFlow()
-
     private val _cancelEvent = MutableStateFlow(false)
     val cancelEvent = _cancelEvent.asStateFlow()
 
@@ -47,7 +46,17 @@ class AlarmEditViewModel @Inject constructor(
     }
 
     val date = _alarm.map {
-        it?.days
+        it?.let { alarm ->
+            if (alarm.days.size == 1)
+                alarm.days[0].convertDateString()
+            else {
+                val days = mutableListOf<String>()
+                alarm.days.forEach { date ->
+                    days.add(date.convertDayString())
+                }
+                days.joinToString(", ")
+            }
+        }
     }
 
     fun changeSelectedDaysStatus(index: Int) = viewModelScope.launch {
