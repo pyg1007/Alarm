@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <data>
 
@@ -18,6 +19,8 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:timePickerMode="spinner"
+            android:hour="@={viewModel.hour}"
+            android:minute="@={viewModel.min}"
             app:layout_constraintHeight_percent="0.35"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
@@ -43,12 +46,22 @@
 
                 <include
                     android:id="@+id/include_day"
+                    layout="@layout/include_days"
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
-                    layout="@layout/include_days"
                     app:layout_constraintHeight_percent="0.15"
-                    app:layout_constraintTop_toBottomOf="@id/tv_selected_date"
-                    />
+                    app:layout_constraintTop_toBottomOf="@id/tv_selected_date" />
+
+                <EditText
+                    android:id="@+id/et_alarm_title"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:importantForAutofill="no"
+                    android:inputType="text"
+                    android:text="@={viewModel.title}"
+                    app:layout_constraintHeight_percent="0.25"
+                    app:layout_constraintTop_toBottomOf="@id/include_day"
+                    tools:ignore="LabelFor" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
         </androidx.cardview.widget.CardView>

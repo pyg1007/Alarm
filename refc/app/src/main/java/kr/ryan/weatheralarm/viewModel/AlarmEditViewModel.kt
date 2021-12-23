@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import kr.ryan.weatheralarm.data.Alarm
@@ -12,6 +13,10 @@ import kr.ryan.weatheralarm.usecase.AlarmInsertUseCase
 import kr.ryan.weatheralarm.usecase.AlarmUpdateUseCase
 import kr.ryan.weatheralarm.util.convertDateString
 import kr.ryan.weatheralarm.util.convertDayString
+import kr.ryan.weatheralarm.util.getCurrentHour
+import kr.ryan.weatheralarm.util.getCurrentMin
+import timber.log.Timber
+import java.util.*
 import javax.inject.Inject
 
 /**
@@ -38,26 +43,10 @@ class AlarmEditViewModel @Inject constructor(
     private val _saveEvent = MutableStateFlow(false)
     val saveEvent = _saveEvent.asStateFlow()
 
-    private val _alarm = MutableStateFlow<Alarm?>(null)
-    val alarm = _alarm.asStateFlow()
+    val title = MutableStateFlow("")
+    val hour = MutableStateFlow(Date().getCurrentHour())
+    val min = MutableStateFlow(Date().getCurrentMin())
 
-    val title = _alarm.map {
-        it?.title
-    }
-
-    val date = _alarm.map {
-        it?.let { alarm ->
-            if (alarm.days.size == 1)
-                alarm.days[0].convertDateString()
-            else {
-                val days = mutableListOf<String>()
-                alarm.days.forEach { date ->
-                    days.add(date.convertDayString())
-                }
-                days.joinToString(", ")
-            }
-        }
-    }
 
     fun changeSelectedDaysStatus(index: Int) = viewModelScope.launch {
         val changeDayStatus = selectedDaysStatus.toMutableList()
@@ -66,8 +55,12 @@ class AlarmEditViewModel @Inject constructor(
         _dayStatus.emit(changeDayStatus)
     }
 
-    fun initAlarm(alarm: Alarm) = viewModelScope.launch {
-        _alarm.emit(alarm)
+    fun changeHour(hour: Int) = viewModelScope.launch {
+        this@AlarmEditViewModel.hour.emit(hour)
+    }
+
+    fun changeMinute(minute: Int) = viewModelScope.launch {
+        min.emit(minute)
     }
 
     fun onClickCancelEvent() = viewModelScope.launch {
@@ -84,10 +77,6 @@ class AlarmEditViewModel @Inject constructor(
 
     fun initSaveEvent() = viewModelScope.launch {
         _saveEvent.emit(false)
-    }
-
-    fun changeAlarm(alarm: Alarm) = viewModelScope.launch {
-        _alarm.emit(alarm)
     }
 
     fun insertAlarm(alarm: Alarm) = viewModelScope.launch {

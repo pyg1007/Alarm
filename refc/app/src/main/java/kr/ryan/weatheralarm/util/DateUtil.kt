@@ -20,3 +20,13 @@ fun Date.convertDayString() : String{
     val simpleDateFormat = SimpleDateFormat("E", Locale.getDefault())
     return simpleDateFormat.format(this)
 }
+
+fun Date.getCurrentHour() : Int {
+    val simpleDateFormat = SimpleDateFormat("HH", Locale.getDefault())
+    return simpleDateFormat.format(this).toInt()
+}
+
+fun Date.getCurrentMin() : Int {
+    val simpleDateFormat = SimpleDateFormat("mm", Locale.getDefault())
+    return simpleDateFormat.format(this).toInt()
+}

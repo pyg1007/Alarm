@@ -2,7 +2,6 @@ package kr.ryan.weatheralarm.future.activity
 
 import android.os.Bundle
 import android.view.Gravity
-import android.view.MenuItem
 import android.widget.PopupMenu
 import androidx.activity.viewModels
 import androidx.lifecycle.*
@@ -89,7 +88,7 @@ class MainActivity : BaseActivity<ActivityMainBinding>(R.layout.activity_main) {
             val popup = PopupMenu(this@MainActivity, view, Gravity.END)
             menuInflater.inflate(R.menu.item_popup_alarm, popup.menu)
             popup.setOnMenuItemClickListener {
-                if (it.itemId == R.id.action_delete){
+                if (it.itemId == R.id.action_delete) {
                     alarmViewModel.deleteAlarm(alarm.convertAlarm())
                 }
                 false
@@ -104,7 +103,7 @@ class MainActivity : BaseActivity<ActivityMainBinding>(R.layout.activity_main) {
         }
     }
 
-    private fun openAlarmDialog(alarm: Alarm?){
+    private fun openAlarmDialog(alarm: Alarm?) {
         dialogFragment = AlarmDialogFragment()
         alarm?.let { data ->
             val bundle = Bundle().also {
@@ -117,7 +116,7 @@ class MainActivity : BaseActivity<ActivityMainBinding>(R.layout.activity_main) {
         responseAlarmDialog()
     }
 
-    private fun responseAlarmDialog(){
+    private fun responseAlarmDialog() {
         AlarmDialogFragment.setOnCancelEvent {
             val snackBar = Snackbar.make(binding.constRoot, "취소하셨습니다.", Snackbar.LENGTH_SHORT)
             Timber.d("${snackBar.isShown}")
@@ -126,7 +125,8 @@ class MainActivity : BaseActivity<ActivityMainBinding>(R.layout.activity_main) {
         }
 
         AlarmDialogFragment.setOnSaveEvent {
-            val snackBar = Snackbar.make(binding.constRoot, "새로운 알람이 등록되었습니다.", Snackbar.LENGTH_SHORT)
+            val snackBar =
+                Snackbar.make(binding.constRoot, "새로운 알람이 등록되었습니다.", Snackbar.LENGTH_SHORT)
             Timber.d("${snackBar.isShown}")
             if (snackBar.isShown) return@setOnSaveEvent
             else snackBar.show()
