@@ -16,11 +16,12 @@ import timber.log.Timber
 object DrawCircle {
 
     @JvmStatic
-    @BindingAdapter(value = ["dayIndex", "dayStatus"], requireAll = true)
-    fun TextView.drawCircle(index: Int, status: Boolean) {
+    @BindingAdapter(value = ["dayIndex", "dayStatus", "result"], requireAll = true)
+    fun TextView.drawCircle(index: Int, status: Boolean, result: (Int) -> Unit) {
         Timber.d("$index , $status")
         when (index) {
             0 -> { // 일요일
+                result(index)
                 background = if (status) ContextCompat.getDrawable(
                     context,
                     R.drawable.circle_date_red
@@ -28,6 +29,7 @@ object DrawCircle {
                 else null
             }
             6 -> { // 토요일
+                result(index)
                 background = if (status) ContextCompat.getDrawable(
                     context,
                     R.drawable.circle_date_blue
@@ -35,6 +37,7 @@ object DrawCircle {
                 else null
             }
             else -> { // 월 ~ 금
+                result(index)
                 background = if (status) ContextCompat.getDrawable(
                     context,
                     R.drawable.circle_date_black

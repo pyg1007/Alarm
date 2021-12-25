@@ -15,12 +15,13 @@
 
         <TextView
             android:id="@+id/tv_sunday"
+            dayIndex="@{0}"
+            dayStatus="@{viewModel.dayStatus.get(0)}"
+            result="@{viewModel.dayClick}"
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:gravity="center"
             android:onClick="@{() -> viewModel.changeSelectedDaysStatus(0)}"
-            dayIndex="@{0}"
-            dayStatus="@{viewModel.dayStatus.get(0)}"
             android:text="@string/sunday"
             android:textColor="@color/red"
             android:textStyle="bold"
@@ -32,6 +33,9 @@
 
         <TextView
             android:id="@+id/tv_monday"
+            dayIndex="@{1}"
+            dayStatus="@{viewModel.dayStatus.get(1)}"
+            result="@{viewModel.dayClick}"
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:gravity="center"
@@ -47,6 +51,9 @@
 
         <TextView
             android:id="@+id/tv_tuesday"
+            dayIndex="@{2}"
+            dayStatus="@{viewModel.dayStatus.get(2)}"
+            result="@{viewModel.dayClick}"
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:gravity="center"
@@ -62,6 +69,9 @@
 
         <TextView
             android:id="@+id/tv_wednesday"
+            dayIndex="@{3}"
+            dayStatus="@{viewModel.dayStatus.get(3)}"
+            result="@{viewModel.dayClick}"
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:gravity="center"
@@ -77,6 +87,9 @@
 
         <TextView
             android:id="@+id/tv_thursday"
+            dayIndex="@{4}"
+            dayStatus="@{viewModel.dayStatus.get(4)}"
+            result="@{viewModel.dayClick}"
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:gravity="center"
@@ -92,6 +105,9 @@
 
         <TextView
             android:id="@+id/tv_friday"
+            dayIndex="@{5}"
+            dayStatus="@{viewModel.dayStatus.get(5)}"
+            result="@{viewModel.dayClick}"
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:gravity="center"
@@ -107,6 +123,9 @@
 
         <TextView
             android:id="@+id/tv_saturday"
+            dayIndex="@{6}"
+            dayStatus="@{viewModel.dayStatus.get(6)}"
+            result="@{viewModel.dayClick}"
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:gravity="center"

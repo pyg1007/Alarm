@@ -14,6 +14,8 @@ import kr.ryan.weatheralarm.R
 import kr.ryan.weatheralarm.data.Alarm
 import kr.ryan.weatheralarm.databinding.DialogAlarmBinding
 import kr.ryan.weatheralarm.util.dialogFragmentResize
+import kr.ryan.weatheralarm.util.getCurrentHour
+import kr.ryan.weatheralarm.util.getCurrentMin
 import kr.ryan.weatheralarm.viewModel.AlarmEditViewModel
 import timber.log.Timber
 
@@ -103,7 +105,15 @@ class AlarmDialogFragment : BaseDialogFragment<DialogAlarmBinding>(R.layout.dial
 
     private fun initViewModel(){
         alarm?.let {
-            viewModel.insertAlarm(it)
+
+            it.days[0].run { // 시간 초기 설정 (alarm 이 null 이 아니라는 소리는 edit 상태이기 때문)
+                viewModel.changeHour(getCurrentHour())
+                viewModel.changeMinute(getCurrentMin())
+            }
+
+            viewModel.changeTitle(it.title ?: "")
+            viewModel.changeDates(it.days)
+
         }
     }
 

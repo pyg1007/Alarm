@@ -43,10 +43,14 @@ class AlarmEditViewModel @Inject constructor(
     private val _saveEvent = MutableStateFlow(false)
     val saveEvent = _saveEvent.asStateFlow()
 
+    val dates = MutableStateFlow(listOf<Date>())
     val title = MutableStateFlow("")
     val hour = MutableStateFlow(Date().getCurrentHour())
     val min = MutableStateFlow(Date().getCurrentMin())
 
+    val dayClick = fun(day: Int){
+        Timber.d("$day")
+    }
 
     fun changeSelectedDaysStatus(index: Int) = viewModelScope.launch {
         val changeDayStatus = selectedDaysStatus.toMutableList()
@@ -61,6 +65,14 @@ class AlarmEditViewModel @Inject constructor(
 
     fun changeMinute(minute: Int) = viewModelScope.launch {
         min.emit(minute)
+    }
+
+    fun changeTitle(title: String) = viewModelScope.launch {
+        this@AlarmEditViewModel.title.emit(title)
+    }
+
+    fun changeDates(dates: List<Date>) = viewModelScope.launch {
+        this@AlarmEditViewModel.dates.emit(dates)
     }
 
     fun onClickCancelEvent() = viewModelScope.launch {
