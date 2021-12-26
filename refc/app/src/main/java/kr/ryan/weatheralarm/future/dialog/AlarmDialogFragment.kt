@@ -69,10 +69,6 @@ class AlarmDialogFragment : BaseDialogFragment<DialogAlarmBinding>(R.layout.dial
                 launch {
                     onClickSaveBtn()
                 }
-
-                launch {
-                    observeStatus()
-                }
             }
         }
         return super.onCreateView(inflater, container, savedInstanceState)
@@ -120,12 +116,6 @@ class AlarmDialogFragment : BaseDialogFragment<DialogAlarmBinding>(R.layout.dial
     private fun changeTimePicker(){
         binding.timePick.setOnTimeChangedListener { timePicker, hour, min ->
 
-        }
-    }
-
-    private suspend fun observeStatus() {
-        viewModel.dayStatus.collect {
-            Timber.d("$it")
         }
     }
 

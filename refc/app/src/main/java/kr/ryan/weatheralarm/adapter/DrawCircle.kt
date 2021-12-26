@@ -3,6 +3,8 @@ package kr.ryan.weatheralarm.adapter
 import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.databinding.BindingAdapter
+import androidx.databinding.InverseBindingAdapter
+import androidx.databinding.InverseBindingListener
 import kr.ryan.weatheralarm.R
 import timber.log.Timber
 
@@ -16,34 +18,32 @@ import timber.log.Timber
 object DrawCircle {
 
     @JvmStatic
-    @BindingAdapter(value = ["dayIndex", "dayStatus", "result"], requireAll = true)
-    fun TextView.drawCircle(index: Int, status: Boolean, result: (Int) -> Unit) {
-        Timber.d("$index , $status")
-        when (index) {
-            0 -> { // 일요일
-                result(index)
-                background = if (status) ContextCompat.getDrawable(
-                    context,
-                    R.drawable.circle_date_red
-                )
-                else null
+    @BindingAdapter("attrDraw")
+    fun TextView.setDrawCircle(state: Boolean){
+    }
+
+    @JvmStatic
+    @InverseBindingAdapter(attribute = "attrDraw")
+    fun TextView.getDrawCircle(): Boolean{
+        return background != null
+    }
+
+    @JvmStatic
+    @BindingAdapter("attrDrawAttrChanged")
+    fun TextView.drawCircle(
+        listener : InverseBindingListener
+    ){
+        setOnClickListener {
+            background = if (background == null){
+                when (id) {
+                    R.id.tv_sunday -> ContextCompat.getDrawable(context, R.drawable.circle_date_red)
+                    R.id.tv_saturday -> ContextCompat.getDrawable(context, R.drawable.circle_date_blue)
+                    else -> ContextCompat.getDrawable(context, R.drawable.circle_date_black)
+                }
+            }else{
+                null
             }
-            6 -> { // 토요일
-                result(index)
-                background = if (status) ContextCompat.getDrawable(
-                    context,
-                    R.drawable.circle_date_blue
-                )
-                else null
-            }
-            else -> { // 월 ~ 금
-                result(index)
-                background = if (status) ContextCompat.getDrawable(
-                    context,
-                    R.drawable.circle_date_black
-                )
-                else null
-            }
+            listener.onChange()
         }
     }
 }

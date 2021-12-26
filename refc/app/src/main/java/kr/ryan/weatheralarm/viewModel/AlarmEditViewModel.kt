@@ -3,10 +3,7 @@ package kr.ryan.weatheralarm.viewModel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import kr.ryan.weatheralarm.data.Alarm
 import kr.ryan.weatheralarm.usecase.AlarmInsertUseCase
@@ -48,15 +45,20 @@ class AlarmEditViewModel @Inject constructor(
     val hour = MutableStateFlow(Date().getCurrentHour())
     val min = MutableStateFlow(Date().getCurrentMin())
 
-    val dayClick = fun(day: Int){
-        Timber.d("$day")
-    }
+    val sunDayState = MutableStateFlow(false)
+    val monDayState = MutableStateFlow(false)
+    val tuesDayState = MutableStateFlow(false)
+    val wednesDayState = MutableStateFlow(false)
+    val thursDayState = MutableStateFlow(false)
+    val friDayState = MutableStateFlow(false)
+    val saturDayState = MutableStateFlow(false)
 
-    fun changeSelectedDaysStatus(index: Int) = viewModelScope.launch {
-        val changeDayStatus = selectedDaysStatus.toMutableList()
-        changeDayStatus[index] = !changeDayStatus[index]
-        selectedDaysStatus = changeDayStatus
-        _dayStatus.emit(changeDayStatus)
+    init {
+        viewModelScope.launch {
+            sunDayState.collect {
+                Timber.d("sunday : $it")
+            }
+        }
     }
 
     fun changeHour(hour: Int) = viewModelScope.launch {
