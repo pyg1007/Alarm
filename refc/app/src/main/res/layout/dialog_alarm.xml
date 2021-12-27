@@ -40,6 +40,7 @@
                     android:id="@+id/tv_selected_date"
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
+                    android:text="@{viewModel.observeShowDayList}"
                     android:gravity="center_vertical"
                     app:layout_constraintHeight_percent="0.15"
                     app:layout_constraintTop_toTopOf="parent" />

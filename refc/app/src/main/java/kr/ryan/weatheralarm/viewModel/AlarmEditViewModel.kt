@@ -29,10 +29,12 @@ class AlarmEditViewModel @Inject constructor(
     private val updateUseCase: AlarmUpdateUseCase
 ) : ViewModel() {
 
-    private var selectedDaysStatus = mutableListOf(false, false, false, false, false, false, false)
+    private val dayList = listOf("일", "월", "화", "수", "목", "금", "토")
 
-    private val _dayStatus = MutableStateFlow(selectedDaysStatus)
-    val dayStatus = _dayStatus.asStateFlow()
+    private val showDayList = mutableListOf<String>()
+
+    private val _observeShowDayList = MutableStateFlow<List<String>>(listOf())
+    val observeShowDayList = MutableStateFlow("")
 
     private val _cancelEvent = MutableStateFlow(false)
     val cancelEvent = _cancelEvent.asStateFlow()
@@ -54,10 +56,31 @@ class AlarmEditViewModel @Inject constructor(
     val saturDayState = MutableStateFlow(false)
 
     init {
-        viewModelScope.launch {
-            sunDayState.collect {
-                Timber.d("sunday : $it")
-            }
+        sunDayState.controlShowing(0)
+        monDayState.controlShowing(1)
+        tuesDayState.controlShowing(2)
+        wednesDayState.controlShowing(3)
+        thursDayState.controlShowing(4)
+        friDayState.controlShowing(5)
+        saturDayState.controlShowing(6)
+
+        showDay()
+    }
+
+    private fun StateFlow<Boolean>.controlShowing(index: Int) = viewModelScope.launch {
+        collect {
+            if (it)
+                showDayList.add(dayList[index])
+            else
+                showDayList.remove(dayList[index])
+
+            _observeShowDayList.emit(showDayList.toList())
+        }
+    }
+
+    private fun showDay() = viewModelScope.launch {
+        _observeShowDayList.collect { list ->
+            observeShowDayList.emit(list.sortedBy { dayList.indexOf(it) }.joinToString(", "))
         }
     }
 
