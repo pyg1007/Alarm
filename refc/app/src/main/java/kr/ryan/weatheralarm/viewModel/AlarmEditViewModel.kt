@@ -124,4 +124,8 @@ class AlarmEditViewModel @Inject constructor(
         updateUseCase.updateAlarm(alarm)
     }
 
+    private fun createAlarm() = viewModelScope.launch {
+        val day = mutableListOf<Date>()
+    }
+
 }
