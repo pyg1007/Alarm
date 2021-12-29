@@ -3,6 +3,8 @@ package kr.ryan.weatheralarm.room
 import androidx.room.*
 import kotlinx.coroutines.flow.Flow
 import kr.ryan.weatheralarm.data.Alarm
+import kr.ryan.weatheralarm.data.AlarmDate
+import kr.ryan.weatheralarm.data.AlarmWithDate
 
 /**
  * WeatherAlarm
@@ -13,7 +15,11 @@ import kr.ryan.weatheralarm.data.Alarm
  */
 @Dao
 interface AlarmDao {
-
+    /**
+     *
+     * Alarm Dao
+     *
+     */
     @Query("Select * from Alarm")
     fun getAllAlarm(): Flow<List<Alarm>>
 
@@ -26,4 +32,31 @@ interface AlarmDao {
     @Update
     suspend fun updateAlarm(alarm: Alarm)
 
+    /**
+     *
+     * AlarmDate Dao
+     *
+     */
+
+    @Query("Select * from date where alarmId = :alarmId")
+    fun getAlarmDate(alarmId: Long) : Flow<List<AlarmDate>>
+
+    @Insert
+    suspend fun insertAlarmDate(alarmDate: AlarmDate): Long
+
+    @Update
+    suspend fun updateAlarmDate(alarmDate: AlarmDate)
+
+    @Delete
+    suspend fun deleteAlarmDate(alarmDate: AlarmDate)
+
+    /**
+     *
+     * Alarm Alarm Date Relation
+     *
+     */
+
+    @Transaction
+    @Query("Select * from alarm")
+    fun getRelation() : Flow<List<AlarmWithDate>>
 }

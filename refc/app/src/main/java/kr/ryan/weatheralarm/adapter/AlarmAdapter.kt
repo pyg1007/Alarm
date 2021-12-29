@@ -11,7 +11,6 @@ import kr.ryan.weatheralarm.adapter.viewHolder.DateViewHolder
 import kr.ryan.weatheralarm.adapter.viewHolder.DaysViewHolder
 import kr.ryan.weatheralarm.data.Alarm
 import kr.ryan.weatheralarm.data.AlarmStatus
-import kr.ryan.weatheralarm.data.convertAlarmStatus
 import kr.ryan.weatheralarm.util.AlarmDiffUtil
 
 /**
@@ -54,17 +53,9 @@ class AlarmAdapter: ListAdapter<Alarm, RecyclerView.ViewHolder>(AlarmDiffUtil())
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-        when(getItemViewType(position)){
-            DATE -> (holder as DateViewHolder).bind(convertAlarmStatus(getItem(position)))
-            DAYS -> (holder as DaysViewHolder).bind(convertAlarmStatus(getItem(position)))
-        }
-    }
-
-    override fun getItemViewType(position: Int): Int {
-        val item = getItem(position).days
-        return if (item.isNullOrEmpty() || item.size == 1)
-            DATE
-        else
-            DAYS
+//        when(getItemViewType(position)){
+//            DATE -> (holder as DateViewHolder).bind(convertAlarmStatus(getItem(position)))
+//            DAYS -> (holder as DaysViewHolder).bind(convertAlarmStatus(getItem(position)))
+//        }
     }
 }

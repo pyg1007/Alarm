@@ -69,6 +69,8 @@ class AlarmDialogFragment : BaseDialogFragment<DialogAlarmBinding>(R.layout.dial
                 launch {
                     onClickSaveBtn()
                 }
+
+
             }
         }
         return super.onCreateView(inflater, container, savedInstanceState)
@@ -77,8 +79,8 @@ class AlarmDialogFragment : BaseDialogFragment<DialogAlarmBinding>(R.layout.dial
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         initBinding()
-        initViewModel()
         changeTimePicker()
+
     }
 
     private fun initAlarm(){
@@ -96,20 +98,6 @@ class AlarmDialogFragment : BaseDialogFragment<DialogAlarmBinding>(R.layout.dial
                 viewModel = this@AlarmDialogFragment.viewModel
                 lifecycleOwner = viewLifecycleOwner
             }
-        }
-    }
-
-    private fun initViewModel(){
-        alarm?.let {
-
-            it.days[0].run { // 시간 초기 설정 (alarm 이 null 이 아니라는 소리는 edit 상태이기 때문)
-                viewModel.changeHour(getCurrentHour())
-                viewModel.changeMinute(getCurrentMin())
-            }
-
-            viewModel.changeTitle(it.title ?: "")
-            viewModel.changeDates(it.days)
-
         }
     }
 

@@ -25,7 +25,8 @@ import javax.inject.Inject
 @HiltViewModel
 class AlarmViewModel @Inject constructor(
     private val selectUseCase: AlarmSelectUseCase,
-    private val deleteUseCase: AlarmDeleteUseCase
+    private val deleteUseCase: AlarmDeleteUseCase,
+    private val insertUseCase: AlarmInsertUseCase
 ) : ViewModel() {
 
     private val _alarmList = MutableStateFlow(listOf<Alarm>())
@@ -55,6 +56,7 @@ class AlarmViewModel @Inject constructor(
     }
 
     fun activeMoreBtn() = viewModelScope.launch {
+        insertAlarm()
         _onClickMore.emit(true)
     }
 
@@ -64,6 +66,11 @@ class AlarmViewModel @Inject constructor(
 
     fun initMoreState() = viewModelScope.launch {
         _onClickMore.emit(false)
+    }
+
+    private fun insertAlarm() = viewModelScope.launch {
+        val alarm = Alarm(title = "ABCD", onOff = true)
+        insertUseCase.insertAlarm(alarm)
     }
 
     fun deleteAlarm(alarm: Alarm) = viewModelScope.launch {

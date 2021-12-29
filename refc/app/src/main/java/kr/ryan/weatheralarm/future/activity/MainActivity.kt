@@ -1,6 +1,7 @@
 package kr.ryan.weatheralarm.future.activity
 
 import android.os.Bundle
+import android.util.Log
 import android.view.Gravity
 import android.widget.PopupMenu
 import androidx.activity.viewModels
@@ -15,7 +16,6 @@ import kr.ryan.weatheralarm.adapter.AlarmAdapter
 import kr.ryan.weatheralarm.data.Alarm
 import kr.ryan.weatheralarm.databinding.ActivityMainBinding
 import kr.ryan.weatheralarm.future.dialog.AlarmDialogFragment
-import kr.ryan.weatheralarm.util.convertAlarm
 import kr.ryan.weatheralarm.viewModel.AlarmViewModel
 import timber.log.Timber
 import javax.inject.Inject
@@ -89,7 +89,7 @@ class MainActivity : BaseActivity<ActivityMainBinding>(R.layout.activity_main) {
             menuInflater.inflate(R.menu.item_popup_alarm, popup.menu)
             popup.setOnMenuItemClickListener {
                 if (it.itemId == R.id.action_delete) {
-                    alarmViewModel.deleteAlarm(alarm.convertAlarm())
+                    Timber.d("delete Action")
                 }
                 false
             }
@@ -99,7 +99,7 @@ class MainActivity : BaseActivity<ActivityMainBinding>(R.layout.activity_main) {
 
     private fun recyclerViewItemClick() {
         alarmAdapter.setOnClickListener { _, position, alarm ->
-            openAlarmDialog(alarm.convertAlarm())
+            Timber.d("item onClick")
         }
     }
 
@@ -156,7 +156,8 @@ class MainActivity : BaseActivity<ActivityMainBinding>(R.layout.activity_main) {
 
     private suspend fun observeAlarmData() {
         alarmViewModel.alarmList.collect {
-            alarmAdapter.submitList(it.toMutableList())
+            Timber.d("alarm List -> $it")
+            //alarmAdapter.submitList(it.toMutableList())
         }
     }
 

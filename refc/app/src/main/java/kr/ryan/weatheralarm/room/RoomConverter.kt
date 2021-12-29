@@ -1,7 +1,6 @@
 package kr.ryan.weatheralarm.room
 
 import androidx.room.TypeConverter
-import com.google.gson.Gson
 import java.util.*
 
 /**
@@ -11,12 +10,16 @@ import java.util.*
  * Created On 2021-10-28.
  * Description:
  */
-object RoomConverter {
+class RoomConverter {
 
     @TypeConverter
-    fun fromTimestamp(value: List<Date>?): String? = Gson().toJson(value?.map { it.time })
+    fun fromTimestamp(value: Long?): Date? {
+        return value?.let { Date(it) }
+    }
 
     @TypeConverter
-    fun dateToTimeStamp(value: String?): List<Date> = Gson().fromJson(value, Array<Long>::class.java).map { Date(it) }
+    fun dateToTimeStamp(value: Date?): Long? {
+        return value?.time
+    }
 
 }

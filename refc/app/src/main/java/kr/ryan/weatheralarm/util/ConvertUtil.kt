@@ -12,10 +12,10 @@ import kr.ryan.weatheralarm.data.AlarmStatus
  */
 
 
-fun AlarmStatus.convertAlarm(): Alarm {
-    return when (this) {
-        is AlarmStatus.DaysAlarm -> Alarm(index, title, date, status)
-        is AlarmStatus.DateAlarm -> Alarm(index, title, listOf(date), status)
-        else -> throw IllegalStateException("unKnown Data Type")
-    }
-}
+//fun AlarmStatus.convertAlarm(): Alarm {
+//    return when (this) {
+//        is AlarmStatus.DaysAlarm -> Alarm(index, title, date, status)
+//        is AlarmStatus.DateAlarm -> Alarm(index, title, listOf(date), status)
+//        else -> throw IllegalStateException("unKnown Data Type")
+//    }
+//}

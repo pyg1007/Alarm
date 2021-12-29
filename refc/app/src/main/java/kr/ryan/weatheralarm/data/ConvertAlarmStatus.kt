@@ -9,9 +9,9 @@ package kr.ryan.weatheralarm.data
  */
 
 
-fun convertAlarmStatus(alarm: Alarm) : AlarmStatus{
-    return if (alarm.days.size == 1)
-        AlarmStatus.DateAlarm(alarm.index, alarm.title, alarm.days[0], alarm.onOff)
-    else
-        AlarmStatus.DaysAlarm(alarm.index, alarm.title, alarm.days, alarm.onOff)
-}
+//fun convertAlarmStatus(alarm: Alarm) : AlarmStatus{
+//    return if (alarm.days.size == 1)
+//        AlarmStatus.DateAlarm(alarm.index, alarm.title, alarm.days[0], alarm.onOff)
+//    else
+//        AlarmStatus.DaysAlarm(alarm.index, alarm.title, alarm.days, alarm.onOff)
+//}

@@ -8,6 +8,7 @@ import androidx.room.TypeConverters
 import androidx.sqlite.db.SupportSQLiteDatabase
 import kotlinx.coroutines.runBlocking
 import kr.ryan.weatheralarm.data.Alarm
+import kr.ryan.weatheralarm.data.AlarmDate
 import timber.log.Timber
 import java.util.*
 import java.util.concurrent.Executors
@@ -19,7 +20,7 @@ import java.util.concurrent.Executors
  * Created On 2021-10-24.
  * Description:
  */
-@Database(entities = [Alarm::class], version = 1)
+@Database(entities = [Alarm::class, AlarmDate::class], version = 1)
 @TypeConverters(RoomConverter::class)
 abstract class AlarmDatabase : RoomDatabase() {
     abstract fun alarmDao(): AlarmDao

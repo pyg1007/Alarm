@@ -1,8 +1,7 @@
 package kr.ryan.weatheralarm.data
 
 import android.os.Parcelable
-import androidx.room.Entity
-import androidx.room.PrimaryKey
+import androidx.room.*
 import kotlinx.parcelize.IgnoredOnParcel
 import kotlinx.parcelize.Parcelize
 import java.util.*
@@ -18,5 +17,30 @@ import java.util.*
 @Entity
 data class Alarm(
     @PrimaryKey(autoGenerate = true)
-    var index: Long = 0, var title: String?, var days: List<Date>, var onOff: Boolean
+    val index: Long = 0, val title: String?, val onOff: Boolean
 ) : Parcelable
+
+@Entity(
+    tableName = "date",
+    foreignKeys = [
+        ForeignKey(
+            entity = Alarm::class,
+            parentColumns = arrayOf("index"),
+            childColumns = arrayOf("alarmId"),
+            onDelete = ForeignKey.CASCADE
+        )
+    ]
+)
+data class AlarmDate(
+    @PrimaryKey(autoGenerate = true)
+    val index: Long, val alarmId: Long, val date: Date
+)
+
+data class AlarmWithDate(
+    @Embedded val alarm: Alarm,
+    @Relation(
+        parentColumn = "index",
+        entityColumn = "alarmId"
+    )
+    val alarmDate: List<AlarmDate>
+)

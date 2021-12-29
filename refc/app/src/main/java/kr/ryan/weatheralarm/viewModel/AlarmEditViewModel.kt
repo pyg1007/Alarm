@@ -1,6 +1,7 @@
 package kr.ryan.weatheralarm.viewModel
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.*
@@ -47,6 +48,8 @@ class AlarmEditViewModel @Inject constructor(
     val hour = MutableStateFlow(Date().getCurrentHour())
     val min = MutableStateFlow(Date().getCurrentMin())
 
+    val testList = MutableStateFlow(listOf(false, false, false, false, false, false, false))
+
     val sunDayState = MutableStateFlow(false)
     val monDayState = MutableStateFlow(false)
     val tuesDayState = MutableStateFlow(false)
@@ -65,6 +68,12 @@ class AlarmEditViewModel @Inject constructor(
         saturDayState.controlShowing(6)
 
         showDay()
+
+        viewModelScope.launch {
+            testList.collect {
+                Timber.d("$it")
+            }
+        }
     }
 
     private fun StateFlow<Boolean>.controlShowing(index: Int) = viewModelScope.launch {
@@ -122,10 +131,6 @@ class AlarmEditViewModel @Inject constructor(
 
     fun updateAlarm(alarm: Alarm) = viewModelScope.launch {
         updateUseCase.updateAlarm(alarm)
-    }
-
-    private fun createAlarm() = viewModelScope.launch {
-        val day = mutableListOf<Date>()
     }
 
 }
