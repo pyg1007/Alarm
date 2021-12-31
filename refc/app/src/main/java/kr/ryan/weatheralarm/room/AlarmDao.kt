@@ -38,8 +38,8 @@ interface AlarmDao {
      *
      */
 
-    @Query("Select * from date where alarmId = :alarmId")
-    fun getAlarmDate(alarmId: Long) : Flow<List<AlarmDate>>
+    @Query("Select * from date")
+    fun getAllAlarmDate() : Flow<List<AlarmDate>>
 
     @Insert
     suspend fun insertAlarmDate(alarmDate: AlarmDate): Long

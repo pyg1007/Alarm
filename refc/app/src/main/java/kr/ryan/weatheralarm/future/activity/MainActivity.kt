@@ -63,6 +63,14 @@ class MainActivity : BaseActivity<ActivityMainBinding>(R.layout.activity_main) {
                     observeMoreBtn()
                 }
 
+                launch {
+                    observeAlarmDateData()
+                }
+
+                launch {
+                    observeAlarmWithDate()
+                }
+
             }
 
         }
@@ -154,10 +162,25 @@ class MainActivity : BaseActivity<ActivityMainBinding>(R.layout.activity_main) {
 
     }
 
+    //Alarm 관련 테스트 확인용
     private suspend fun observeAlarmData() {
         alarmViewModel.alarmList.collect {
             Timber.d("alarm List -> $it")
-            //alarmAdapter.submitList(it.toMutableList())
+
+        }
+    }
+
+    // Alarm Date 관련 테스트 확인용
+    private suspend fun observeAlarmDateData(){
+        alarmViewModel.alarmDateList.collect {
+            Timber.d("alarm date List -> $it")
+        }
+    }
+
+    private suspend fun observeAlarmWithDate(){
+        alarmViewModel.alarmRelation.collect {
+            Timber.d("Relation -> $it")
+            alarmAdapter.submitList(it.toMutableList())
         }
     }
 

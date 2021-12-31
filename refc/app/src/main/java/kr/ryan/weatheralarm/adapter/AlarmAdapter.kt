@@ -9,9 +9,10 @@ import androidx.recyclerview.widget.RecyclerView
 import kr.ryan.weatheralarm.R
 import kr.ryan.weatheralarm.adapter.viewHolder.DateViewHolder
 import kr.ryan.weatheralarm.adapter.viewHolder.DaysViewHolder
-import kr.ryan.weatheralarm.data.Alarm
 import kr.ryan.weatheralarm.data.AlarmStatus
-import kr.ryan.weatheralarm.util.AlarmDiffUtil
+import kr.ryan.weatheralarm.data.AlarmWithDate
+import kr.ryan.weatheralarm.data.convertAlarmStatus
+import kr.ryan.weatheralarm.util.AlarmWithDateDiffUtil
 
 /**
  * WeatherAlarm
@@ -23,39 +24,60 @@ import kr.ryan.weatheralarm.util.AlarmDiffUtil
 const val DAYS = 1
 const val DATE = 2
 
-class AlarmAdapter: ListAdapter<Alarm, RecyclerView.ViewHolder>(AlarmDiffUtil()) {
+class AlarmAdapter : ListAdapter<AlarmWithDate, RecyclerView.ViewHolder>(AlarmWithDateDiffUtil()) {
 
     private lateinit var _onClickEvent: (View, Int, AlarmStatus) -> Unit
     private lateinit var _onLongClickEvent: (View, Int, AlarmStatus) -> Unit
 
-    fun setOnClickListener(clickListener: (View, Int, AlarmStatus) -> Unit){
+    fun setOnClickListener(clickListener: (View, Int, AlarmStatus) -> Unit) {
         _onClickEvent = clickListener
     }
 
-    fun setOnLongClickListener(longClickListener: (View, Int, AlarmStatus) -> Unit){
+    fun setOnLongClickListener(longClickListener: (View, Int, AlarmStatus) -> Unit) {
         _onLongClickEvent = longClickListener
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
-        return when(viewType){
+        return when (viewType) {
             DAYS -> {
                 DaysViewHolder.setOnItemClick(_onClickEvent)
                 DaysViewHolder.setOnLongItemClick(_onLongClickEvent)
-                DaysViewHolder(DataBindingUtil.inflate(LayoutInflater.from(parent.context), R.layout.recycler_days, parent, false))
+                DaysViewHolder(
+                    DataBindingUtil.inflate(
+                        LayoutInflater.from(parent.context),
+                        R.layout.recycler_days,
+                        parent,
+                        false
+                    )
+                )
             }
             DATE -> {
                 DateViewHolder.setOnItemClick(_onClickEvent)
                 DateViewHolder.setOnLongItemClick(_onLongClickEvent)
-                DateViewHolder(DataBindingUtil.inflate(LayoutInflater.from(parent.context), R.layout.recycler_date, parent, false))
+                DateViewHolder(
+                    DataBindingUtil.inflate(
+                        LayoutInflater.from(parent.context),
+                        R.layout.recycler_date,
+                        parent,
+                        false
+                    )
+                )
             }
             else -> throw IllegalStateException("unKnown ViewHolder")
         }
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-//        when(getItemViewType(position)){
-//            DATE -> (holder as DateViewHolder).bind(convertAlarmStatus(getItem(position)))
-//            DAYS -> (holder as DaysViewHolder).bind(convertAlarmStatus(getItem(position)))
-//        }
+        when(getItemViewType(position)){
+            DATE -> (holder as DateViewHolder).bind(convertAlarmStatus(getItem(position)))
+            DAYS -> (holder as DaysViewHolder).bind(convertAlarmStatus(getItem(position)))
+        }
+    }
+
+    override fun getItemViewType(position: Int): Int {
+        return when (getItem(position).alarmDate.size) {
+            1 -> DATE
+            else -> DAYS
+        }
     }
 }

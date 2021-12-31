@@ -33,7 +33,7 @@ data class Alarm(
 )
 data class AlarmDate(
     @PrimaryKey(autoGenerate = true)
-    val index: Long, val alarmId: Long, val date: Date
+    val index: Long = 0, val alarmId: Long, val date: Date
 )
 
 data class AlarmWithDate(

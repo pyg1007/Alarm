@@ -16,6 +16,10 @@ class AlarmSelectUseCase @Inject constructor(
     private val selectRepository: SelectRepository
 ) {
 
-    suspend fun selectAlarm(): Flow<List<Alarm>> = selectRepository.provideAlarmList()
+    suspend fun selectAlarm() = selectRepository.provideAlarmList()
+
+    suspend fun selectAlarmDate() = selectRepository.provideAlarmDateList()
+
+    suspend fun selectAlarmWithDate() = selectRepository.provideAlarmWithDate()
 
 }

@@ -1,6 +1,7 @@
 package kr.ryan.weatheralarm.usecase
 
 import kr.ryan.weatheralarm.data.Alarm
+import kr.ryan.weatheralarm.data.AlarmDate
 import kr.ryan.weatheralarm.repository.InsertRepository
 import javax.inject.Inject
 
@@ -16,5 +17,8 @@ class AlarmInsertUseCase @Inject constructor(
 ) {
 
     suspend fun insertAlarm(alarm:Alarm): Long = insertRepository.provideInsertAlarm(alarm)
+
+
+    suspend fun insertAlarmDate(alarmDate: AlarmDate) : Long = insertRepository.provideInsertAlarmDate(alarmDate)
 
 }
