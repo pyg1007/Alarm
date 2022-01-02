@@ -24,7 +24,7 @@ interface AlarmDao {
     fun getAllAlarm(): Flow<List<Alarm>>
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
-    suspend fun insertAlarm(alarm: Alarm): Long
+    suspend fun insertAlarm(alarm: Alarm)
 
     @Delete
     suspend fun deleteAlarm(alarm: Alarm)
@@ -41,14 +41,14 @@ interface AlarmDao {
     @Query("Select * from date")
     fun getAllAlarmDate() : Flow<List<AlarmDate>>
 
-    @Insert
-    suspend fun insertAlarmDate(alarmDate: AlarmDate): Long
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    suspend fun insertAlarmDate(vararg alarmDate: AlarmDate)
 
     @Update
-    suspend fun updateAlarmDate(alarmDate: AlarmDate)
+    suspend fun updateAlarmDate(vararg alarmDate: AlarmDate)
 
     @Delete
-    suspend fun deleteAlarmDate(alarmDate: AlarmDate)
+    suspend fun deleteAlarmDate(vararg alarmDate: AlarmDate)
 
     /**
      *

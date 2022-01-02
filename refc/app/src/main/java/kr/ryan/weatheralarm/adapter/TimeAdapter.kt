@@ -6,6 +6,7 @@ import androidx.core.content.ContextCompat
 import androidx.databinding.BindingAdapter
 import kr.ryan.weatheralarm.R
 import kr.ryan.weatheralarm.data.AlarmStatus
+import timber.log.Timber
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -26,8 +27,7 @@ object TimeAdapter {
                 SimpleDateFormat("a", Locale.getDefault()).format(status.date)
             }
             is AlarmStatus.DaysAlarm -> {
-                val currentDate = Calendar.getInstance().time
-                SimpleDateFormat("a", Locale.getDefault()).format(status.date.sorted().find { it >= currentDate } ?: "")
+                SimpleDateFormat("a", Locale.getDefault()).format(status.date[0])
             }
         }
     }
@@ -40,8 +40,7 @@ object TimeAdapter {
                 SimpleDateFormat("hh : mm", Locale.getDefault()).format(status.date)
             }
             is AlarmStatus.DaysAlarm -> {
-                val currentDate = Calendar.getInstance().time
-                SimpleDateFormat("hh : mm", Locale.getDefault()).format(status.date.sorted().find { it >= currentDate } ?: "")
+                SimpleDateFormat("hh : mm", Locale.getDefault()).format(status.date[0])
             }
         }
     }
@@ -54,8 +53,7 @@ object TimeAdapter {
                 SimpleDateFormat("yyyy년 MM월 dd일 (E)", Locale.getDefault()).format(status.date)
             }
             is AlarmStatus.DaysAlarm -> {
-                val currentDate = Calendar.getInstance().time
-                SimpleDateFormat("yyyy년 MM월 dd일 (E)", Locale.getDefault()).format(status.date.sorted().find { it >= currentDate } ?: "")
+                null
             }
         }
     }

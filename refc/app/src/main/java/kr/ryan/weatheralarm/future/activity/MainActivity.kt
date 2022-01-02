@@ -52,10 +52,6 @@ class MainActivity : BaseActivity<ActivityMainBinding>(R.layout.activity_main) {
 
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 launch {
-                    observeAlarmData()
-                }
-
-                launch {
                     observeAddBtn()
                 }
 
@@ -64,18 +60,10 @@ class MainActivity : BaseActivity<ActivityMainBinding>(R.layout.activity_main) {
                 }
 
                 launch {
-                    observeAlarmDateData()
-                }
-
-                launch {
                     observeAlarmWithDate()
                 }
-
             }
-
         }
-
-
     }
 
     private fun initBinding() {
@@ -162,23 +150,8 @@ class MainActivity : BaseActivity<ActivityMainBinding>(R.layout.activity_main) {
 
     }
 
-    //Alarm 관련 테스트 확인용
-    private suspend fun observeAlarmData() {
-        alarmViewModel.alarmList.collect {
-            Timber.d("alarm List -> $it")
-
-        }
-    }
-
-    // Alarm Date 관련 테스트 확인용
-    private suspend fun observeAlarmDateData(){
-        alarmViewModel.alarmDateList.collect {
-            Timber.d("alarm date List -> $it")
-        }
-    }
-
     private suspend fun observeAlarmWithDate(){
-        alarmViewModel.alarmRelation.collect {
+        alarmViewModel.alarmList.collect {
             Timber.d("Relation -> $it")
             alarmAdapter.submitList(it.toMutableList())
         }

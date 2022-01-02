@@ -18,9 +18,9 @@ class InsertRepository @Inject constructor(
 ) {
 
     @WorkerThread
-    suspend fun provideInsertAlarm(alarm: Alarm): Long = alarmDao.insertAlarm(alarm)
+    suspend fun provideInsertAlarm(alarm: Alarm) = alarmDao.insertAlarm(alarm)
 
     @WorkerThread
-    suspend fun provideInsertAlarmDate(alarmDate: AlarmDate) : Long = alarmDao.insertAlarmDate(alarmDate)
+    suspend fun provideInsertAlarmDate(alarmDate: AlarmDate) = alarmDao.insertAlarmDate(alarmDate)
 
 }

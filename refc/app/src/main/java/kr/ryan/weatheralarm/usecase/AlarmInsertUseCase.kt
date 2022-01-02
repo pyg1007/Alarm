@@ -16,9 +16,9 @@ class AlarmInsertUseCase @Inject constructor(
     private val insertRepository: InsertRepository
 ) {
 
-    suspend fun insertAlarm(alarm:Alarm): Long = insertRepository.provideInsertAlarm(alarm)
+    suspend fun insertAlarm(alarm:Alarm) = insertRepository.provideInsertAlarm(alarm)
 
 
-    suspend fun insertAlarmDate(alarmDate: AlarmDate) : Long = insertRepository.provideInsertAlarmDate(alarmDate)
+    suspend fun insertAlarmDate(alarmDate: AlarmDate) = insertRepository.provideInsertAlarmDate(alarmDate)
 
 }
