@@ -53,12 +53,11 @@
             android:id="@+id/tv_date"
             date="@{alarm}"
             android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:gravity="center_vertical"
+            android:layout_height="wrap_content"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toRightOf="@id/tv_time"
             app:layout_constraintTop_toBottomOf="@id/tv_alarm_title"
-            app:layout_constraintWidth_percent="0.3" />
+            app:layout_constraintWidth_percent="0.4" />
 
         <androidx.appcompat.widget.SwitchCompat
             android:id="@+id/switch_alarm_state"
