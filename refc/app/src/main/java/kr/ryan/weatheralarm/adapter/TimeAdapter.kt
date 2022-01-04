@@ -1,11 +1,9 @@
 package kr.ryan.weatheralarm.adapter
 
 import android.widget.TextView
-import androidx.appcompat.widget.SwitchCompat
-import androidx.core.content.ContextCompat
 import androidx.databinding.BindingAdapter
-import kr.ryan.weatheralarm.R
 import kr.ryan.weatheralarm.data.AlarmStatus
+import kr.ryan.weatheralarm.data.AlarmWithDate
 import timber.log.Timber
 import java.text.SimpleDateFormat
 import java.util.*
@@ -22,7 +20,7 @@ object TimeAdapter {
     @JvmStatic
     @BindingAdapter("Meridiem")
     fun TextView.convertTimeToMeridiem(status: AlarmStatus) {
-        text = when(status){
+        text = when (status) {
             is AlarmStatus.DateAlarm -> {
                 SimpleDateFormat("a", Locale.getDefault()).format(status.date)
             }
@@ -35,7 +33,7 @@ object TimeAdapter {
     @JvmStatic
     @BindingAdapter("time")
     fun TextView.convertTime(status: AlarmStatus) {
-        text = when(status){
+        text = when (status) {
             is AlarmStatus.DateAlarm -> {
                 SimpleDateFormat("hh : mm", Locale.getDefault()).format(status.date)
             }
@@ -48,7 +46,7 @@ object TimeAdapter {
     @JvmStatic
     @BindingAdapter("date")
     fun TextView.convertDate(status: AlarmStatus) {
-        text = when(status){
+        text = when (status) {
             is AlarmStatus.DateAlarm -> {
                 SimpleDateFormat("yyyy년 MM월 dd일 (E)", Locale.getDefault()).format(status.date)
             }
@@ -56,6 +54,33 @@ object TimeAdapter {
                 null
             }
         }
+    }
+
+    @JvmStatic
+    @BindingAdapter("setFastTime")
+    fun TextView.findFastTime(time: List<AlarmWithDate>?) {
+        text = null
+
+        val alarmOnList = time?.filter { it.alarm.onOff }
+        val remainTimeAlarmList = mutableListOf<AlarmWithDate>()
+
+        alarmOnList?.forEach {
+            run {
+
+
+
+            }
+        }
+
+
+        Timber.d("Init Time -> $time")
+        Timber.d("First Filter -> ${time?.filter { it.alarm.onOff }}")
+        Timber.d(
+            "Second Sort -> ${
+                time?.filter { it.alarm.onOff }
+                    ?.sortedBy { alarmWithDate -> alarmWithDate.alarmDate.sortedBy { it.date }[0].date }
+            }"
+        )
     }
 
 }

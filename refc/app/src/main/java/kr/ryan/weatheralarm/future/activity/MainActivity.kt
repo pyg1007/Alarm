@@ -150,11 +150,11 @@ class MainActivity : BaseActivity<ActivityMainBinding>(R.layout.activity_main) {
 
     }
 
-    private suspend fun observeAlarmWithDate(){
-        alarmViewModel.alarmList.collect {
+    private fun observeAlarmWithDate(){
+        alarmViewModel.alarmList.observe(this, Observer {
             Timber.d("Relation -> $it")
             alarmAdapter.submitList(it.toMutableList())
-        }
+        })
     }
 
 }

@@ -1,6 +1,7 @@
 package kr.ryan.weatheralarm.viewModel
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.*
@@ -24,17 +25,9 @@ import javax.inject.Inject
 class AlarmViewModel @Inject constructor(
     private val selectUseCase: AlarmSelectUseCase,
     private val deleteUseCase: AlarmDeleteUseCase
-) : ViewModel() {
+) : BaseAlarmViewModel(selectUseCase) {
 
-    val alarmList = flow {
-        selectUseCase.selectAlarmWithDate().collect {
-            Timber.d("alarm with date ->  $it")
-            emit(it)
-        }
-    }.catch { e ->
-        Timber.d("$e")
-        emit(emptyList())
-    }
+    val alarmList = selectAllAlarmList.asLiveData()
 
     private val _onClickAdd = MutableStateFlow(false)
     val onClickAdd
