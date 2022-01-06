@@ -14,8 +14,11 @@ import kr.ryan.baseui.BaseActivity
 import kr.ryan.weatheralarm.R
 import kr.ryan.weatheralarm.adapter.AlarmAdapter
 import kr.ryan.weatheralarm.data.Alarm
+import kr.ryan.weatheralarm.data.AlarmWithDate
 import kr.ryan.weatheralarm.databinding.ActivityMainBinding
 import kr.ryan.weatheralarm.future.dialog.AlarmDialogFragment
+import kr.ryan.weatheralarm.util.AlarmEvent
+import kr.ryan.weatheralarm.util.UiEvent
 import kr.ryan.weatheralarm.viewModel.AlarmViewModel
 import timber.log.Timber
 import javax.inject.Inject
@@ -30,6 +33,8 @@ class MainActivity : BaseActivity<ActivityMainBinding>(R.layout.activity_main) {
     lateinit var alarmAdapter: AlarmAdapter
 
     private var dialogFragment: AlarmDialogFragment? = null
+
+    private var alarmList: List<AlarmWithDate>? = null
 
     init {
 
@@ -52,11 +57,7 @@ class MainActivity : BaseActivity<ActivityMainBinding>(R.layout.activity_main) {
 
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 launch {
-                    observeAddBtn()
-                }
-
-                launch {
-                    observeMoreBtn()
+                    observeUiState()
                 }
 
                 launch {
@@ -85,7 +86,9 @@ class MainActivity : BaseActivity<ActivityMainBinding>(R.layout.activity_main) {
             menuInflater.inflate(R.menu.item_popup_alarm, popup.menu)
             popup.setOnMenuItemClickListener {
                 if (it.itemId == R.id.action_delete) {
-                    Timber.d("delete Action")
+                    alarmList?.let { alarmDate ->
+                        alarmViewModel.onEvent(AlarmEvent.OnDeleteClick(alarmDate[position]))
+                    }
                 }
                 false
             }
@@ -95,7 +98,9 @@ class MainActivity : BaseActivity<ActivityMainBinding>(R.layout.activity_main) {
 
     private fun recyclerViewItemClick() {
         alarmAdapter.setOnClickListener { _, position, alarm ->
-            Timber.d("item onClick")
+            alarmList?.let {
+
+            }
         }
     }
 
@@ -114,45 +119,41 @@ class MainActivity : BaseActivity<ActivityMainBinding>(R.layout.activity_main) {
 
     private fun responseAlarmDialog() {
         AlarmDialogFragment.setOnCancelEvent {
-            val snackBar = Snackbar.make(binding.constRoot, "취소하셨습니다.", Snackbar.LENGTH_SHORT)
-            Timber.d("${snackBar.isShown}")
-            if (snackBar.isShown) return@setOnCancelEvent
-            else snackBar.show()
+
         }
 
         AlarmDialogFragment.setOnSaveEvent {
-            val snackBar =
-                Snackbar.make(binding.constRoot, "새로운 알람이 등록되었습니다.", Snackbar.LENGTH_SHORT)
-            Timber.d("${snackBar.isShown}")
-            if (snackBar.isShown) return@setOnSaveEvent
-            else snackBar.show()
+
         }
     }
 
-    private suspend fun observeAddBtn() {
+    private suspend fun observeUiState(){
+        alarmViewModel.uiEvent.collect {
+            when(it){
+                is UiEvent.Navigate -> {
 
-        alarmViewModel.onClickAdd.collect {
-            if (it) {
-                openAlarmDialog(null)
-                alarmViewModel.initAddState()
+                }
+                is UiEvent.PopUpStack -> {
+
+                }
+                is UiEvent.ShowSnackBar ->{
+                    val snackBar = Snackbar.make(binding.constRoot, it.message, Snackbar.LENGTH_SHORT)
+                    snackBar.setAction(it.action) {
+                        alarmViewModel.deleteAlarmDate?.let { deletedAlarm ->
+                            alarmViewModel.onEvent(AlarmEvent.OnUndoDeleteClick(deletedAlarm))
+                        }
+                        snackBar.dismiss()
+                    }
+                    snackBar.show()
+                }
             }
         }
-
-    }
-
-    private suspend fun observeMoreBtn() {
-
-        alarmViewModel.onClickMore.collect {
-            if (it) {
-                alarmViewModel.initMoreState()
-            }
-        }
-
     }
 
     private fun observeAlarmWithDate(){
         alarmViewModel.alarmList.observe(this, Observer {
             Timber.d("Relation -> $it")
+            alarmList = it
             alarmAdapter.submitList(it.toMutableList())
         })
     }

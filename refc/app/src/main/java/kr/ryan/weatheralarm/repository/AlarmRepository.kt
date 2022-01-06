@@ -1,4 +1,4 @@
-package kr.ryan.weatheralarm.room
+package kr.ryan.weatheralarm.repository
 
 import androidx.room.*
 import kotlinx.coroutines.flow.Flow
@@ -8,19 +8,18 @@ import kr.ryan.weatheralarm.data.AlarmWithDate
 
 /**
  * WeatherAlarm
- * Class: AlarmDao
+ * Class: AlarmRepository
  * Created by pyg10.
- * Created On 2021-10-24.
+ * Created On 2022-01-05.
  * Description:
  */
-@Dao
-interface AlarmDao {
+interface AlarmRepository {
+
     /**
      *
      * Alarm Dao
      *
      */
-    @Update
     suspend fun updateAlarmInfo(alarm: Alarm)
 
     /**
@@ -28,13 +27,10 @@ interface AlarmDao {
      * AlarmDate Dao
      *
      */
-    @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insertAlarmDate(vararg alarmDate: AlarmDate)
 
-    @Update
     suspend fun updateAlarmDate(vararg alarmDate: AlarmDate)
 
-    @Delete
     suspend fun deleteAlarmDate(vararg alarmDate: AlarmDate)
 
     /**
@@ -43,17 +39,12 @@ interface AlarmDao {
      *
      */
 
-    @Transaction
-    @Query("Select * from alarm")
     fun getAllAlarmList() : Flow<List<AlarmWithDate>>
 
-    @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insertAlarm(alarmWithDate: AlarmWithDate)
 
-    @Delete
     suspend fun deleteAlarm(alarmWithDate: AlarmWithDate)
 
-    @Update
     suspend fun updateAlarm(alarmWithDate: AlarmWithDate)
 
 }

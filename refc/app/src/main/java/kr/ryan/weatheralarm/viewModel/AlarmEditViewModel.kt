@@ -1,5 +1,6 @@
 package kr.ryan.weatheralarm.viewModel
 
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
@@ -27,7 +28,8 @@ import javax.inject.Inject
 @HiltViewModel
 class AlarmEditViewModel @Inject constructor(
     private val insertUseCase: AlarmInsertUseCase,
-    private val updateUseCase: AlarmUpdateUseCase
+    private val updateUseCase: AlarmUpdateUseCase,
+    savedStateHandle: SavedStateHandle
 ) : ViewModel() {
 
     private val dayList = listOf("일", "월", "화", "수", "목", "금", "토")
