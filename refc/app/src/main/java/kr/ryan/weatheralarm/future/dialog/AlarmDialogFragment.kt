@@ -66,9 +66,9 @@ class AlarmDialogFragment : BaseDialogFragment<DialogAlarmBinding>(R.layout.dial
                     onClickCancelBtn()
                 }
 
-                launch {
-                    onClickSaveBtn()
-                }
+//                launch {
+//                    onClickSaveBtn()
+//                }
 
 
             }
@@ -78,7 +78,7 @@ class AlarmDialogFragment : BaseDialogFragment<DialogAlarmBinding>(R.layout.dial
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        initBinding()
+        //initBinding()
         changeTimePicker()
 
     }
@@ -89,17 +89,17 @@ class AlarmDialogFragment : BaseDialogFragment<DialogAlarmBinding>(R.layout.dial
         }
     }
 
-    private fun initBinding(){
-        binding.apply {
-            lifecycleOwner = viewLifecycleOwner
-            viewModel = this@AlarmDialogFragment.viewModel
-
-            includeDay.apply {
-                viewModel = this@AlarmDialogFragment.viewModel
-                lifecycleOwner = viewLifecycleOwner
-            }
-        }
-    }
+//    private fun initBinding(){
+//        binding.apply {
+//            lifecycleOwner = viewLifecycleOwner
+//            viewModel = this@AlarmDialogFragment.viewModel
+//
+//            includeDay.apply {
+//                viewModel = this@AlarmDialogFragment.viewModel
+//                lifecycleOwner = viewLifecycleOwner
+//            }
+//        }
+//    }
 
     private fun changeTimePicker(){
         binding.timePick.setOnTimeChangedListener { timePicker, hour, min ->
@@ -116,17 +116,17 @@ class AlarmDialogFragment : BaseDialogFragment<DialogAlarmBinding>(R.layout.dial
             }
         }
     }
-
-    private suspend fun onClickSaveBtn() {
-        viewModel.saveEvent.collect {
-            if (it){
-                alarm?.let{ alarm ->
-                    viewModel.insertAlarm(alarm)
-                }
-                saveEvent()
-                viewModel.initSaveEvent()
-                dismiss()
-            }
-        }
-    }
+//
+//    private suspend fun onClickSaveBtn() {
+//        viewModel.saveEvent.collect {
+//            if (it){
+//                alarm?.let{ alarm ->
+//                    viewModel.insertAlarm(alarm)
+//                }
+//                saveEvent()
+//                viewModel.initSaveEvent()
+//                dismiss()
+//            }
+//        }
+//    }
 }

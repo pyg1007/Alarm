@@ -2,13 +2,6 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <data>
-
-        <variable
-            name="viewModel"
-            type="kr.ryan.weatheralarm.viewModel.AlarmViewModel" />
-    </data>
-
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/const_root"
         android:layout_width="match_parent"
@@ -26,7 +19,6 @@
             android:id="@+id/tv_remain_time"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            setFastTime="@{viewModel.alarmList}"
             android:background="@color/cyan_200"
             android:elevation="15dp"
             android:gravity="center"
@@ -46,7 +38,6 @@
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:contentDescription="@string/add"
-            android:onClick="@{() -> viewModel.activeAddBtn()}"
             android:src="@drawable/ic_add"
             app:layout_constraintBottom_toTopOf="@id/recycler_alarm"
             app:layout_constraintDimensionRatio="1"
@@ -59,7 +50,6 @@
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:contentDescription="@string/more"
-            android:onClick="@{() -> viewModel.activeMoreBtn()}"
             android:src="@drawable/ic_more_vert"
             app:layout_constraintBottom_toTopOf="@id/recycler_alarm"
             app:layout_constraintDimensionRatio="1"

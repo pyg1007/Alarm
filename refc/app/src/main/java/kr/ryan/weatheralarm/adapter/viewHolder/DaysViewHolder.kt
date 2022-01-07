@@ -17,7 +17,7 @@ class DaysViewHolder constructor(private val binding: RecyclerDaysBinding) : Rec
 
     fun bind(status: AlarmStatus){
 
-        initBinding(status)
+        //initBinding(status)
 
         binding.root.setOnLongClickListener {
             onLongItemClick(it, adapterPosition, status)
@@ -29,9 +29,9 @@ class DaysViewHolder constructor(private val binding: RecyclerDaysBinding) : Rec
         }
     }
 
-    private fun initBinding(status: AlarmStatus){
-        binding.alarm = status as AlarmStatus.DaysAlarm
-    }
+//    private fun initBinding(status: AlarmStatus){
+//        binding.alarm = status as AlarmStatus.DaysAlarm
+//    }
 
     companion object{
 

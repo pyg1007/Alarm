@@ -3,13 +3,6 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <data>
-
-        <variable
-            name="viewModel"
-            type="kr.ryan.weatheralarm.viewModel.AlarmEditViewModel" />
-    </data>
-
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
@@ -19,8 +12,6 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:timePickerMode="spinner"
-            android:hour="@={viewModel.hour}"
-            android:minute="@={viewModel.min}"
             app:layout_constraintHeight_percent="0.35"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
@@ -40,7 +31,6 @@
                     android:id="@+id/tv_selected_date"
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
-                    android:text="@{viewModel.observeShowDayList}"
                     android:gravity="center_vertical"
                     app:layout_constraintHeight_percent="0.15"
                     app:layout_constraintTop_toTopOf="parent" />
@@ -59,7 +49,6 @@
                     android:layout_height="0dp"
                     android:importantForAutofill="no"
                     android:inputType="text"
-                    android:text="@={viewModel.title}"
                     app:layout_constraintHeight_percent="0.25"
                     app:layout_constraintTop_toBottomOf="@id/include_day"
                     tools:ignore="LabelFor" />
@@ -72,7 +61,6 @@
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:background="@color/cyan_200"
-            android:onClick="@{() -> viewModel.onClickCancelEvent()}"
             android:text="@string/cancel"
             app:backgroundTint="@null"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -86,7 +74,6 @@
             android:layout_height="0dp"
             android:background="@color/cyan_200"
             android:gravity="center"
-            android:onClick="@{() -> viewModel.onClickSaveEvent()}"
             android:text="@string/save"
             app:backgroundTint="@null"
             app:layout_constraintBottom_toBottomOf="parent"

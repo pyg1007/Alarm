@@ -2,8 +2,7 @@ package kr.ryan.weatheralarm.usecase
 
 import kr.ryan.weatheralarm.data.Alarm
 import kr.ryan.weatheralarm.data.AlarmDate
-import kr.ryan.weatheralarm.data.AlarmWithDate
-import kr.ryan.weatheralarm.repository.AlarmRepositoryImpl
+import kr.ryan.weatheralarm.repository.AlarmRepository
 import javax.inject.Inject
 
 /**
@@ -14,11 +13,11 @@ import javax.inject.Inject
  * Description:
  */
 class AlarmDeleteUseCase @Inject constructor(
-    private val alarmRepositoryImpl: AlarmRepositoryImpl
+    private val alarmRepository: AlarmRepository
 ) {
 
-    suspend fun deleteAlarm(alarmWithDate: AlarmWithDate) = alarmRepositoryImpl.deleteAlarm(alarmWithDate)
+    suspend fun deleteAlarm(alarm: Alarm) = alarmRepository.deleteAlarmInfo(alarm)
     
-    suspend fun deleteAlarmDate(vararg alarmDate: AlarmDate) = alarmRepositoryImpl.deleteAlarmDate(*alarmDate)
+    suspend fun deleteAlarmDate(alarmDate: List<AlarmDate>) = alarmRepository.deleteAlarmDate(alarmDate)
 
 }

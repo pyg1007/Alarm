@@ -7,7 +7,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
-import kr.ryan.weatheralarm.data.AlarmDate
+import kr.ryan.weatheralarm.data.Alarm
 import kr.ryan.weatheralarm.data.AlarmWithDate
 import kr.ryan.weatheralarm.usecase.AlarmDeleteUseCase
 import kr.ryan.weatheralarm.usecase.AlarmInsertUseCase
@@ -57,7 +57,7 @@ class AlarmViewModel @Inject constructor(
             }
             is AlarmEvent.OnDeleteClick -> { // 롱클릭시 나타나는 팝업메뉴 클릭시
                 deleteAlarmDate = event.alarmWithDate
-                deleteAlarm(event.alarmWithDate)
+                deleteAlarm(event.alarmWithDate.alarm)
                 sendChannelEvent(
                     UiEvent.ShowSnackBar(
                         "${event.alarmWithDate.alarm.title} 을 삭제하였습니다.",
@@ -71,12 +71,12 @@ class AlarmViewModel @Inject constructor(
         }
     }
 
-    private fun deleteAlarm(alarmWithDate: AlarmWithDate) = viewModelScope.launch {
-        deleteUseCase.deleteAlarm(alarmWithDate)
+    private fun deleteAlarm(alarm: Alarm) = viewModelScope.launch {
+        deleteUseCase.deleteAlarm(alarm)
     }
 
     private fun insertAlarm(alarmWithDate: AlarmWithDate) = viewModelScope.launch {
-        insertUseCase.insertAlarm(alarmWithDate)
+        insertUseCase.insertAlarm(alarmWithDate.alarm, alarmWithDate.alarmDate)
     }
 
     private fun sendChannelEvent(event: UiEvent) = viewModelScope.launch {

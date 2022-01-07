@@ -30,6 +30,7 @@ object DataBaseModule {
     }
 
     @Provides
+    @Singleton
     fun provideAlarmRepository(alarmDatabase: AlarmDatabase): AlarmRepository {
         return AlarmRepositoryImpl(alarmDatabase.alarmDao())
     }

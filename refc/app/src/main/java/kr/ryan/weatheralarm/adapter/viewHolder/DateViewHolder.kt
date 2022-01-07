@@ -16,7 +16,7 @@ import kr.ryan.weatheralarm.databinding.RecyclerDateBinding
 class DateViewHolder constructor(private val binding: RecyclerDateBinding) : RecyclerView.ViewHolder(binding.root) {
 
     fun bind(status: AlarmStatus){
-        initBinding(status)
+        //initBinding(status)
 
         binding.root.setOnLongClickListener {
             onLongItemClick(it, adapterPosition, status)
@@ -28,9 +28,9 @@ class DateViewHolder constructor(private val binding: RecyclerDateBinding) : Rec
         }
     }
 
-    private fun initBinding(status: AlarmStatus){
-        binding.alarm = status as AlarmStatus.DateAlarm
-    }
+//    private fun initBinding(status: AlarmStatus){
+//        binding.alarm = status as AlarmStatus.DateAlarm
+//    }
 
     companion object{
 

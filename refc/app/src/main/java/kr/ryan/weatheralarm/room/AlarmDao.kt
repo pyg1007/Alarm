@@ -23,19 +23,25 @@ interface AlarmDao {
     @Update
     suspend fun updateAlarmInfo(alarm: Alarm)
 
+    @Delete
+    suspend fun deleteAlarmInfo(alarm: Alarm)
+
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    suspend fun insertAlarmInfo(alarm: Alarm) : Long
+
     /**
      *
      * AlarmDate Dao
      *
      */
     @Insert(onConflict = OnConflictStrategy.IGNORE)
-    suspend fun insertAlarmDate(vararg alarmDate: AlarmDate)
+    suspend fun insertAlarmDate(alarmDate: List<AlarmDate>)
 
     @Update
-    suspend fun updateAlarmDate(vararg alarmDate: AlarmDate)
+    suspend fun updateAlarmDate(alarmDate: List<AlarmDate>)
 
     @Delete
-    suspend fun deleteAlarmDate(vararg alarmDate: AlarmDate)
+    suspend fun deleteAlarmDate(alarmDate: List<AlarmDate>)
 
     /**
      *
@@ -47,13 +53,12 @@ interface AlarmDao {
     @Query("Select * from alarm")
     fun getAllAlarmList() : Flow<List<AlarmWithDate>>
 
-    @Insert(onConflict = OnConflictStrategy.IGNORE)
-    suspend fun insertAlarm(alarmWithDate: AlarmWithDate)
+    @Transaction
+    suspend fun insertAlarm(alarm: Alarm, alarmDate: List<AlarmDate>){
+        val id = insertAlarmInfo(alarm)
 
-    @Delete
-    suspend fun deleteAlarm(alarmWithDate: AlarmWithDate)
-
-    @Update
-    suspend fun updateAlarm(alarmWithDate: AlarmWithDate)
+        alarmDate.forEach { it.alarmId = id }
+        insertAlarmDate(alarmDate)
+    }
 
 }

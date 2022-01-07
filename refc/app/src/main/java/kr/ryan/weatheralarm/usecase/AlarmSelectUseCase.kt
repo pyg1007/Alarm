@@ -1,6 +1,6 @@
 package kr.ryan.weatheralarm.usecase
 
-import kr.ryan.weatheralarm.repository.AlarmRepositoryImpl
+import kr.ryan.weatheralarm.repository.AlarmRepository
 import javax.inject.Inject
 
 /**
@@ -11,9 +11,9 @@ import javax.inject.Inject
  * Description:
  */
 class AlarmSelectUseCase @Inject constructor(
-    private val alarmRepositoryImpl: AlarmRepositoryImpl
+    private val alarmRepository: AlarmRepository
 ) {
 
-    suspend fun selectAlarmList() = alarmRepositoryImpl.getAllAlarmList()
+    fun selectAlarmList() = alarmRepository.getAllAlarmList()
 
 }

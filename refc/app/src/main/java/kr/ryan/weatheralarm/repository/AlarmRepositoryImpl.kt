@@ -17,35 +17,31 @@ class AlarmRepositoryImpl(
     private val dao: AlarmDao
 ) : AlarmRepository {
 
-    override suspend fun insertAlarm(alarmWithDate: AlarmWithDate) {
-        dao.insertAlarm(alarmWithDate)
-    }
-
-    override suspend fun deleteAlarm(alarmWithDate: AlarmWithDate) {
-        dao.deleteAlarm(alarmWithDate)
-    }
-
-    override suspend fun updateAlarm(alarmWithDate: AlarmWithDate) {
-        dao.updateAlarm(alarmWithDate)
-    }
-
-    override suspend fun insertAlarmDate(vararg alarmDate: AlarmDate) {
-        dao.insertAlarmDate(*alarmDate)
-    }
-
-    override suspend fun updateAlarmDate(vararg alarmDate: AlarmDate) {
-        dao.updateAlarmDate(*alarmDate)
-    }
-
-    override suspend fun deleteAlarmDate(vararg alarmDate: AlarmDate) {
-        dao.deleteAlarmDate(*alarmDate)
-    }
-
     override suspend fun updateAlarmInfo(alarm: Alarm) {
         dao.updateAlarmInfo(alarm)
     }
 
+    override suspend fun deleteAlarmInfo(alarm: Alarm) {
+        dao.deleteAlarmInfo(alarm)
+    }
+
+    override suspend fun insertAlarmDate(alarmDate: List<AlarmDate>) {
+        dao.insertAlarmDate(alarmDate)
+    }
+
+    override suspend fun updateAlarmDate(alarmDate: List<AlarmDate>) {
+        dao.updateAlarmDate(alarmDate)
+    }
+
+    override suspend fun deleteAlarmDate(alarmDate: List<AlarmDate>) {
+        dao.deleteAlarmDate(alarmDate)
+    }
+
     override fun getAllAlarmList(): Flow<List<AlarmWithDate>> {
         return dao.getAllAlarmList()
+    }
+
+    override suspend fun insertAlarm(alarm: Alarm, alarmDate: List<AlarmDate>) {
+        dao.insertAlarm(alarm, alarmDate)
     }
 }

@@ -45,7 +45,7 @@ class MainActivity : BaseActivity<ActivityMainBinding>(R.layout.activity_main) {
             }
 
             whenCreated {
-                initBinding()
+                //initBinding()
                 initRecyclerView()
                 recyclerViewItemClick()
                 recyclerViewItemLongClick()
@@ -67,12 +67,12 @@ class MainActivity : BaseActivity<ActivityMainBinding>(R.layout.activity_main) {
         }
     }
 
-    private fun initBinding() {
-        binding.apply {
-            viewModel = alarmViewModel
-            lifecycleOwner = this@MainActivity
-        }
-    }
+//    private fun initBinding() {
+//        binding.apply {
+//            viewModel = alarmViewModel
+//            lifecycleOwner = this@MainActivity
+//        }
+//    }
 
     private fun initRecyclerView() {
         binding.recyclerAlarm.apply {
@@ -99,7 +99,7 @@ class MainActivity : BaseActivity<ActivityMainBinding>(R.layout.activity_main) {
     private fun recyclerViewItemClick() {
         alarmAdapter.setOnClickListener { _, position, alarm ->
             alarmList?.let {
-
+                alarmViewModel.onEvent(AlarmEvent.OnAlarmClick(it[position]))
             }
         }
     }

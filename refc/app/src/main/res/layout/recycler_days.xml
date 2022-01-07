@@ -2,12 +2,6 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <data>
-        <variable
-            name="alarm"
-            type="kr.ryan.weatheralarm.data.AlarmStatus.DaysAlarm" />
-    </data>
-
     <androidx.constraintlayout.widget.ConstraintLayout
         android:background="@color/purple_700"
         android:layout_width="match_parent"
@@ -18,7 +12,6 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:gravity="center_vertical"
-            android:text="@{alarm.title}"
             android:textSize="16sp"
             android:textStyle="bold"
             app:layout_constraintHeight_percent="0.35"
@@ -26,7 +19,6 @@
 
         <TextView
             android:id="@+id/tv_meridiem"
-            Meridiem="@{alarm}"
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:gravity="bottom|center_horizontal"
@@ -38,7 +30,6 @@
 
         <TextView
             android:id="@+id/tv_time"
-            time="@{alarm}"
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:gravity="center_vertical"
@@ -61,7 +52,6 @@
             android:id="@+id/switch_alarm_state"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:checked="@{alarm.status}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toRightOf="@id/tv_date"
             app:layout_constraintRight_toRightOf="parent"

@@ -127,12 +127,4 @@ class AlarmEditViewModel @Inject constructor(
         _saveEvent.emit(false)
     }
 
-    fun insertAlarm(alarm: Alarm) = viewModelScope.launch {
-        insertUseCase.insertAlarm(alarm)
-    }
-
-    fun updateAlarm(alarm: Alarm) = viewModelScope.launch {
-        updateUseCase.updateAlarm(alarm)
-    }
-
 }
