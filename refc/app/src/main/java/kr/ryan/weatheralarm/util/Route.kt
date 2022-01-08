@@ -13,5 +13,7 @@ object Route {
 
     const val EDIT_MODE = "EditMode"
 
+    const val CANCEL = "CANCEL"
 
+    const val SAVE = "SAVE"
 }

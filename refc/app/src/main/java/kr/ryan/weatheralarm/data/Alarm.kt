@@ -20,6 +20,7 @@ data class Alarm(
     val index: Long = 0, val title: String?, val onOff: Boolean
 ) : Parcelable
 
+@Parcelize
 @Entity(
     tableName = "date",
     foreignKeys = [
@@ -35,8 +36,9 @@ data class AlarmDate(
     @PrimaryKey(autoGenerate = true)
     val index: Long = 0,
     var alarmId: Long? = null, val date: Date
-)
+): Parcelable
 
+@Parcelize
 data class AlarmWithDate(
     @Embedded val alarm: Alarm,
     @Relation(
@@ -44,4 +46,4 @@ data class AlarmWithDate(
         entityColumn = "alarmId"
     )
     val alarmDate: List<AlarmDate>
-)
+): Parcelable

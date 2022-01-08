@@ -32,7 +32,7 @@ class AlarmViewModel @Inject constructor(
     private val deleteUseCase: AlarmDeleteUseCase
 ) : ViewModel() {
 
-    val alarmList = flow<List<AlarmWithDate>> {
+    val alarmList = flow {
         selectUseCase.selectAlarmList().collect {
             emit(it)
         }
@@ -66,8 +66,17 @@ class AlarmViewModel @Inject constructor(
                 )
             }
             is AlarmEvent.OnAlarmClick -> { // 설정되어있는 알람 클릭
-                sendChannelEvent(UiEvent.Navigate(Route.EDIT_MODE))
+                sendChannelEvent(UiEvent.Navigate(Route.EDIT_MODE, event.alarmWithDate))
             }
+        }
+    }
+
+    fun onClickBtn(route: String) = viewModelScope.launch {
+        when (route) {
+            "ADD" -> _uiEvent.send(UiEvent.Navigate(Route.ADD_MODE))
+            "CANCEL" -> _uiEvent.send(UiEvent.Navigate(Route.CANCEL))
+            "SAVE" -> _uiEvent.send(UiEvent.Navigate(Route.SAVE))
+            else -> _uiEvent.send(UiEvent.ShowSnackBar("${route}를 클릭하셨습니다."))
         }
     }
 
@@ -79,7 +88,7 @@ class AlarmViewModel @Inject constructor(
         insertUseCase.insertAlarm(alarmWithDate.alarm, alarmWithDate.alarmDate)
     }
 
-    private fun sendChannelEvent(event: UiEvent) = viewModelScope.launch {
+    fun sendChannelEvent(event: UiEvent) = viewModelScope.launch {
         _uiEvent.send(event)
     }
 }

@@ -1,5 +1,7 @@
 package kr.ryan.weatheralarm.util
 
+import kr.ryan.weatheralarm.data.AlarmWithDate
+
 /**
  * WeatherAlarm
  * Class: UiEvent
@@ -11,7 +13,7 @@ sealed class UiEvent{
 
     object PopUpStack: UiEvent()
 
-    data class Navigate(val route: String) : UiEvent()
+    data class Navigate(val route: String, val alarmWithDate: AlarmWithDate? = null) : UiEvent()
 
     data class ShowSnackBar(
         val message: String,

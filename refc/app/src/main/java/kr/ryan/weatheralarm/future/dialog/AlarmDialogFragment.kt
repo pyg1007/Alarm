@@ -13,10 +13,9 @@ import kr.ryan.baseui.BaseDialogFragment
 import kr.ryan.weatheralarm.R
 import kr.ryan.weatheralarm.data.Alarm
 import kr.ryan.weatheralarm.databinding.DialogAlarmBinding
-import kr.ryan.weatheralarm.util.dialogFragmentResize
-import kr.ryan.weatheralarm.util.getCurrentHour
-import kr.ryan.weatheralarm.util.getCurrentMin
+import kr.ryan.weatheralarm.util.*
 import kr.ryan.weatheralarm.viewModel.AlarmEditViewModel
+import kr.ryan.weatheralarm.viewModel.AlarmViewModel
 import timber.log.Timber
 
 /**
@@ -29,7 +28,8 @@ import timber.log.Timber
 @AndroidEntryPoint
 class AlarmDialogFragment : BaseDialogFragment<DialogAlarmBinding>(R.layout.dialog_alarm) {
 
-    private val viewModel by viewModels<AlarmEditViewModel>()
+    private val editViewModel by viewModels<AlarmEditViewModel>()
+    private val alarmViewModel by viewModels<AlarmViewModel>()
 
     private var alarm: Alarm? = null
 
@@ -63,7 +63,7 @@ class AlarmDialogFragment : BaseDialogFragment<DialogAlarmBinding>(R.layout.dial
 
             lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED){
                 launch {
-                    onClickCancelBtn()
+                    observeUiState()
                 }
 
 //                launch {
@@ -78,7 +78,7 @@ class AlarmDialogFragment : BaseDialogFragment<DialogAlarmBinding>(R.layout.dial
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        //initBinding()
+        initBinding()
         changeTimePicker()
 
     }
@@ -89,17 +89,13 @@ class AlarmDialogFragment : BaseDialogFragment<DialogAlarmBinding>(R.layout.dial
         }
     }
 
-//    private fun initBinding(){
-//        binding.apply {
-//            lifecycleOwner = viewLifecycleOwner
-//            viewModel = this@AlarmDialogFragment.viewModel
-//
-//            includeDay.apply {
-//                viewModel = this@AlarmDialogFragment.viewModel
-//                lifecycleOwner = viewLifecycleOwner
-//            }
-//        }
-//    }
+    private fun initBinding(){
+        binding.apply {
+            lifecycleOwner = viewLifecycleOwner
+            alarmViewModel = this@AlarmDialogFragment.alarmViewModel
+            editViewModel = this@AlarmDialogFragment.editViewModel
+        }
+    }
 
     private fun changeTimePicker(){
         binding.timePick.setOnTimeChangedListener { timePicker, hour, min ->
@@ -107,26 +103,25 @@ class AlarmDialogFragment : BaseDialogFragment<DialogAlarmBinding>(R.layout.dial
         }
     }
 
-    private suspend fun onClickCancelBtn() {
-        viewModel.cancelEvent.collect {
-            if (it){
-                cancelEvent()
-                viewModel.initCancelEvent()
-                dismiss()
+    private suspend fun observeUiState() {
+        alarmViewModel.uiEvent.collect {
+            when(it){
+                is UiEvent.Navigate -> {
+                    if (it.route == Route.CANCEL) {
+                        cancelEvent()
+                    }
+                    else if(it.route == Route.SAVE) {
+                        saveEvent()
+                    }
+                    dismiss()
+                }
+                is UiEvent.ShowSnackBar -> {
+
+                }
+                is UiEvent.PopUpStack -> {
+
+                }
             }
         }
     }
-//
-//    private suspend fun onClickSaveBtn() {
-//        viewModel.saveEvent.collect {
-//            if (it){
-//                alarm?.let{ alarm ->
-//                    viewModel.insertAlarm(alarm)
-//                }
-//                saveEvent()
-//                viewModel.initSaveEvent()
-//                dismiss()
-//            }
-//        }
-//    }
 }

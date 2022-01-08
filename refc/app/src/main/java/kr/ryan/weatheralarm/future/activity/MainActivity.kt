@@ -1,7 +1,6 @@
 package kr.ryan.weatheralarm.future.activity
 
 import android.os.Bundle
-import android.util.Log
 import android.view.Gravity
 import android.widget.PopupMenu
 import androidx.activity.viewModels
@@ -13,11 +12,11 @@ import kotlinx.coroutines.launch
 import kr.ryan.baseui.BaseActivity
 import kr.ryan.weatheralarm.R
 import kr.ryan.weatheralarm.adapter.AlarmAdapter
-import kr.ryan.weatheralarm.data.Alarm
 import kr.ryan.weatheralarm.data.AlarmWithDate
 import kr.ryan.weatheralarm.databinding.ActivityMainBinding
 import kr.ryan.weatheralarm.future.dialog.AlarmDialogFragment
 import kr.ryan.weatheralarm.util.AlarmEvent
+import kr.ryan.weatheralarm.util.Route
 import kr.ryan.weatheralarm.util.UiEvent
 import kr.ryan.weatheralarm.viewModel.AlarmViewModel
 import timber.log.Timber
@@ -45,7 +44,7 @@ class MainActivity : BaseActivity<ActivityMainBinding>(R.layout.activity_main) {
             }
 
             whenCreated {
-                //initBinding()
+                initBinding()
                 initRecyclerView()
                 recyclerViewItemClick()
                 recyclerViewItemLongClick()
@@ -67,12 +66,12 @@ class MainActivity : BaseActivity<ActivityMainBinding>(R.layout.activity_main) {
         }
     }
 
-//    private fun initBinding() {
-//        binding.apply {
-//            viewModel = alarmViewModel
-//            lifecycleOwner = this@MainActivity
-//        }
-//    }
+    private fun initBinding() {
+        binding.apply {
+            viewModel = alarmViewModel
+            lifecycleOwner = this@MainActivity
+        }
+    }
 
     private fun initRecyclerView() {
         binding.recyclerAlarm.apply {
@@ -81,7 +80,7 @@ class MainActivity : BaseActivity<ActivityMainBinding>(R.layout.activity_main) {
     }
 
     private fun recyclerViewItemLongClick() {
-        alarmAdapter.setOnLongClickListener { view, position, alarm ->
+        alarmAdapter.setOnLongClickListener { view, position, _ ->
             val popup = PopupMenu(this@MainActivity, view, Gravity.END)
             menuInflater.inflate(R.menu.item_popup_alarm, popup.menu)
             popup.setOnMenuItemClickListener {
@@ -97,18 +96,18 @@ class MainActivity : BaseActivity<ActivityMainBinding>(R.layout.activity_main) {
     }
 
     private fun recyclerViewItemClick() {
-        alarmAdapter.setOnClickListener { _, position, alarm ->
+        alarmAdapter.setOnClickListener { _, position, _ ->
             alarmList?.let {
                 alarmViewModel.onEvent(AlarmEvent.OnAlarmClick(it[position]))
             }
         }
     }
 
-    private fun openAlarmDialog(alarm: Alarm?) {
+    private fun openAlarmDialog(alarmWithDate: AlarmWithDate?) {
         dialogFragment = AlarmDialogFragment()
-        alarm?.let { data ->
+        alarmWithDate?.let { data ->
             val bundle = Bundle().also {
-                it.putParcelable("alarm", data)
+                it.putParcelable("alarmWithDate", data)
             }
             dialogFragment?.arguments = bundle
         }
@@ -119,25 +118,31 @@ class MainActivity : BaseActivity<ActivityMainBinding>(R.layout.activity_main) {
 
     private fun responseAlarmDialog() {
         AlarmDialogFragment.setOnCancelEvent {
-
+            Timber.d("Cancel Active")
+            alarmViewModel.sendChannelEvent(UiEvent.ShowSnackBar("취소하였습니다."))
         }
 
         AlarmDialogFragment.setOnSaveEvent {
-
+            Timber.d("Save Active")
+            alarmViewModel.sendChannelEvent(UiEvent.ShowSnackBar("저장되었습니다."))
         }
     }
 
-    private suspend fun observeUiState(){
+    private suspend fun observeUiState() {
         alarmViewModel.uiEvent.collect {
-            when(it){
+            when (it) {
                 is UiEvent.Navigate -> {
-
+                    if (it.route == Route.ADD_MODE)
+                        openAlarmDialog(null)
+                    else
+                        openAlarmDialog(it.alarmWithDate)
                 }
                 is UiEvent.PopUpStack -> {
 
                 }
-                is UiEvent.ShowSnackBar ->{
-                    val snackBar = Snackbar.make(binding.constRoot, it.message, Snackbar.LENGTH_SHORT)
+                is UiEvent.ShowSnackBar -> {
+                    val snackBar =
+                        Snackbar.make(binding.constRoot, it.message, Snackbar.LENGTH_SHORT)
                     snackBar.setAction(it.action) {
                         alarmViewModel.deleteAlarmDate?.let { deletedAlarm ->
                             alarmViewModel.onEvent(AlarmEvent.OnUndoDeleteClick(deletedAlarm))
@@ -150,7 +155,7 @@ class MainActivity : BaseActivity<ActivityMainBinding>(R.layout.activity_main) {
         }
     }
 
-    private fun observeAlarmWithDate(){
+    private fun observeAlarmWithDate() {
         alarmViewModel.alarmList.observe(this, Observer {
             Timber.d("Relation -> $it")
             alarmList = it
