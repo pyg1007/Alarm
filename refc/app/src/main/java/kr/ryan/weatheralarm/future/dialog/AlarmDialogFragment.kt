@@ -109,17 +109,18 @@ class AlarmDialogFragment : BaseDialogFragment<DialogAlarmBinding>(R.layout.dial
                 is UiEvent.Navigate -> {
                     if (it.route == Route.CANCEL) {
                         cancelEvent()
+                        alarmViewModel.sendChannelEvent(UiEvent.PopUpStack)
                     }
                     else if(it.route == Route.SAVE) {
                         saveEvent()
+                        alarmViewModel.sendChannelEvent(UiEvent.PopUpStack)
                     }
-                    dismiss()
                 }
                 is UiEvent.ShowSnackBar -> {
 
                 }
                 is UiEvent.PopUpStack -> {
-
+                    dismiss()
                 }
             }
         }
