@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.*
+import androidx.lifecycle.Observer
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
@@ -17,6 +18,7 @@ import kr.ryan.weatheralarm.util.*
 import kr.ryan.weatheralarm.viewModel.AlarmEditViewModel
 import kr.ryan.weatheralarm.viewModel.AlarmViewModel
 import timber.log.Timber
+import java.util.*
 
 /**
  * WeatherAlarm
@@ -32,6 +34,9 @@ class AlarmDialogFragment : BaseDialogFragment<DialogAlarmBinding>(R.layout.dial
     private val alarmViewModel by viewModels<AlarmViewModel>()
 
     private var alarm: Alarm? = null
+
+    private var preHour = 0
+    private var preMin = 0
 
     companion object{
 
@@ -79,8 +84,9 @@ class AlarmDialogFragment : BaseDialogFragment<DialogAlarmBinding>(R.layout.dial
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         initBinding()
+        initViewModel()
         changeTimePicker()
-
+        test()
     }
 
     private fun initAlarm(){
@@ -97,10 +103,35 @@ class AlarmDialogFragment : BaseDialogFragment<DialogAlarmBinding>(R.layout.dial
         }
     }
 
-    private fun changeTimePicker(){
-        binding.timePick.setOnTimeChangedListener { timePicker, hour, min ->
+    private fun initViewModel(){
+        val date = Date()
+        preHour = date.getCurrentHour()
+        preMin = date.getCurrentMin()
+        editViewModel.changeHour(preHour)
+        editViewModel.changeMinute(preMin)
+    }
 
+    private fun changeTimePicker(){
+        binding.timePick.setOnTimeChangedListener { _, hour, min ->
+            if (preHour != hour) {
+                editViewModel.changeHour(hour)
+                preHour = hour
+            }
+            if (preMin != min) {
+                editViewModel.changeMinute(min)
+                preMin = min
+            }
         }
+    }
+
+    private fun test(){
+        editViewModel.selectedHour.observe(viewLifecycleOwner, Observer {
+            Timber.d("hour -> $it")
+        })
+
+        editViewModel.selectedMinute.observe(viewLifecycleOwner, Observer {
+            Timber.d("minute -> $it")
+        })
     }
 
     private suspend fun observeUiState() {

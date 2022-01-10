@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import kr.ryan.weatheralarm.data.Alarm
@@ -34,75 +35,23 @@ class AlarmEditViewModel @Inject constructor(
 
     private val dayList = listOf("일", "월", "화", "수", "목", "금", "토")
 
-    private val showDayList = mutableListOf<String>()
+    private val _selectedHour = Channel<Int>()
 
-    private val _observeShowDayList = MutableStateFlow<List<String>>(listOf())
-    val observeShowDayList = MutableStateFlow("")
+    private val _selectedMinute = Channel<Int>()
 
-    val dates = MutableStateFlow(listOf<Date>())
-    val title = MutableStateFlow("")
-    val hour = MutableStateFlow(Date().getCurrentHour())
-    val min = MutableStateFlow(Date().getCurrentMin())
-
-    val testList = MutableStateFlow(listOf(false, false, false, false, false, false, false))
-
-    val sunDayState = MutableStateFlow(false)
-    val monDayState = MutableStateFlow(false)
-    val tuesDayState = MutableStateFlow(false)
-    val wednesDayState = MutableStateFlow(false)
-    val thursDayState = MutableStateFlow(false)
-    val friDayState = MutableStateFlow(false)
-    val saturDayState = MutableStateFlow(false)
-
-    init {
-        sunDayState.controlShowing(0)
-        monDayState.controlShowing(1)
-        tuesDayState.controlShowing(2)
-        wednesDayState.controlShowing(3)
-        thursDayState.controlShowing(4)
-        friDayState.controlShowing(5)
-        saturDayState.controlShowing(6)
-
-        showDay()
-
-        viewModelScope.launch {
-            testList.collect {
-                Timber.d("$it")
-            }
-        }
-    }
-
-    private fun StateFlow<Boolean>.controlShowing(index: Int) = viewModelScope.launch {
-        collect {
-            if (it)
-                showDayList.add(dayList[index])
-            else
-                showDayList.remove(dayList[index])
-
-            _observeShowDayList.emit(showDayList.toList())
-        }
-    }
-
-    private fun showDay() = viewModelScope.launch {
-        _observeShowDayList.collect { list ->
-            observeShowDayList.emit(list.sortedBy { dayList.indexOf(it) }.joinToString(", "))
-        }
-    }
+    val selectedHour = _selectedHour.receiveAsFlow().asLiveData()
+    val selectedMinute = _selectedMinute.receiveAsFlow().asLiveData()
 
     fun changeHour(hour: Int) = viewModelScope.launch {
-        this@AlarmEditViewModel.hour.emit(hour)
+        _selectedHour.send(hour)
     }
 
     fun changeMinute(minute: Int) = viewModelScope.launch {
-        min.emit(minute)
+        _selectedMinute.send(minute)
     }
 
-    fun changeTitle(title: String) = viewModelScope.launch {
-        this@AlarmEditViewModel.title.emit(title)
-    }
+    fun onClickDays(index: Int) = viewModelScope.launch {
 
-    fun changeDates(dates: List<Date>) = viewModelScope.launch {
-        this@AlarmEditViewModel.dates.emit(dates)
     }
 
 }
