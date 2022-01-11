@@ -36,11 +36,26 @@ class AlarmEditViewModel @Inject constructor(
     private val dayList = listOf("일", "월", "화", "수", "목", "금", "토")
 
     private val _selectedHour = Channel<Int>()
-
     private val _selectedMinute = Channel<Int>()
 
     val selectedHour = _selectedHour.receiveAsFlow().asLiveData()
     val selectedMinute = _selectedMinute.receiveAsFlow().asLiveData()
+
+    private val _selectedYear = Channel<Int>()
+    private val _selectedMonth = Channel<Int>()
+    private val _selectedDate = Channel<Int>()
+
+    private val _selectedDays = Channel<List<Int>>()
+
+    val selectedDays = _selectedDays.receiveAsFlow().map{
+        val convertStringList = mutableListOf<String>()
+        it.forEach { index ->
+            convertStringList.add(dayList[index])
+        }
+        convertStringList.joinToString(", ")
+    }.asLiveData()
+
+    private val selectedDayList = mutableListOf<Int>()
 
     fun changeHour(hour: Int) = viewModelScope.launch {
         _selectedHour.send(hour)
@@ -50,8 +65,29 @@ class AlarmEditViewModel @Inject constructor(
         _selectedMinute.send(minute)
     }
 
-    fun onClickDays(index: Int) = viewModelScope.launch {
+    fun changeYear(year: Int) = viewModelScope.launch {
 
+    }
+
+    fun changeMonth(month: Int) = viewModelScope.launch {
+
+    }
+
+    fun changeDate(date: Int) = viewModelScope.launch {
+
+    }
+
+    val onClickDays = {index: Int ->
+        setSelectedDayList(index)
+    }
+
+    private fun setSelectedDayList(index: Int) = viewModelScope.launch{
+        if (selectedDayList.contains(index))
+            selectedDayList.remove(index)
+        else
+            selectedDayList.add(index)
+
+        _selectedDays.send(selectedDayList.sorted().toList())
     }
 
 }
