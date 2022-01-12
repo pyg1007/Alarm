@@ -119,12 +119,12 @@ class MainActivity : BaseActivity<ActivityMainBinding>(R.layout.activity_main) {
     private fun responseAlarmDialog() {
         AlarmDialogFragment.setOnCancelEvent {
             Timber.d("Cancel Active")
-            alarmViewModel.sendChannelEvent(UiEvent.ShowSnackBar("취소하였습니다."))
+            alarmViewModel.sendEvent(UiEvent.ShowSnackBar("취소하였습니다."))
         }
 
         AlarmDialogFragment.setOnSaveEvent {
             Timber.d("Save Active")
-            alarmViewModel.sendChannelEvent(UiEvent.ShowSnackBar("저장되었습니다."))
+            alarmViewModel.sendEvent(UiEvent.ShowSnackBar("저장되었습니다."))
         }
     }
 

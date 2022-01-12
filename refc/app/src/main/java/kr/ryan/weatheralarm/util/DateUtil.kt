@@ -11,22 +11,32 @@ import java.util.*
  * Description:
  */
 
-fun Date.convertDateString(): String{
+fun Date.convertDateString(): String {
     val simpleDateFormat = SimpleDateFormat("MM월 dd일 (E)", Locale.getDefault())
     return simpleDateFormat.format(this)
 }
 
-fun Date.convertDayString() : String{
-    val simpleDateFormat = SimpleDateFormat("E", Locale.getDefault())
-    return simpleDateFormat.format(this)
+fun Date.getCurrentYear(): Int {
+    val simpleDateFormat = SimpleDateFormat("yyyy", Locale.getDefault())
+    return simpleDateFormat.format(this).toInt()
 }
 
-fun Date.getCurrentHour() : Int {
+fun Date.getCurrentMonth(): Int {
+    val simpleDateFormat = SimpleDateFormat("MM", Locale.getDefault())
+    return simpleDateFormat.format(this).toInt()
+}
+
+fun Date.getCurrentDate(): Int {
+    val simpleDateFormat = SimpleDateFormat("dd", Locale.getDefault())
+    return simpleDateFormat.format(this).toInt()
+}
+
+fun Date.getCurrentHour(): Int {
     val simpleDateFormat = SimpleDateFormat("HH", Locale.getDefault())
     return simpleDateFormat.format(this).toInt()
 }
 
-fun Date.getCurrentMin() : Int {
+fun Date.getCurrentMin(): Int {
     val simpleDateFormat = SimpleDateFormat("mm", Locale.getDefault())
     return simpleDateFormat.format(this).toInt()
 }

@@ -40,15 +40,15 @@ class AlarmViewModel @Inject constructor(
         Timber.d("Exception $e")
     }.asLiveData()
 
-    private val _uiEvent = Channel<UiEvent>()
-    val uiEvent = _uiEvent.receiveAsFlow()
+    private val _uiEvent = MutableSharedFlow<UiEvent>()
+    val uiEvent = _uiEvent.asSharedFlow()
 
     var deleteAlarmDate: AlarmWithDate? = null
 
     fun onEvent(event: AlarmEvent) {
         when (event) {
             is AlarmEvent.OnAddClick -> { // 추가버튼
-                sendChannelEvent(UiEvent.Navigate(Route.ADD_MODE))
+                sendEvent(UiEvent.Navigate(Route.ADD_MODE))
             }
             is AlarmEvent.OnUndoDeleteClick -> { // 스낵바 취소버튼
                 deleteAlarmDate?.let {
@@ -58,7 +58,7 @@ class AlarmViewModel @Inject constructor(
             is AlarmEvent.OnDeleteClick -> { // 롱클릭시 나타나는 팝업메뉴 클릭시
                 deleteAlarmDate = event.alarmWithDate
                 deleteAlarm(event.alarmWithDate.alarm)
-                sendChannelEvent(
+                sendEvent(
                     UiEvent.ShowSnackBar(
                         "${event.alarmWithDate.alarm.title} 을 삭제하였습니다.",
                         "실행 취소"
@@ -66,17 +66,17 @@ class AlarmViewModel @Inject constructor(
                 )
             }
             is AlarmEvent.OnAlarmClick -> { // 설정되어있는 알람 클릭
-                sendChannelEvent(UiEvent.Navigate(Route.EDIT_MODE, event.alarmWithDate))
+                sendEvent(UiEvent.Navigate(Route.EDIT_MODE, event.alarmWithDate))
             }
         }
     }
 
     fun onClickBtn(route: String) = viewModelScope.launch {
         when (route) {
-            "ADD" -> _uiEvent.send(UiEvent.Navigate(Route.ADD_MODE))
-            "CANCEL" -> _uiEvent.send(UiEvent.Navigate(Route.CANCEL))
-            "SAVE" -> _uiEvent.send(UiEvent.Navigate(Route.SAVE))
-            else -> _uiEvent.send(UiEvent.ShowSnackBar("${route}를 클릭하셨습니다."))
+            "ADD" -> _uiEvent.emit(UiEvent.Navigate(Route.ADD_MODE))
+            "CANCEL" -> _uiEvent.emit(UiEvent.Navigate(Route.CANCEL))
+            "SAVE" -> _uiEvent.emit(UiEvent.Navigate(Route.SAVE))
+            else -> _uiEvent.emit(UiEvent.ShowSnackBar("${route}를 클릭하셨습니다."))
         }
     }
 
@@ -88,7 +88,7 @@ class AlarmViewModel @Inject constructor(
         insertUseCase.insertAlarm(alarmWithDate.alarm, alarmWithDate.alarmDate)
     }
 
-    fun sendChannelEvent(event: UiEvent) = viewModelScope.launch {
-        _uiEvent.send(event)
+    fun sendEvent(event: UiEvent) = viewModelScope.launch {
+        _uiEvent.emit(event)
     }
 }

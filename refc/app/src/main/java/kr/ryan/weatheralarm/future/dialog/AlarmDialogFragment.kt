@@ -106,8 +106,13 @@ class AlarmDialogFragment : BaseDialogFragment<DialogAlarmBinding>(R.layout.dial
         val date = Date()
         preHour = date.getCurrentHour()
         preMin = date.getCurrentMin()
-        editViewModel.changeHour(preHour)
-        editViewModel.changeMinute(preMin)
+        editViewModel.run {
+            changeYear(date.getCurrentYear())
+            changeMonth(date.getCurrentMonth())
+            changeDate(date.getCurrentDate())
+            changeHour(preHour)
+            changeMinute(preMin)
+        }
     }
 
     private fun changeTimePicker(){
@@ -124,12 +129,12 @@ class AlarmDialogFragment : BaseDialogFragment<DialogAlarmBinding>(R.layout.dial
     }
 
     private fun test(){
-        editViewModel.selectedHour.observe(viewLifecycleOwner, Observer {
-            Timber.d("hour -> $it")
+        editViewModel.showDate.observe(viewLifecycleOwner, Observer {
+            Timber.d("date -> $it")
         })
 
-        editViewModel.selectedMinute.observe(viewLifecycleOwner, Observer {
-            Timber.d("minute -> $it")
+        editViewModel.selectedDays.observe(viewLifecycleOwner, Observer {
+            Timber.d("days -> $it")
         })
     }
 
@@ -139,11 +144,11 @@ class AlarmDialogFragment : BaseDialogFragment<DialogAlarmBinding>(R.layout.dial
                 is UiEvent.Navigate -> {
                     if (it.route == Route.CANCEL) {
                         cancelEvent()
-                        alarmViewModel.sendChannelEvent(UiEvent.PopUpStack)
+                        alarmViewModel.sendEvent(UiEvent.PopUpStack)
                     }
                     else if(it.route == Route.SAVE) {
                         saveEvent()
-                        alarmViewModel.sendChannelEvent(UiEvent.PopUpStack)
+                        alarmViewModel.sendEvent(UiEvent.PopUpStack)
                     }
                 }
                 is UiEvent.ShowSnackBar -> {
