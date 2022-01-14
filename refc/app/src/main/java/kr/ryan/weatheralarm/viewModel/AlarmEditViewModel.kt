@@ -1,13 +1,15 @@
 package kr.ryan.weatheralarm.viewModel
 
-import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
+import kr.ryan.weatheralarm.data.Alarm
+import kr.ryan.weatheralarm.data.AlarmDate
 import kr.ryan.weatheralarm.usecase.AlarmInsertUseCase
 import kr.ryan.weatheralarm.usecase.AlarmUpdateUseCase
 import kr.ryan.weatheralarm.util.*
@@ -25,8 +27,7 @@ import javax.inject.Inject
 @HiltViewModel
 class AlarmEditViewModel @Inject constructor(
     private val insertUseCase: AlarmInsertUseCase,
-    private val updateUseCase: AlarmUpdateUseCase,
-    savedStateHandle: SavedStateHandle
+    private val updateUseCase: AlarmUpdateUseCase
 ) : ViewModel() {
 
     private val dayList = listOf("일", "월", "화", "수", "목", "금", "토")
@@ -37,10 +38,17 @@ class AlarmEditViewModel @Inject constructor(
     private val _selectedYear = MutableStateFlow(Date().getCurrentYear())
     private val _selectedMonth = MutableStateFlow(Date().getCurrentMonth())
     private val _selectedDate = MutableStateFlow(Date().getCurrentDate())
+    private val _test = MutableStateFlow(0)
 
     private val _selectedDays = MutableStateFlow<List<Int>>(emptyList())
 
-    val selectedDays = _selectedDays.map{
+    /**
+     *
+     * 요일들을 클릭했을때 보여주는 부분
+     *
+     */
+
+    val selectedDays = _selectedDays.map {
         val convertStringList = mutableListOf<String>()
         it.forEach { index ->
             convertStringList.add(dayList[index])
@@ -50,11 +58,24 @@ class AlarmEditViewModel @Inject constructor(
 
     private val selectedDayList = mutableListOf<Int>()
 
-    val showDate = combine(_selectedYear, _selectedMonth, _selectedDate, _selectedHour, _selectedMinute){
-            ints: Array<Int> ->
+    /**
+     *
+     * 요일들은 위의 변수로 표기
+     * 해당 내용은 선택되어있는 날짜
+     * 년, 월, 일, 시, 분을 조절하면 텍스트 변경되는 부분
+     *
+     */
+
+    val showDate = combine(
+        _selectedYear,
+        _selectedMonth,
+        _selectedDate,
+        _selectedHour,
+        _selectedMinute
+    ) { ints: Array<Int> ->
         Calendar.getInstance().apply {
             set(Calendar.YEAR, ints[0])
-            set(Calendar.MONTH, ints[1]-1)
+            set(Calendar.MONTH, ints[1] - 1)
             set(Calendar.DAY_OF_MONTH, ints[2])
             set(Calendar.HOUR_OF_DAY, ints[3])
             set(Calendar.MINUTE, ints[4])
@@ -63,8 +84,13 @@ class AlarmEditViewModel @Inject constructor(
         it.convertDateString()
     }.asLiveData()
 
-    val onClickDays = {index: Int ->
-        viewModelScope.launch{
+    /**
+     *
+     * 요일 클릭시 동작하는 부분
+     *
+     */
+    val onClickDays = { index: Int ->
+        viewModelScope.launch {
             if (selectedDayList.contains(index))
                 selectedDayList.remove(index)
             else
@@ -73,6 +99,8 @@ class AlarmEditViewModel @Inject constructor(
             _selectedDays.emit(selectedDayList.sorted().toList())
         }
     }
+
+    val alarmTitle = MutableStateFlow("")
 
     fun changeHour(hour: Int) = viewModelScope.launch {
         _selectedHour.emit(hour)
@@ -92,6 +120,39 @@ class AlarmEditViewModel @Inject constructor(
 
     fun changeDate(date: Int) = viewModelScope.launch {
         _selectedDate.emit(date)
+    }
+
+    suspend fun insert() = viewModelScope.launch {
+        runCatching {
+            val alarm = Alarm(title = alarmTitle.value, onOff = true)
+            val alarmDate : List<AlarmDate> = if (_selectedDays.value.isNullOrEmpty()){
+                listOf(AlarmDate(date = Calendar.getInstance().apply {
+                    set(Calendar.YEAR, _selectedYear.value)
+                    set(Calendar.MONTH, _selectedMonth.value -1)
+                    set(Calendar.DAY_OF_MONTH, _selectedDate.value)
+                    set(Calendar.HOUR_OF_DAY, _selectedHour.value)
+                    set(Calendar.MINUTE, _selectedMinute.value)
+                }.time))
+            }else{
+                val dateList = mutableListOf<AlarmDate>()
+                repeat(_selectedDays.value.size) {
+                    dateList.add(AlarmDate(date = Calendar.getInstance().apply {
+                        set(Calendar.YEAR, _selectedYear.value)
+                        set(Calendar.MONTH, _selectedMonth.value - 1)
+                        set(Calendar.DAY_OF_WEEK, it+1)
+                        set(Calendar.HOUR_OF_DAY, _selectedHour.value)
+                        set(Calendar.MINUTE, _selectedMinute.value)
+                    }.time))
+                }
+                dateList.toList()
+            }
+
+            insertUseCase.insertAlarm(alarm, alarmDate)
+        }.onSuccess {
+            Timber.d("Success")
+        }.onFailure {
+            Timber.d("Failure -> $it")
+        }
     }
 
 

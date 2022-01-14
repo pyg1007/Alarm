@@ -148,6 +148,7 @@ class AlarmDialogFragment : BaseDialogFragment<DialogAlarmBinding>(R.layout.dial
                     }
                     else if(it.route == Route.SAVE) {
                         saveEvent()
+                        editViewModel.insert()
                         alarmViewModel.sendEvent(UiEvent.PopUpStack)
                     }
                 }
