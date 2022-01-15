@@ -8,8 +8,8 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.*
 import androidx.lifecycle.Observer
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.launch
 import kr.ryan.baseui.BaseDialogFragment
 import kr.ryan.weatheralarm.R
 import kr.ryan.weatheralarm.data.Alarm
@@ -148,7 +148,9 @@ class AlarmDialogFragment : BaseDialogFragment<DialogAlarmBinding>(R.layout.dial
                     }
                     else if(it.route == Route.SAVE) {
                         saveEvent()
-                        editViewModel.insert()
+                        withContext(CoroutineScope(Dispatchers.IO).coroutineContext) {
+                            editViewModel.insert()
+                        }
                         alarmViewModel.sendEvent(UiEvent.PopUpStack)
                     }
                 }

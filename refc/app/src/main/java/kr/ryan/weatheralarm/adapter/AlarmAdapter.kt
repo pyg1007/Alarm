@@ -26,14 +26,14 @@ const val DATE = 2
 
 class AlarmAdapter : ListAdapter<AlarmWithDate, RecyclerView.ViewHolder>(AlarmWithDateDiffUtil()) {
 
-    private lateinit var _onClickEvent: (View, Int, AlarmStatus) -> Unit
-    private lateinit var _onLongClickEvent: (View, Int, AlarmStatus) -> Unit
+    private lateinit var _onClickEvent: (View, Int, AlarmWithDate) -> Unit
+    private lateinit var _onLongClickEvent: (View, Int, AlarmWithDate) -> Unit
 
-    fun setOnClickListener(clickListener: (View, Int, AlarmStatus) -> Unit) {
+    fun setOnClickListener(clickListener: (View, Int, AlarmWithDate) -> Unit) {
         _onClickEvent = clickListener
     }
 
-    fun setOnLongClickListener(longClickListener: (View, Int, AlarmStatus) -> Unit) {
+    fun setOnLongClickListener(longClickListener: (View, Int, AlarmWithDate) -> Unit) {
         _onLongClickEvent = longClickListener
     }
 
@@ -69,8 +69,8 @@ class AlarmAdapter : ListAdapter<AlarmWithDate, RecyclerView.ViewHolder>(AlarmWi
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         when(getItemViewType(position)){
-            DATE -> (holder as DateViewHolder).bind(convertAlarmStatus(getItem(position)))
-            DAYS -> (holder as DaysViewHolder).bind(convertAlarmStatus(getItem(position)))
+            DATE -> (holder as DateViewHolder).bind(getItem(position))
+            DAYS -> (holder as DaysViewHolder).bind(getItem(position))
         }
     }
 
