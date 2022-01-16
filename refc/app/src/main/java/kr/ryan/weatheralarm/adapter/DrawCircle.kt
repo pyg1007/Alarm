@@ -5,6 +5,7 @@ import androidx.core.content.ContextCompat
 import androidx.databinding.BindingAdapter
 import kotlinx.coroutines.Job
 import kr.ryan.weatheralarm.R
+import java.util.*
 
 /**
  * WeatherAlarm
@@ -16,7 +17,7 @@ import kr.ryan.weatheralarm.R
 object DrawCircle {
 
     @JvmStatic
-    @BindingAdapter("drawCircle")
+    @BindingAdapter("drawCircleListener")
     fun TextView.setDrawCircle(result: (Int) -> Job){
         setOnClickListener {
             if (background == null) {
@@ -83,6 +84,26 @@ object DrawCircle {
                 }
             }
         }
+    }
+
+    @JvmStatic
+    @BindingAdapter("drawCircle")
+    fun TextView.drawCircle(item: List<Date>){
+
+        item.forEach {
+
+            val dayOfWeek = Calendar.getInstance().apply {
+                time = it
+            }.get(Calendar.DAY_OF_WEEK)
+
+            when(dayOfWeek){
+                1 -> {
+
+                }
+            }
+
+        }
+
     }
 
 

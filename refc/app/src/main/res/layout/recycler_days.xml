@@ -2,6 +2,31 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
+    <data>
+
+        <import type="java.util.List"/>
+        <import type="java.util.Date"/>
+        <variable
+            name="title"
+            type="String" />
+
+        <variable
+            name="meridiem"
+            type="String" />
+
+        <variable
+            name="time"
+            type="String" />
+
+        <variable
+            name="days"
+            type="List&lt;Date" />
+
+        <variable
+            name="onOff"
+            type="Boolean" />
+    </data>
+
     <androidx.constraintlayout.widget.ConstraintLayout
         android:background="@color/purple_700"
         android:layout_width="match_parent"

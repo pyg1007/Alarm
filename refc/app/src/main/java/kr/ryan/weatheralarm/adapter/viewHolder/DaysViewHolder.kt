@@ -6,6 +6,9 @@ import kr.ryan.weatheralarm.data.Alarm
 import kr.ryan.weatheralarm.data.AlarmStatus
 import kr.ryan.weatheralarm.data.AlarmWithDate
 import kr.ryan.weatheralarm.databinding.RecyclerDaysBinding
+import kr.ryan.weatheralarm.util.convertDateToString
+import kr.ryan.weatheralarm.util.convertTime
+import kr.ryan.weatheralarm.util.getMeridiem
 
 /**
  * WeatherAlarm
@@ -16,23 +19,31 @@ import kr.ryan.weatheralarm.databinding.RecyclerDaysBinding
  */
 class DaysViewHolder constructor(private val binding: RecyclerDaysBinding) : RecyclerView.ViewHolder(binding.root){
 
-    fun bind(status: AlarmWithDate){
+    fun bind(alarmWithDate: AlarmWithDate){
 
-        //initBinding(status)
+        initBinding(alarmWithDate)
 
         binding.root.setOnLongClickListener {
-            onLongItemClick(it, adapterPosition, status)
+            onLongItemClick(it, adapterPosition, alarmWithDate)
             true
         }
 
         binding.root.setOnClickListener {
-            onItemClick(it, adapterPosition, status)
+            onItemClick(it, adapterPosition, alarmWithDate)
         }
     }
 
-//    private fun initBinding(status: AlarmStatus){
-//        binding.alarm = status as AlarmStatus.DaysAlarm
-//    }
+    private fun initBinding(alarmWithDate: AlarmWithDate){
+        binding.run {
+            title = alarmWithDate.alarm.title ?: ""
+            alarmWithDate.alarmDate[0].date.also {
+                date = it.convertDateToString()
+                meridiem = it.getMeridiem()
+                time = it.convertTime()
+            }
+            onOff = alarmWithDate.alarm.onOff
+        }
+    }
 
     companion object{
 

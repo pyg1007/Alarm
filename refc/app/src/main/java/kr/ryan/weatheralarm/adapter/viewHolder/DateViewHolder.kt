@@ -2,10 +2,9 @@ package kr.ryan.weatheralarm.adapter.viewHolder
 
 import android.view.View
 import androidx.recyclerview.widget.RecyclerView
-import kr.ryan.weatheralarm.data.Alarm
-import kr.ryan.weatheralarm.data.AlarmStatus
 import kr.ryan.weatheralarm.data.AlarmWithDate
 import kr.ryan.weatheralarm.databinding.RecyclerDateBinding
+import kr.ryan.weatheralarm.util.*
 
 /**
  * WeatherAlarm
@@ -16,22 +15,30 @@ import kr.ryan.weatheralarm.databinding.RecyclerDateBinding
  */
 class DateViewHolder constructor(private val binding: RecyclerDateBinding) : RecyclerView.ViewHolder(binding.root) {
 
-    fun bind(status: AlarmWithDate){
-        //initBinding(status)
+    fun bind(alarmWithDate: AlarmWithDate){
+        initBinding(alarmWithDate)
 
         binding.root.setOnLongClickListener {
-            onLongItemClick(it, adapterPosition, status)
+            onLongItemClick(it, adapterPosition, alarmWithDate)
             true
         }
 
         binding.root.setOnClickListener {
-            onItemClick(it, adapterPosition, status)
+            onItemClick(it, adapterPosition, alarmWithDate)
         }
     }
 
-//    private fun initBinding(status: AlarmStatus){
-//        binding.alarm = status as AlarmStatus.DateAlarm
-//    }
+    private fun initBinding(alarmWithDate: AlarmWithDate){
+        binding.run {
+            title = alarmWithDate.alarm.title ?: ""
+            alarmWithDate.alarmDate[0].date.also {
+                date = it.convertDateToString()
+                meridiem = it.getMeridiem()
+                time = it.convertTime()
+            }
+            onOff = alarmWithDate.alarm.onOff
+        }
+    }
 
     companion object{
 
