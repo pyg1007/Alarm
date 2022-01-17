@@ -9,9 +9,7 @@ import androidx.recyclerview.widget.RecyclerView
 import kr.ryan.weatheralarm.R
 import kr.ryan.weatheralarm.adapter.viewHolder.DateViewHolder
 import kr.ryan.weatheralarm.adapter.viewHolder.DaysViewHolder
-import kr.ryan.weatheralarm.data.AlarmStatus
 import kr.ryan.weatheralarm.data.AlarmWithDate
-import kr.ryan.weatheralarm.data.convertAlarmStatus
 import kr.ryan.weatheralarm.util.AlarmWithDateDiffUtil
 
 /**
@@ -68,7 +66,7 @@ class AlarmAdapter : ListAdapter<AlarmWithDate, RecyclerView.ViewHolder>(AlarmWi
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-        when(getItemViewType(position)){
+        when (getItemViewType(position)) {
             DATE -> (holder as DateViewHolder).bind(getItem(position))
             DAYS -> (holder as DaysViewHolder).bind(getItem(position))
         }

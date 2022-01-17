@@ -4,8 +4,8 @@
 
     <data>
 
-        <import type="java.util.List"/>
-        <import type="java.util.Date"/>
+        <import type="java.util.List" />
+
         <variable
             name="title"
             type="String" />
@@ -20,7 +20,7 @@
 
         <variable
             name="days"
-            type="List&lt;Date" />
+            type="List&lt;Integer>" />
 
         <variable
             name="onOff"
@@ -28,15 +28,15 @@
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:background="@color/purple_700"
         android:layout_width="match_parent"
-        android:layout_height="150dp">
+        android:layout_height="@dimen/item_alarm_height">
 
         <TextView
             android:id="@+id/tv_alarm_title"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:gravity="center_vertical"
+            android:text="@{title}"
             android:textSize="16sp"
             android:textStyle="bold"
             app:layout_constraintHeight_percent="0.35"
@@ -46,7 +46,9 @@
             android:id="@+id/tv_meridiem"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:gravity="bottom|center_horizontal"
+            android:gravity="center_horizontal"
+            android:text="@{meridiem}"
+            app:layout_constraintBaseline_toBaselineOf="@id/tv_time"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintHeight_percent="0.3"
             app:layout_constraintLeft_toLeftOf="parent"
@@ -58,6 +60,7 @@
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:gravity="center_vertical"
+            android:text="@{time}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toRightOf="@id/tv_meridiem"
             app:layout_constraintTop_toBottomOf="@id/tv_alarm_title"
@@ -70,10 +73,11 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toRightOf="@id/tv_time"
             app:layout_constraintTop_toBottomOf="@id/tv_alarm_title"
-            app:layout_constraintWidth_percent="0.4" >
+            app:layout_constraintWidth_percent="0.45">
 
             <TextView
                 android:id="@+id/tv_sunday"
+                drawCircle="@{days}"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:gravity="center"
@@ -88,6 +92,7 @@
 
             <TextView
                 android:id="@+id/tv_monday"
+                drawCircle="@{days}"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:gravity="center"
@@ -102,6 +107,7 @@
 
             <TextView
                 android:id="@+id/tv_tuesday"
+                drawCircle="@{days}"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:gravity="center"
@@ -116,6 +122,7 @@
 
             <TextView
                 android:id="@+id/tv_wednesday"
+                drawCircle="@{days}"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:gravity="center"
@@ -130,6 +137,7 @@
 
             <TextView
                 android:id="@+id/tv_thursday"
+                drawCircle="@{days}"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:gravity="center"
@@ -144,6 +152,7 @@
 
             <TextView
                 android:id="@+id/tv_friday"
+                drawCircle="@{days}"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:gravity="center"
@@ -158,6 +167,7 @@
 
             <TextView
                 android:id="@+id/tv_saturday"
+                drawCircle="@{days}"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:gravity="center"
@@ -176,6 +186,7 @@
             android:id="@+id/switch_alarm_state"
             android:layout_width="0dp"
             android:layout_height="0dp"
+            android:checked="@{onOff}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toRightOf="@id/const_date"
             app:layout_constraintRight_toRightOf="parent"

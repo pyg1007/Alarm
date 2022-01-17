@@ -2,11 +2,8 @@ package kr.ryan.weatheralarm.adapter
 
 import android.widget.TextView
 import androidx.databinding.BindingAdapter
-import kr.ryan.weatheralarm.data.AlarmStatus
 import kr.ryan.weatheralarm.data.AlarmWithDate
 import timber.log.Timber
-import java.text.SimpleDateFormat
-import java.util.*
 
 /**
  * WeatherAlarm
@@ -18,45 +15,6 @@ import java.util.*
 object TimeAdapter {
 
     @JvmStatic
-    @BindingAdapter("Meridiem")
-    fun TextView.convertTimeToMeridiem(status: AlarmStatus) {
-        text = when (status) {
-            is AlarmStatus.DateAlarm -> {
-                SimpleDateFormat("a", Locale.getDefault()).format(status.date)
-            }
-            is AlarmStatus.DaysAlarm -> {
-                SimpleDateFormat("a", Locale.getDefault()).format(status.date[0])
-            }
-        }
-    }
-
-    @JvmStatic
-    @BindingAdapter("time")
-    fun TextView.convertTime(status: AlarmStatus) {
-        text = when (status) {
-            is AlarmStatus.DateAlarm -> {
-                SimpleDateFormat("hh : mm", Locale.getDefault()).format(status.date)
-            }
-            is AlarmStatus.DaysAlarm -> {
-                SimpleDateFormat("hh : mm", Locale.getDefault()).format(status.date[0])
-            }
-        }
-    }
-
-    @JvmStatic
-    @BindingAdapter("date")
-    fun TextView.convertDate(status: AlarmStatus) {
-        text = when (status) {
-            is AlarmStatus.DateAlarm -> {
-                SimpleDateFormat("yyyy년 MM월 dd일 (E)", Locale.getDefault()).format(status.date)
-            }
-            is AlarmStatus.DaysAlarm -> {
-                null
-            }
-        }
-    }
-
-    @JvmStatic
     @BindingAdapter("setFastTime")
     fun TextView.findFastTime(time: List<AlarmWithDate>?) {
         text = null
@@ -66,7 +24,6 @@ object TimeAdapter {
 
         alarmOnList?.forEach {
             run {
-
 
 
             }

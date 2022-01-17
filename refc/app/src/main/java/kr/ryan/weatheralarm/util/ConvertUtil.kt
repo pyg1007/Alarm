@@ -1,8 +1,5 @@
 package kr.ryan.weatheralarm.util
 
-import kr.ryan.weatheralarm.data.Alarm
-import kr.ryan.weatheralarm.data.AlarmStatus
-
 /**
  * WeatherAlarm
  * Class: ConvertUtil

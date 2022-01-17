@@ -21,11 +21,6 @@ fun Date.getMeridiem(): String {
     return simpleDateFormat.format(this)
 }
 
-fun Date.convertDateToString(): String {
-    val simpleDateFormat = SimpleDateFormat("MM월 dd일", Locale.getDefault())
-    return simpleDateFormat.format(this)
-}
-
 fun Date.convertTime(): String {
     val simpleDateFormat = SimpleDateFormat("HH : mm", Locale.getDefault())
     return simpleDateFormat.format(this)

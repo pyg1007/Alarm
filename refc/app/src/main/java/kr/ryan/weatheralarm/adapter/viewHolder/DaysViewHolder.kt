@@ -2,13 +2,11 @@ package kr.ryan.weatheralarm.adapter.viewHolder
 
 import android.view.View
 import androidx.recyclerview.widget.RecyclerView
-import kr.ryan.weatheralarm.data.Alarm
-import kr.ryan.weatheralarm.data.AlarmStatus
 import kr.ryan.weatheralarm.data.AlarmWithDate
 import kr.ryan.weatheralarm.databinding.RecyclerDaysBinding
-import kr.ryan.weatheralarm.util.convertDateToString
 import kr.ryan.weatheralarm.util.convertTime
 import kr.ryan.weatheralarm.util.getMeridiem
+import java.util.*
 
 /**
  * WeatherAlarm
@@ -37,10 +35,12 @@ class DaysViewHolder constructor(private val binding: RecyclerDaysBinding) : Rec
         binding.run {
             title = alarmWithDate.alarm.title ?: ""
             alarmWithDate.alarmDate[0].date.also {
-                date = it.convertDateToString()
                 meridiem = it.getMeridiem()
                 time = it.convertTime()
             }
+            days = alarmWithDate.alarmDate.map { Calendar.getInstance().apply {
+                time = it.date
+            }.get(Calendar.DAY_OF_WEEK) }
             onOff = alarmWithDate.alarm.onOff
         }
     }

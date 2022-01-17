@@ -32,7 +32,7 @@ class DateViewHolder constructor(private val binding: RecyclerDateBinding) : Rec
         binding.run {
             title = alarmWithDate.alarm.title ?: ""
             alarmWithDate.alarmDate[0].date.also {
-                date = it.convertDateToString()
+                date = it.convertDateWithDayToString()
                 meridiem = it.getMeridiem()
                 time = it.convertTime()
             }

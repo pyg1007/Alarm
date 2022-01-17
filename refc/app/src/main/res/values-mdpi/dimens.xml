@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <dimen name="item_alarm_height">96dp</dimen>
+    <dimen name="item_alarm_height">37.5dp</dimen>
+
 </resources>

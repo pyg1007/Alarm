@@ -3,6 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
+
         <variable
             name="title"
             type="String" />
@@ -25,17 +26,16 @@
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:background="?attr/colorPrimaryVariant"
-        android:elevation="15dp"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/item_alarm_height">
+        android:layout_height="@dimen/item_alarm_height"
+        android:elevation="15dp">
 
         <TextView
             android:id="@+id/tv_alarm_title"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:text="@{title}"
             android:gravity="center_vertical"
+            android:text="@{title}"
             android:textSize="16sp"
             android:textStyle="bold"
             app:layout_constraintHeight_percent="0.35"
@@ -45,8 +45,9 @@
             android:id="@+id/tv_meridiem"
             android:layout_width="0dp"
             android:layout_height="0dp"
+            android:gravity="center_horizontal"
             android:text="@{meridiem}"
-            android:gravity="bottom|center_horizontal"
+            app:layout_constraintBaseline_toBaselineOf="@id/tv_time"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintHeight_percent="0.3"
             app:layout_constraintLeft_toLeftOf="parent"
@@ -69,10 +70,12 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:text="@{date}"
+            android:gravity="end"
+            app:layout_constraintBaseline_toBaselineOf="@id/tv_time"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toRightOf="@id/tv_time"
             app:layout_constraintTop_toBottomOf="@id/tv_alarm_title"
-            app:layout_constraintWidth_percent="0.4" />
+            app:layout_constraintWidth_percent="0.45" />
 
         <androidx.appcompat.widget.SwitchCompat
             android:id="@+id/switch_alarm_state"

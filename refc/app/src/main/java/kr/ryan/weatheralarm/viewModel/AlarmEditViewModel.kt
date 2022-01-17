@@ -81,7 +81,7 @@ class AlarmEditViewModel @Inject constructor(
             set(Calendar.MINUTE, ints[4])
         }.time
     }.map {
-        it.convertDateString()
+        it.convertDateWithDayToString()
     }.asLiveData()
 
     /**

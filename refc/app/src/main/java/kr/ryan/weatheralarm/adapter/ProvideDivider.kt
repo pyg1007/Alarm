@@ -17,7 +17,11 @@ object ProvideDivider {
 
     @JvmStatic
     @BindingAdapter(value = ["dividerHeight", "dividerPadding", "dividerColor"], requireAll = false)
-    fun RecyclerView.provideDivider(dividerHeight: Float?, dividerPadding: Float?, @ColorInt dividerColor: Int?){
+    fun RecyclerView.provideDivider(
+        dividerHeight: Float?,
+        dividerPadding: Float?,
+        @ColorInt dividerColor: Int?
+    ) {
         val divider = CustomDivider(
             height = dividerHeight ?: 0f,
             padding = dividerPadding ?: 0f,

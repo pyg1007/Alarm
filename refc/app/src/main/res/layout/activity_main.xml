@@ -69,7 +69,6 @@
             android:id="@+id/recycler_alarm"
             dividerColor="@{@color/gray_400}"
             dividerHeight="@{5f}"
-            android:background="@color/cyan_200"
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:orientation="vertical"
