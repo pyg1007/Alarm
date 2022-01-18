@@ -3,6 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
+
         <variable
             name="viewModel"
             type="kr.ryan.weatheralarm.viewModel.AlarmEditViewModel" />
@@ -14,12 +15,13 @@
 
         <TextView
             android:id="@+id/tv_sunday"
+            drawCircleListener="@{viewModel.onClickDays}"
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:gravity="center"
             android:text="@string/sunday"
             android:textColor="@color/red"
-            drawCircleListener="@{viewModel.onClickDays}"
+            android:textSize="@dimen/day_text_size"
             android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintDimensionRatio="1"
@@ -29,12 +31,13 @@
 
         <TextView
             android:id="@+id/tv_monday"
+            drawCircleListener="@{viewModel.onClickDays}"
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:gravity="center"
             android:text="@string/monday"
             android:textColor="@color/black"
-            drawCircleListener="@{viewModel.onClickDays}"
+            android:textSize="@dimen/day_text_size"
             android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintDimensionRatio="1"
@@ -44,12 +47,13 @@
 
         <TextView
             android:id="@+id/tv_tuesday"
+            drawCircleListener="@{viewModel.onClickDays}"
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:gravity="center"
             android:text="@string/tuesday"
             android:textColor="@color/black"
-            drawCircleListener="@{viewModel.onClickDays}"
+            android:textSize="@dimen/day_text_size"
             android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintDimensionRatio="1"
@@ -59,12 +63,13 @@
 
         <TextView
             android:id="@+id/tv_wednesday"
+            drawCircleListener="@{viewModel.onClickDays}"
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:gravity="center"
             android:text="@string/wednesday"
             android:textColor="@color/black"
-            drawCircleListener="@{viewModel.onClickDays}"
+            android:textSize="@dimen/day_text_size"
             android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintDimensionRatio="1"
@@ -74,12 +79,13 @@
 
         <TextView
             android:id="@+id/tv_thursday"
+            drawCircleListener="@{viewModel.onClickDays}"
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:gravity="center"
             android:text="@string/thursday"
             android:textColor="@color/black"
-            drawCircleListener="@{viewModel.onClickDays}"
+            android:textSize="@dimen/day_text_size"
             android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintDimensionRatio="1"
@@ -89,12 +95,13 @@
 
         <TextView
             android:id="@+id/tv_friday"
+            drawCircleListener="@{viewModel.onClickDays}"
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:gravity="center"
             android:text="@string/friday"
             android:textColor="@color/black"
-            drawCircleListener="@{viewModel.onClickDays}"
+            android:textSize="@dimen/day_text_size"
             android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintDimensionRatio="1"
@@ -104,12 +111,13 @@
 
         <TextView
             android:id="@+id/tv_saturday"
+            drawCircleListener="@{viewModel.onClickDays}"
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:gravity="center"
             android:text="@string/saturday"
             android:textColor="@color/blue"
-            drawCircleListener="@{viewModel.onClickDays}"
+            android:textSize="@dimen/day_text_size"
             android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintDimensionRatio="1"
