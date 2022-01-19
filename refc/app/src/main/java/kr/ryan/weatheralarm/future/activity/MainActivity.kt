@@ -39,19 +39,11 @@ class MainActivity : BaseActivity<ActivityMainBinding>(R.layout.activity_main) {
 
         lifecycleScope.launch {
 
-            whenStarted {
-
-            }
-
             whenCreated {
                 initBinding()
                 initRecyclerView()
                 recyclerViewItemClick()
                 recyclerViewItemLongClick()
-            }
-
-            whenResumed {
-
             }
 
             repeatOnLifecycle(Lifecycle.State.STARTED) {

@@ -10,4 +10,10 @@
         <item name="android:windowSoftInputMode">stateUnspecified|adjustPan</item>
         <item name="android:background">@android:color/transparent</item>
     </style>
+
+    <style name="Theme.App.Splash" parent="Theme.SplashScreen">
+
+        <item name="windowSplashScreenBackground">@color/gray_400</item>
+
+    </style>
 </resources>
