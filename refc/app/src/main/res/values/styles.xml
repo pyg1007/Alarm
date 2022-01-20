@@ -11,9 +11,10 @@
         <item name="android:background">@android:color/transparent</item>
     </style>
 
-    <style name="Theme.App.Splash" parent="Theme.SplashScreen">
+    <style name="Theme.AppCompat.Splash" parent="Theme.SplashScreen">
 
         <item name="windowSplashScreenBackground">@color/gray_400</item>
 
+        <item name="windowSplashScreenAnimatedIcon">@drawable/ic_alarm</item>
     </style>
 </resources>

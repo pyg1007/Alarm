@@ -5,6 +5,7 @@ import androidx.annotation.LayoutRes
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
+import timber.log.Timber
 
 /**
  * WeatherAlarm
@@ -20,6 +21,8 @@ abstract class BaseActivity<VDB : ViewDataBinding>(@LayoutRes private val layout
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        Timber.d("Base onCreate Before ContentView")
         binding = DataBindingUtil.setContentView(this, layoutRes)
+        Timber.d("Base onCreate After ContentView")
     }
 }
