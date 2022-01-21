@@ -13,7 +13,6 @@ import kr.ryan.weatheralarm.data.AlarmDate
 import kr.ryan.weatheralarm.usecase.AlarmInsertUseCase
 import kr.ryan.weatheralarm.usecase.AlarmUpdateUseCase
 import kr.ryan.weatheralarm.util.*
-import timber.log.Timber
 import java.util.*
 import javax.inject.Inject
 
@@ -122,38 +121,39 @@ class AlarmEditViewModel @Inject constructor(
         _selectedDate.emit(date)
     }
 
-    suspend fun insert() = viewModelScope.launch {
-        runCatching {
-            val alarm = Alarm(title = alarmTitle.value, onOff = true)
-            val alarmDate : List<AlarmDate> = if (_selectedDays.value.isNullOrEmpty()){
-                listOf(AlarmDate(date = Calendar.getInstance().apply {
-                    set(Calendar.YEAR, _selectedYear.value)
-                    set(Calendar.MONTH, _selectedMonth.value -1)
-                    set(Calendar.DAY_OF_MONTH, _selectedDate.value)
-                    set(Calendar.HOUR_OF_DAY, _selectedHour.value)
-                    set(Calendar.MINUTE, _selectedMinute.value)
-                }.time))
-            }else{
-                val dateList = mutableListOf<AlarmDate>()
-                repeat(_selectedDays.value.size) {
-                    dateList.add(AlarmDate(date = Calendar.getInstance().apply {
+    suspend fun insert(success: () -> Unit, failure: (t: Throwable) -> Unit) =
+        viewModelScope.launch {
+            runCatching {
+                val alarm = Alarm(title = alarmTitle.value, onOff = true)
+                val alarmDate: List<AlarmDate> = if (_selectedDays.value.isNullOrEmpty()) {
+                    listOf(AlarmDate(date = Calendar.getInstance().apply {
                         set(Calendar.YEAR, _selectedYear.value)
                         set(Calendar.MONTH, _selectedMonth.value - 1)
-                        set(Calendar.DAY_OF_WEEK, it+1)
+                        set(Calendar.DAY_OF_MONTH, _selectedDate.value)
                         set(Calendar.HOUR_OF_DAY, _selectedHour.value)
                         set(Calendar.MINUTE, _selectedMinute.value)
                     }.time))
+                } else {
+                    val dateList = mutableListOf<AlarmDate>()
+                    _selectedDays.value.forEach {
+                        dateList.add(AlarmDate(date = Calendar.getInstance().apply {
+                            set(Calendar.YEAR, _selectedYear.value)
+                            set(Calendar.MONTH, _selectedMonth.value - 1)
+                            set(Calendar.DAY_OF_WEEK, it + 1)
+                            set(Calendar.HOUR_OF_DAY, _selectedHour.value)
+                            set(Calendar.MINUTE, _selectedMinute.value)
+                        }.time))
+                    }
+                    dateList.toList()
                 }
-                dateList.toList()
-            }
 
-            insertUseCase.insertAlarm(alarm, alarmDate)
-        }.onSuccess {
-            Timber.d("Success")
-        }.onFailure {
-            Timber.d("Failure -> $it")
+                insertUseCase.insertAlarm(alarm, alarmDate)
+            }.onSuccess {
+                success()
+            }.onFailure {
+                failure(it)
+            }
         }
-    }
 
 
 }

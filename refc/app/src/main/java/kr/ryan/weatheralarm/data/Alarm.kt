@@ -17,7 +17,7 @@ import java.util.*
 @Entity
 data class Alarm(
     @PrimaryKey(autoGenerate = true)
-    val index: Long = 0, val title: String?, val onOff: Boolean
+    val index: Long = 0, val pendingId: Int, val title: String?, val isRepeat: Boolean, val onOff: Boolean
 ) : Parcelable
 
 @Parcelize
@@ -32,6 +32,7 @@ data class Alarm(
         )
     ]
 )
+
 data class AlarmDate(
     @PrimaryKey(autoGenerate = true)
     val index: Long = 0,

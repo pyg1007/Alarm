@@ -38,16 +38,16 @@ class AlarmDialogFragment : BaseDialogFragment<DialogAlarmBinding>(R.layout.dial
     private var preHour = 0
     private var preMin = 0
 
-    companion object{
+    companion object {
 
         private lateinit var cancelEvent: () -> Unit
         private lateinit var saveEvent: () -> Unit
 
-        fun setOnCancelEvent(onClick : () -> Unit){
+        fun setOnCancelEvent(onClick: () -> Unit) {
             cancelEvent = onClick
         }
 
-        fun setOnSaveEvent(onClick: () -> Unit){
+        fun setOnSaveEvent(onClick: () -> Unit) {
             saveEvent = onClick
         }
     }
@@ -66,7 +66,7 @@ class AlarmDialogFragment : BaseDialogFragment<DialogAlarmBinding>(R.layout.dial
                 initAlarm()
             }
 
-            lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED){
+            lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 launch {
                     observeUiState()
                 }
@@ -83,13 +83,13 @@ class AlarmDialogFragment : BaseDialogFragment<DialogAlarmBinding>(R.layout.dial
         test()
     }
 
-    private fun initAlarm(){
+    private fun initAlarm() {
         arguments?.let {
             alarm = it.getParcelable("Alarm")
         }
     }
 
-    private fun initBinding(){
+    private fun initBinding() {
         binding.apply {
             lifecycleOwner = viewLifecycleOwner
             alarmViewModel = this@AlarmDialogFragment.alarmViewModel
@@ -102,7 +102,7 @@ class AlarmDialogFragment : BaseDialogFragment<DialogAlarmBinding>(R.layout.dial
         }
     }
 
-    private fun initViewModel(){
+    private fun initViewModel() {
         val date = Date()
         preHour = date.getCurrentHour()
         preMin = date.getCurrentMin()
@@ -115,7 +115,7 @@ class AlarmDialogFragment : BaseDialogFragment<DialogAlarmBinding>(R.layout.dial
         }
     }
 
-    private fun changeTimePicker(){
+    private fun changeTimePicker() {
         binding.timePick.setOnTimeChangedListener { _, hour, min ->
             if (preHour != hour) {
                 editViewModel.changeHour(hour)
@@ -128,7 +128,7 @@ class AlarmDialogFragment : BaseDialogFragment<DialogAlarmBinding>(R.layout.dial
         }
     }
 
-    private fun test(){
+    private fun test() {
         editViewModel.showDate.observe(viewLifecycleOwner, Observer {
             Timber.d("date -> $it")
         })
@@ -140,18 +140,19 @@ class AlarmDialogFragment : BaseDialogFragment<DialogAlarmBinding>(R.layout.dial
 
     private suspend fun observeUiState() {
         alarmViewModel.uiEvent.collect {
-            when(it){
+            when (it) {
                 is UiEvent.Navigate -> {
                     if (it.route == Route.CANCEL) {
                         cancelEvent()
                         alarmViewModel.sendEvent(UiEvent.PopUpStack)
-                    }
-                    else if(it.route == Route.SAVE) {
-                        saveEvent()
-                        withContext(CoroutineScope(Dispatchers.IO).coroutineContext) {
-                            editViewModel.insert()
-                        }
-                        alarmViewModel.sendEvent(UiEvent.PopUpStack)
+                    } else if (it.route == Route.SAVE) {
+                        editViewModel.insert({
+                            Timber.d("insert success")
+                            saveEvent()
+                            alarmViewModel.sendEvent(UiEvent.PopUpStack)
+                        }, { throwable ->
+                            Timber.d("insert failure -> $throwable")
+                        })
                     }
                 }
                 is UiEvent.ShowSnackBar -> {
