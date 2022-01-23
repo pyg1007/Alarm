@@ -5,7 +5,9 @@ import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import android.os.Build
+import kr.ryan.weatheralarm.data.AlarmWithDate
 import kr.ryan.weatheralarm.receiver.AlarmReceiver
+import java.util.*
 
 /**
  * WeatherAlarm
@@ -15,14 +17,29 @@ import kr.ryan.weatheralarm.receiver.AlarmReceiver
  * Description:
  */
 
-fun AlarmManager.registerAlarm() {
+fun AlarmManager.registerAlarm(context: Context, alarmWithDate: AlarmWithDate) {
+    val intent = Intent(context, AlarmReceiver::class.java)
+    val sender = PendingIntent.getBroadcast(
+        context, alarmWithDate.alarm.pendingId, intent,
+        if (Build.VERSION.SDK_INT >= 30)
+            PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
+        else
+            PendingIntent.FLAG_UPDATE_CURRENT
+    )
+    if (Build.VERSION.SDK_INT >= 31){
+        if (canScheduleExactAlarms())
+            setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, Calendar.getInstance().timeInMillis, sender)
+        else
+            setExact(AlarmManager.RTC_WAKEUP, Calendar.getInstance().timeInMillis, sender)
+    }else
+        setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, Calendar.getInstance().timeInMillis, sender)
 
 }
 
-fun Context.isRegisterAlarm(alarmId: Int): Boolean {
+fun Context.isRegisterAlarm(alarmWithDate: AlarmWithDate): Boolean {
     val intent = Intent(this, AlarmReceiver::class.java)
     val sender = PendingIntent.getBroadcast(
-        this, alarmId, intent,
+        this, alarmWithDate.alarm.pendingId, intent,
         if (Build.VERSION.SDK_INT >= 30)
             PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
         else
@@ -31,11 +48,11 @@ fun Context.isRegisterAlarm(alarmId: Int): Boolean {
     return sender != null
 }
 
-fun AlarmManager.cancelAlarm(context: Context, alarmId: Int) {
+fun AlarmManager.cancelAlarm(context: Context, alarmWithDate: AlarmWithDate) {
     val intent = Intent(context, AlarmReceiver::class.java)
     val sender =
         PendingIntent.getBroadcast(
-            context, alarmId, intent,
+            context, alarmWithDate.alarm.pendingId, intent,
             if (Build.VERSION.SDK_INT >= 30)
                 PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
             else
