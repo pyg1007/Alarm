@@ -24,6 +24,10 @@
         <activity
             android:name=".future.activity.MainActivity"
             android:exported="true"/>
+
+        <receiver android:name=".receiver.AlarmReceiver"
+            android:exported="false"/>
+
     </application>
 
 </manifest>

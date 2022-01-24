@@ -124,7 +124,8 @@ class AlarmEditViewModel @Inject constructor(
     suspend fun insert(success: () -> Unit, failure: (t: Throwable) -> Unit) =
         viewModelScope.launch {
             runCatching {
-                val alarm = Alarm(title = alarmTitle.value, onOff = true)
+                val alarm = if (_selectedDays.value.isNullOrEmpty()) Alarm(title = alarmTitle.value, pendingId = 1000, isRepeat = false, onOff = true)
+                else Alarm(title = alarmTitle.value, pendingId = 1000, isRepeat = true, onOff = true)
                 val alarmDate: List<AlarmDate> = if (_selectedDays.value.isNullOrEmpty()) {
                     listOf(AlarmDate(date = Calendar.getInstance().apply {
                         set(Calendar.YEAR, _selectedYear.value)

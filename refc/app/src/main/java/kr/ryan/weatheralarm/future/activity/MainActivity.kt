@@ -1,10 +1,13 @@
 package kr.ryan.weatheralarm.future.activity
 
+import android.app.AlarmManager
+import android.content.Context
 import android.os.Bundle
 import android.view.Gravity
 import android.widget.PopupMenu
 import androidx.activity.viewModels
 import androidx.lifecycle.*
+import androidx.lifecycle.Observer
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
@@ -12,14 +15,18 @@ import kotlinx.coroutines.launch
 import kr.ryan.baseui.BaseActivity
 import kr.ryan.weatheralarm.R
 import kr.ryan.weatheralarm.adapter.AlarmAdapter
+import kr.ryan.weatheralarm.data.Alarm
+import kr.ryan.weatheralarm.data.AlarmDate
 import kr.ryan.weatheralarm.data.AlarmWithDate
 import kr.ryan.weatheralarm.databinding.ActivityMainBinding
 import kr.ryan.weatheralarm.future.dialog.AlarmDialogFragment
 import kr.ryan.weatheralarm.util.AlarmEvent
 import kr.ryan.weatheralarm.util.Route
 import kr.ryan.weatheralarm.util.UiEvent
+import kr.ryan.weatheralarm.util.registerAlarm
 import kr.ryan.weatheralarm.viewModel.AlarmViewModel
 import timber.log.Timber
+import java.util.*
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -44,6 +51,7 @@ class MainActivity : BaseActivity<ActivityMainBinding>(R.layout.activity_main) {
                 initRecyclerView()
                 recyclerViewItemClick()
                 recyclerViewItemLongClick()
+                testAlarm()
             }
 
             repeatOnLifecycle(Lifecycle.State.STARTED) {
@@ -56,6 +64,17 @@ class MainActivity : BaseActivity<ActivityMainBinding>(R.layout.activity_main) {
                 }
             }
         }
+    }
+
+    private fun testAlarm() {
+        val alarmManager = getSystemService(Context.ALARM_SERVICE) as AlarmManager
+        alarmManager.registerAlarm(this, AlarmWithDate(Alarm(1, 2, "s",
+            isRepeat = false,
+            onOff = true
+        ), listOf(AlarmDate(0, 1, Calendar.getInstance().apply {
+            set(Calendar.HOUR_OF_DAY, 8)
+            set(Calendar.MINUTE, 58)
+        }.time))))
     }
 
     private fun initBinding() {

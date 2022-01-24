@@ -27,13 +27,21 @@ fun AlarmManager.registerAlarm(context: Context, alarmWithDate: AlarmWithDate) {
             PendingIntent.FLAG_UPDATE_CURRENT
     )
     if (Build.VERSION.SDK_INT >= 31){
-        if (canScheduleExactAlarms())
-            setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, Calendar.getInstance().timeInMillis, sender)
-        else
-            setExact(AlarmManager.RTC_WAKEUP, Calendar.getInstance().timeInMillis, sender)
-    }else
-        setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, Calendar.getInstance().timeInMillis, sender)
+        if (!alarmWithDate.alarm.isRepeat) {
+            if (canScheduleExactAlarms())
+                setExactAndAllowWhileIdle(
+                    AlarmManager.RTC_WAKEUP,
+                    alarmWithDate.alarmDate[0].date.time,
+                    sender
+                )
+            else
+                setExact(AlarmManager.RTC_WAKEUP, alarmWithDate.alarmDate[0].date.time, sender)
+        }
+    }else{
+        if (!alarmWithDate.alarm.isRepeat)
+            setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, alarmWithDate.alarmDate[0].date.time, sender)
 
+    }
 }
 
 fun Context.isRegisterAlarm(alarmWithDate: AlarmWithDate): Boolean {

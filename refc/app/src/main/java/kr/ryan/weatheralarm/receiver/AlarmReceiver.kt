@@ -6,6 +6,7 @@ import android.content.Context
 import android.content.Intent
 import android.os.Build
 import androidx.annotation.RequiresApi
+import timber.log.Timber
 
 /**
  * WeatherAlarm
@@ -18,22 +19,9 @@ class AlarmReceiver : BroadcastReceiver() {
 
 
 
-    override fun onReceive(context: Context?, p1: Intent?) {
+    override fun onReceive(context: Context?, intent: Intent?) {
 
-        val alarmManager = context?.getSystemService(Context.ALARM_SERVICE) as AlarmManager
-
-        when{
-            Build.VERSION.SDK_INT >= 31 -> {
-                when{
-                    alarmManager.canScheduleExactAlarms() -> {
-
-                    }
-                }
-            }
-            else -> {
-
-            }
-        }
+        Timber.d("Alarm Receiver Active")
     }
 
 }
