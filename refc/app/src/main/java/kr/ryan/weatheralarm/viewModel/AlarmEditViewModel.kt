@@ -4,15 +4,16 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import kr.ryan.weatheralarm.data.Alarm
 import kr.ryan.weatheralarm.data.AlarmDate
+import kr.ryan.weatheralarm.data.AlarmWithDate
 import kr.ryan.weatheralarm.usecase.AlarmInsertUseCase
+import kr.ryan.weatheralarm.usecase.AlarmSelectUseCase
 import kr.ryan.weatheralarm.usecase.AlarmUpdateUseCase
 import kr.ryan.weatheralarm.util.*
+import timber.log.Timber
 import java.util.*
 import javax.inject.Inject
 
@@ -25,9 +26,20 @@ import javax.inject.Inject
  */
 @HiltViewModel
 class AlarmEditViewModel @Inject constructor(
+    private val selectUseCase: AlarmSelectUseCase,
     private val insertUseCase: AlarmInsertUseCase,
     private val updateUseCase: AlarmUpdateUseCase
 ) : ViewModel() {
+
+    private val _randomPendingNumber = flow {
+        selectUseCase.selectAlarmList().map {
+            emit(it.map { alarmWithDate ->
+                alarmWithDate.alarm.pendingId
+            })
+        }
+    }.catch { e ->
+        Timber.d("Exception $e")
+    }.stateIn(viewModelScope, SharingStarted.Lazily, emptyList<Int>())
 
     private val dayList = listOf("일", "월", "화", "수", "목", "금", "토")
 
@@ -124,31 +136,49 @@ class AlarmEditViewModel @Inject constructor(
     suspend fun insert(success: () -> Unit, failure: (t: Throwable) -> Unit) =
         viewModelScope.launch {
             runCatching {
-                val alarm = if (_selectedDays.value.isNullOrEmpty()) Alarm(title = alarmTitle.value, pendingId = 1000, isRepeat = false, onOff = true)
-                else Alarm(title = alarmTitle.value, pendingId = 1000, isRepeat = true, onOff = true)
-                val alarmDate: List<AlarmDate> = if (_selectedDays.value.isNullOrEmpty()) {
-                    listOf(AlarmDate(date = Calendar.getInstance().apply {
-                        set(Calendar.YEAR, _selectedYear.value)
-                        set(Calendar.MONTH, _selectedMonth.value - 1)
-                        set(Calendar.DAY_OF_MONTH, _selectedDate.value)
-                        set(Calendar.HOUR_OF_DAY, _selectedHour.value)
-                        set(Calendar.MINUTE, _selectedMinute.value)
-                    }.time))
+
+                var randomNumber: Int
+                while (true){
+                    randomNumber = createRandomNumber()
+                    if (!_randomPendingNumber.value.contains(randomNumber))
+                        break
+                }
+
+                if (_selectedDays.value.isNullOrEmpty()) {
+
+                    val alarm = Alarm(pendingId = randomNumber, title = alarmTitle.value, isRepeat = false, onOff = true)
+
+                    val dateList = listOf(
+                        AlarmDate(date = Calendar.getInstance().apply {
+                            set(Calendar.YEAR, _selectedYear.value)
+                            set(Calendar.MONTH, _selectedMonth.value)
+                            set(Calendar.DAY_OF_MONTH, _selectedDate.value)
+                            set(Calendar.HOUR_OF_DAY, _selectedHour.value)
+                            set(Calendar.MINUTE, _selectedMinute.value)
+                        }.time)
+                    )
+
+                    insertUseCase.insertAlarm(alarm, dateList)
+
                 } else {
+
+                    val alarm = Alarm(pendingId = randomNumber, title = alarmTitle.value, isRepeat = true, onOff = true)
+
                     val dateList = mutableListOf<AlarmDate>()
+
                     _selectedDays.value.forEach {
                         dateList.add(AlarmDate(date = Calendar.getInstance().apply {
                             set(Calendar.YEAR, _selectedYear.value)
-                            set(Calendar.MONTH, _selectedMonth.value - 1)
+                            set(Calendar.MONTH, _selectedMonth.value)
                             set(Calendar.DAY_OF_WEEK, it + 1)
                             set(Calendar.HOUR_OF_DAY, _selectedHour.value)
                             set(Calendar.MINUTE, _selectedMinute.value)
                         }.time))
                     }
-                    dateList.toList()
-                }
 
-                insertUseCase.insertAlarm(alarm, alarmDate)
+                    insertUseCase.insertAlarm(alarm, dateList)
+
+                }
             }.onSuccess {
                 success()
             }.onFailure {

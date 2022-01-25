@@ -73,9 +73,9 @@ class AlarmAdapter : ListAdapter<AlarmWithDate, RecyclerView.ViewHolder>(AlarmWi
     }
 
     override fun getItemViewType(position: Int): Int {
-        return when (getItem(position).alarmDate.size) {
-            1 -> DATE
-            else -> DAYS
+        return when (getItem(position).alarm.isRepeat) {
+            false -> DATE
+            true -> DAYS
         }
     }
 }

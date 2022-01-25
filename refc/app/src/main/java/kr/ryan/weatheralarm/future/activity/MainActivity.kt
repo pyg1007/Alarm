@@ -2,7 +2,10 @@ package kr.ryan.weatheralarm.future.activity
 
 import android.app.AlarmManager
 import android.content.Context
+import android.content.Intent
+import android.os.Build
 import android.os.Bundle
+import android.provider.Settings.ACTION_REQUEST_SCHEDULE_EXACT_ALARM
 import android.view.Gravity
 import android.widget.PopupMenu
 import androidx.activity.viewModels
@@ -68,13 +71,28 @@ class MainActivity : BaseActivity<ActivityMainBinding>(R.layout.activity_main) {
 
     private fun testAlarm() {
         val alarmManager = getSystemService(Context.ALARM_SERVICE) as AlarmManager
-        alarmManager.registerAlarm(this, AlarmWithDate(Alarm(1, 2, "s",
-            isRepeat = false,
-            onOff = true
-        ), listOf(AlarmDate(0, 1, Calendar.getInstance().apply {
-            set(Calendar.HOUR_OF_DAY, 8)
-            set(Calendar.MINUTE, 58)
-        }.time))))
+
+        if (Build.VERSION.SDK_INT >= 31){
+            when{
+                alarmManager.canScheduleExactAlarms() -> {
+                    Timber.d("Grant Permission")
+                }
+                else -> {
+                    Intent().apply {
+                        action = ACTION_REQUEST_SCHEDULE_EXACT_ALARM
+                    }.also {
+                        startActivity(it)
+                    }
+                }
+            }
+        }
+//        alarmManager.registerAlarm(this, AlarmWithDate(Alarm(1, 2, "s",
+//            isRepeat = false,
+//            onOff = true
+//        ), listOf(AlarmDate(0, 1, Calendar.getInstance().apply {
+//            set(Calendar.HOUR_OF_DAY, 5)
+//            set(Calendar.MINUTE, 32)
+//        }.time))))
     }
 
     private fun initBinding() {
