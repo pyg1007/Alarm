@@ -86,13 +86,6 @@ class MainActivity : BaseActivity<ActivityMainBinding>(R.layout.activity_main) {
                 }
             }
         }
-//        alarmManager.registerAlarm(this, AlarmWithDate(Alarm(1, 2, "s",
-//            isRepeat = false,
-//            onOff = true
-//        ), listOf(AlarmDate(0, 1, Calendar.getInstance().apply {
-//            set(Calendar.HOUR_OF_DAY, 5)
-//            set(Calendar.MINUTE, 32)
-//        }.time))))
     }
 
     private fun initBinding() {

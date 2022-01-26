@@ -1,5 +1,7 @@
 package kr.ryan.weatheralarm.future.dialog
 
+import android.app.AlarmManager
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -13,6 +15,7 @@ import kotlinx.coroutines.flow.collect
 import kr.ryan.baseui.BaseDialogFragment
 import kr.ryan.weatheralarm.R
 import kr.ryan.weatheralarm.data.Alarm
+import kr.ryan.weatheralarm.data.AlarmWithDate
 import kr.ryan.weatheralarm.databinding.DialogAlarmBinding
 import kr.ryan.weatheralarm.util.*
 import kr.ryan.weatheralarm.viewModel.AlarmEditViewModel
@@ -80,7 +83,6 @@ class AlarmDialogFragment : BaseDialogFragment<DialogAlarmBinding>(R.layout.dial
         initBinding()
         initViewModel()
         changeTimePicker()
-        test()
     }
 
     private fun initAlarm() {
@@ -103,15 +105,32 @@ class AlarmDialogFragment : BaseDialogFragment<DialogAlarmBinding>(R.layout.dial
     }
 
     private fun initViewModel() {
-        val date = Date()
-        preHour = date.getCurrentHour()
-        preMin = date.getCurrentMin()
-        editViewModel.run {
-            changeYear(date.getCurrentYear())
-            changeMonth(date.getCurrentMonth())
-            changeDate(date.getCurrentDate())
-            changeHour(preHour)
-            changeMinute(preMin)
+        val alarmWithDate: AlarmWithDate? = arguments?.getParcelable("alarmWithDate")
+        alarmWithDate?.let {
+            val date = it.alarmDate[0].date
+            preHour = date.getCurrentHour()
+            preMin = date.getCurrentMin()
+            editViewModel.run {
+                changeYear(date.getCurrentYear())
+                changeMonth(date.getCurrentMonth())
+                changeDate(date.getCurrentDate())
+                changeHour(preHour)
+                changeMinute(preMin)
+                changeTitle(it.alarm.title)
+                if (it.alarm.isRepeat)
+                    changeDays(it.alarmDate)
+            }
+        } ?: run {
+            val date = Date()
+            preHour = date.getCurrentHour()
+            preMin = date.getCurrentMin()
+            editViewModel.run {
+                changeYear(date.getCurrentYear())
+                changeMonth(date.getCurrentMonth())
+                changeDate(date.getCurrentDate())
+                changeHour(preHour)
+                changeMinute(preMin)
+            }
         }
     }
 
@@ -128,16 +147,6 @@ class AlarmDialogFragment : BaseDialogFragment<DialogAlarmBinding>(R.layout.dial
         }
     }
 
-    private fun test() {
-        editViewModel.showDate.observe(viewLifecycleOwner, Observer {
-            Timber.d("date -> $it")
-        })
-
-        editViewModel.selectedDays.observe(viewLifecycleOwner, Observer {
-            Timber.d("days -> $it")
-        })
-    }
-
     private suspend fun observeUiState() {
         alarmViewModel.uiEvent.collect {
             when (it) {
@@ -146,8 +155,18 @@ class AlarmDialogFragment : BaseDialogFragment<DialogAlarmBinding>(R.layout.dial
                         cancelEvent()
                         alarmViewModel.sendEvent(UiEvent.PopUpStack)
                     } else if (it.route == Route.SAVE) {
-                        editViewModel.insert({
-                            Timber.d("insert success")
+                        editViewModel.insert({ alarmWithDate ->
+
+                            val alarmManager = requireContext().getSystemService(Context.ALARM_SERVICE) as? AlarmManager
+                            if (alarmWithDate.alarm.isRepeat){
+                                alarmManager?.registerAlarm(requireContext(), alarmWithDate)
+                            }else{
+                                alarmManager?.registerAlarm(requireContext(), alarmWithDate)
+                            }
+
+
+
+
                             saveEvent()
                             alarmViewModel.sendEvent(UiEvent.PopUpStack)
                         }, { throwable ->

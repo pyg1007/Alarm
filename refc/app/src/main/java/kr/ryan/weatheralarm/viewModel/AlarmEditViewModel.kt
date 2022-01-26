@@ -49,7 +49,6 @@ class AlarmEditViewModel @Inject constructor(
     private val _selectedYear = MutableStateFlow(Date().getCurrentYear())
     private val _selectedMonth = MutableStateFlow(Date().getCurrentMonth())
     private val _selectedDate = MutableStateFlow(Date().getCurrentDate())
-    private val _test = MutableStateFlow(0)
 
     private val _selectedDays = MutableStateFlow<List<Int>>(emptyList())
 
@@ -133,7 +132,21 @@ class AlarmEditViewModel @Inject constructor(
         _selectedDate.emit(date)
     }
 
-    suspend fun insert(success: () -> Unit, failure: (t: Throwable) -> Unit) =
+    fun changeDays(days: List<AlarmDate>) = viewModelScope.launch {
+        val convertInt = mutableListOf<Int>()
+        days.forEach {
+            convertInt.add(Calendar.getInstance().apply {
+                time = it.date
+            }.get(Calendar.DAY_OF_WEEK) - 1)
+        }
+        _selectedDays.emit(convertInt)
+    }
+
+    fun changeTitle(title: String?) = viewModelScope.launch {
+        alarmTitle.emit(title?: "")
+    }
+
+    suspend fun insert(success: (alarmWithDate: AlarmWithDate) -> Unit, failure: (t: Throwable) -> Unit) =
         viewModelScope.launch {
             runCatching {
 
@@ -144,11 +157,14 @@ class AlarmEditViewModel @Inject constructor(
                         break
                 }
 
+                val alarm : Alarm
+                val dateList: List<AlarmDate>
+
                 if (_selectedDays.value.isNullOrEmpty()) {
 
-                    val alarm = Alarm(pendingId = randomNumber, title = alarmTitle.value, isRepeat = false, onOff = true)
+                    alarm = Alarm(pendingId = randomNumber, title = alarmTitle.value, isRepeat = false, onOff = true)
 
-                    val dateList = listOf(
+                    dateList = listOf(
                         AlarmDate(date = Calendar.getInstance().apply {
                             set(Calendar.YEAR, _selectedYear.value)
                             set(Calendar.MONTH, _selectedMonth.value)
@@ -162,9 +178,9 @@ class AlarmEditViewModel @Inject constructor(
 
                 } else {
 
-                    val alarm = Alarm(pendingId = randomNumber, title = alarmTitle.value, isRepeat = true, onOff = true)
+                    alarm = Alarm(pendingId = randomNumber, title = alarmTitle.value, isRepeat = true, onOff = true)
 
-                    val dateList = mutableListOf<AlarmDate>()
+                    dateList = mutableListOf<AlarmDate>()
 
                     _selectedDays.value.forEach {
                         dateList.add(AlarmDate(date = Calendar.getInstance().apply {
@@ -179,8 +195,10 @@ class AlarmEditViewModel @Inject constructor(
                     insertUseCase.insertAlarm(alarm, dateList)
 
                 }
+
+                AlarmWithDate(alarm, dateList)
             }.onSuccess {
-                success()
+                success(it)
             }.onFailure {
                 failure(it)
             }

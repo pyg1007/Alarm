@@ -1,5 +1,6 @@
 package kr.ryan.weatheralarm.util
 
+import kr.ryan.weatheralarm.data.AlarmWithDate
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -49,4 +50,10 @@ fun Date.getCurrentHour(): Int {
 fun Date.getCurrentMin(): Int {
     val simpleDateFormat = SimpleDateFormat("mm", Locale.getDefault())
     return simpleDateFormat.format(this).toInt()
+}
+
+fun AlarmWithDate.findFastDate() : Date{
+
+    return alarmDate.sortedBy { it.date }[0].date
+
 }
