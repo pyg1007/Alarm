@@ -20,7 +20,9 @@ import java.util.*
 
 fun AlarmManager.registerAlarm(context: Context, alarmWithDate: AlarmWithDate) {
     Timber.d("register ${alarmWithDate.findFastDate().convertDateWithDayToString()}")
-    val intent = Intent(context, AlarmReceiver::class.java)
+    val intent = Intent(context, AlarmReceiver::class.java).also {
+        it.putExtra("alarm", alarmWithDate)
+    }
     val sender = PendingIntent.getBroadcast(
         context, alarmWithDate.alarm.pendingId, intent,
         if (Build.VERSION.SDK_INT >= 30)

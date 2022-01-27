@@ -43,8 +43,8 @@ class AlarmEditViewModel @Inject constructor(
 
     private val dayList = listOf("일", "월", "화", "수", "목", "금", "토")
 
-    private val _selectedHour = MutableStateFlow(Date().getCurrentHour())
-    private val _selectedMinute = MutableStateFlow(Date().getCurrentMin())
+    val _selectedHour = MutableStateFlow(Date().getCurrentHour())
+    val _selectedMinute = MutableStateFlow(Date().getCurrentMin())
 
     private val _selectedYear = MutableStateFlow(Date().getCurrentYear())
     private val _selectedMonth = MutableStateFlow(Date().getCurrentMonth())
@@ -101,6 +101,10 @@ class AlarmEditViewModel @Inject constructor(
      */
     val onClickDays = { index: Int ->
         viewModelScope.launch {
+            Timber.d(Calendar.getInstance().apply {
+                set(Calendar.DAY_OF_WEEK, index)
+            }.time.convertDateWithDayToString())
+
             if (selectedDayList.contains(index))
                 selectedDayList.remove(index)
             else
@@ -167,7 +171,7 @@ class AlarmEditViewModel @Inject constructor(
                     dateList = listOf(
                         AlarmDate(date = Calendar.getInstance().apply {
                             set(Calendar.YEAR, _selectedYear.value)
-                            set(Calendar.MONTH, _selectedMonth.value)
+                            set(Calendar.MONTH, _selectedMonth.value - 1)
                             set(Calendar.DAY_OF_MONTH, _selectedDate.value)
                             set(Calendar.HOUR_OF_DAY, _selectedHour.value)
                             set(Calendar.MINUTE, _selectedMinute.value)

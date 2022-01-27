@@ -54,6 +54,6 @@ fun Date.getCurrentMin(): Int {
 
 fun AlarmWithDate.findFastDate() : Date{
 
-    return alarmDate.sortedBy { it.date }[0].date
+    return alarmDate.filter { it.date >= Date() }.sortedBy { it.date }[0].date
 
 }
