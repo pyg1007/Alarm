@@ -19,7 +19,7 @@ import java.util.*
  */
 
 fun AlarmManager.registerAlarm(context: Context, alarmWithDate: AlarmWithDate) {
-    Timber.d("register ${alarmWithDate.findFastDate().convertDateWithDayToString()}")
+    Timber.d("register ${alarmWithDate.findFastDate()?.convertDateWithDayToString()}")
     val intent = Intent(context, AlarmReceiver::class.java).also {
         it.putExtra("alarm", alarmWithDate)
     }
@@ -44,17 +44,17 @@ fun AlarmManager.registerAlarm(context: Context, alarmWithDate: AlarmWithDate) {
             if (canScheduleExactAlarms())
                 setExactAndAllowWhileIdle(
                     AlarmManager.RTC_WAKEUP,
-                    alarmWithDate.findFastDate().time,
+                    alarmWithDate.findFastDate()?.time!!,
                     sender
                 )
             else
-                setExact(AlarmManager.RTC_WAKEUP, alarmWithDate.findFastDate().time, sender)
+                setExact(AlarmManager.RTC_WAKEUP, alarmWithDate.findFastDate()?.time!!, sender)
         }
     }else{
         if (!alarmWithDate.alarm.isRepeat)
             setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, alarmWithDate.alarmDate[0].date.time, sender)
         else
-            setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, alarmWithDate.findFastDate().time, sender)
+            setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, alarmWithDate.findFastDate()?.time!!, sender)
     }
 }
 

@@ -157,6 +157,8 @@ class AlarmDialogFragment : BaseDialogFragment<DialogAlarmBinding>(R.layout.dial
                     } else if (it.route == Route.SAVE) {
                         editViewModel.insert({ alarmWithDate ->
 
+                            Timber.d("insert -> $alarmWithDate")
+
                             val alarmManager = requireContext().getSystemService(Context.ALARM_SERVICE) as? AlarmManager
                             if (alarmWithDate.alarm.isRepeat){
                                 alarmManager?.registerAlarm(requireContext(), alarmWithDate)

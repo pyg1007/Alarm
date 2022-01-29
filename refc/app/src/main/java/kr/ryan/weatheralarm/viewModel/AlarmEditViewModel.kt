@@ -187,13 +187,19 @@ class AlarmEditViewModel @Inject constructor(
                     dateList = mutableListOf<AlarmDate>()
 
                     _selectedDays.value.forEach {
-                        dateList.add(AlarmDate(date = Calendar.getInstance().apply {
+
+                        val date = Calendar.getInstance().apply {
                             set(Calendar.YEAR, _selectedYear.value)
-                            set(Calendar.MONTH, _selectedMonth.value)
+                            set(Calendar.MONTH, _selectedMonth.value - 1)
                             set(Calendar.DAY_OF_WEEK, it + 1)
                             set(Calendar.HOUR_OF_DAY, _selectedHour.value)
                             set(Calendar.MINUTE, _selectedMinute.value)
-                        }.time))
+                        }
+
+                        if(date.time <= Date())
+                            date.add(Calendar.DAY_OF_MONTH, 7)
+
+                        dateList.add(AlarmDate(date = date.time))
                     }
 
                     insertUseCase.insertAlarm(alarm, dateList)

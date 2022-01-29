@@ -23,10 +23,7 @@ import kr.ryan.weatheralarm.data.AlarmDate
 import kr.ryan.weatheralarm.data.AlarmWithDate
 import kr.ryan.weatheralarm.databinding.ActivityMainBinding
 import kr.ryan.weatheralarm.future.dialog.AlarmDialogFragment
-import kr.ryan.weatheralarm.util.AlarmEvent
-import kr.ryan.weatheralarm.util.Route
-import kr.ryan.weatheralarm.util.UiEvent
-import kr.ryan.weatheralarm.util.registerAlarm
+import kr.ryan.weatheralarm.util.*
 import kr.ryan.weatheralarm.viewModel.AlarmViewModel
 import timber.log.Timber
 import java.util.*
@@ -108,6 +105,10 @@ class MainActivity : BaseActivity<ActivityMainBinding>(R.layout.activity_main) {
             popup.setOnMenuItemClickListener {
                 if (it.itemId == R.id.action_delete) {
                     alarmList?.let { alarmDate ->
+                        if (isRegisterAlarm(alarmDate[position])){
+                            val alarmManager = getSystemService(Context.ALARM_SERVICE) as? AlarmManager
+                            alarmManager?.cancelAlarm(this@MainActivity, alarmDate[position])
+                        }
                         alarmViewModel.onEvent(AlarmEvent.OnDeleteClick(alarmDate[position]))
                     }
                 }
