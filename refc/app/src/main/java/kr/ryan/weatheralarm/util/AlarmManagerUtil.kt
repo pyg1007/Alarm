@@ -19,9 +19,12 @@ import java.util.*
  */
 
 fun AlarmManager.registerAlarm(context: Context, alarmWithDate: AlarmWithDate) {
-    Timber.d("register ${alarmWithDate.findFastDate()?.convertDateWithDayToString()}")
+    Timber.d("register ${alarmWithDate.findFastDate()?.date?.convertDateWithDayToString()}")
     val intent = Intent(context, AlarmReceiver::class.java).also {
-        it.putExtra("alarm", alarmWithDate)
+        if (alarmWithDate.alarm.isRepeat)
+            it.putExtra("alarm", alarmWithDate.findFastDate())
+        else
+            it.putExtra("alarm", alarmWithDate.alarmDate[0])
     }
     val sender = PendingIntent.getBroadcast(
         context, alarmWithDate.alarm.pendingId, intent,
@@ -44,17 +47,17 @@ fun AlarmManager.registerAlarm(context: Context, alarmWithDate: AlarmWithDate) {
             if (canScheduleExactAlarms())
                 setExactAndAllowWhileIdle(
                     AlarmManager.RTC_WAKEUP,
-                    alarmWithDate.findFastDate()?.time!!,
+                    alarmWithDate.findFastDate()?.date?.time!!,
                     sender
                 )
             else
-                setExact(AlarmManager.RTC_WAKEUP, alarmWithDate.findFastDate()?.time!!, sender)
+                setExact(AlarmManager.RTC_WAKEUP, alarmWithDate.findFastDate()?.date?.time!!, sender)
         }
     }else{
         if (!alarmWithDate.alarm.isRepeat)
             setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, alarmWithDate.alarmDate[0].date.time, sender)
         else
-            setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, alarmWithDate.findFastDate()?.time!!, sender)
+            setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, alarmWithDate.findFastDate()?.date?.time!!, sender)
     }
 }
 

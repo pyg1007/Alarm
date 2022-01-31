@@ -17,6 +17,10 @@ class AlarmRepositoryImpl(
     private val dao: AlarmDao
 ) : AlarmRepository {
 
+    override suspend fun selectAlarmInfo(alarmIndex: Int): Alarm {
+        return dao.getAlarmInfo(alarmIndex)
+    }
+
     override suspend fun updateAlarmInfo(alarm: Alarm) {
         dao.updateAlarmInfo(alarm)
     }

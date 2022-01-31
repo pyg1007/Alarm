@@ -23,6 +23,8 @@ interface AlarmRepository {
      * Alarm Dao
      *
      */
+    suspend fun selectAlarmInfo(alarmIndex: Int) : Alarm
+
     suspend fun updateAlarmInfo(alarm: Alarm)
 
     suspend fun deleteAlarmInfo(alarm: Alarm)

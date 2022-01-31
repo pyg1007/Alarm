@@ -43,8 +43,8 @@ class AlarmEditViewModel @Inject constructor(
 
     private val dayList = listOf("일", "월", "화", "수", "목", "금", "토")
 
-    val _selectedHour = MutableStateFlow(Date().getCurrentHour())
-    val _selectedMinute = MutableStateFlow(Date().getCurrentMin())
+    val selectedHour = MutableStateFlow(Date().getCurrentHour())
+    val selectedMinute = MutableStateFlow(Date().getCurrentMin())
 
     private val _selectedYear = MutableStateFlow(Date().getCurrentYear())
     private val _selectedMonth = MutableStateFlow(Date().getCurrentMonth())
@@ -80,8 +80,8 @@ class AlarmEditViewModel @Inject constructor(
         _selectedYear,
         _selectedMonth,
         _selectedDate,
-        _selectedHour,
-        _selectedMinute
+        selectedHour,
+        selectedMinute
     ) { ints: Array<Int> ->
         Calendar.getInstance().apply {
             set(Calendar.YEAR, ints[0])
@@ -117,11 +117,11 @@ class AlarmEditViewModel @Inject constructor(
     val alarmTitle = MutableStateFlow("")
 
     fun changeHour(hour: Int) = viewModelScope.launch {
-        _selectedHour.emit(hour)
+        selectedHour.emit(hour)
     }
 
     fun changeMinute(minute: Int) = viewModelScope.launch {
-        _selectedMinute.emit(minute)
+        selectedMinute.emit(minute)
     }
 
     fun changeYear(year: Int) = viewModelScope.launch {
@@ -173,8 +173,8 @@ class AlarmEditViewModel @Inject constructor(
                             set(Calendar.YEAR, _selectedYear.value)
                             set(Calendar.MONTH, _selectedMonth.value - 1)
                             set(Calendar.DAY_OF_MONTH, _selectedDate.value)
-                            set(Calendar.HOUR_OF_DAY, _selectedHour.value)
-                            set(Calendar.MINUTE, _selectedMinute.value)
+                            set(Calendar.HOUR_OF_DAY, selectedHour.value)
+                            set(Calendar.MINUTE, selectedMinute.value)
                         }.time)
                     )
 
@@ -192,8 +192,8 @@ class AlarmEditViewModel @Inject constructor(
                             set(Calendar.YEAR, _selectedYear.value)
                             set(Calendar.MONTH, _selectedMonth.value - 1)
                             set(Calendar.DAY_OF_WEEK, it + 1)
-                            set(Calendar.HOUR_OF_DAY, _selectedHour.value)
-                            set(Calendar.MINUTE, _selectedMinute.value)
+                            set(Calendar.HOUR_OF_DAY, selectedHour.value)
+                            set(Calendar.MINUTE, selectedMinute.value)
                         }
 
                         if(date.time <= Date())

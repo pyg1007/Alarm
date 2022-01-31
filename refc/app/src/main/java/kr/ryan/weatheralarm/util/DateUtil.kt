@@ -1,5 +1,6 @@
 package kr.ryan.weatheralarm.util
 
+import kr.ryan.weatheralarm.data.AlarmDate
 import kr.ryan.weatheralarm.data.AlarmWithDate
 import timber.log.Timber
 import java.text.SimpleDateFormat
@@ -53,13 +54,13 @@ fun Date.getCurrentMin(): Int {
     return simpleDateFormat.format(this).toInt()
 }
 
-fun AlarmWithDate.findFastDate() : Date?{
+fun AlarmWithDate.findFastDate() : AlarmDate?{
 
     Timber.d("$alarmDate")
     Timber.d("${alarmDate.filter { it.date >= Date() }}")
     Timber.d("${alarmDate.filter { it.date >= Date() }.minByOrNull { it.date }}")
     Timber.d("${alarmDate.filter { it.date >= Date() }.minByOrNull { it.date }?.date}")
 
-    return alarmDate.filter { it.date >= Date() }.minByOrNull { it.date }?.date
+    return alarmDate.filter { it.date >= Date() }.minByOrNull { it.date }
 
 }

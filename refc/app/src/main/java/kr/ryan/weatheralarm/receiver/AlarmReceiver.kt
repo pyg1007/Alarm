@@ -36,27 +36,9 @@ class AlarmReceiver : BroadcastReceiver() {
 
         CoroutineScope(Dispatchers.IO).launch {
             intent?.let { it ->
-                it.getParcelableExtra<AlarmWithDate>("alarm")?.let { alarmWithDate ->
-                    if (!alarmWithDate.alarm.isRepeat) {
-                        val alarm = alarmWithDate.alarm
-                        val alarmId = alarmWithDate.alarmDate[0].alarmId
-                        alarm.apply {
-                            index = alarmId
-                            onOff = false
-                        }
-                        updateUseCase.updateAlarmInfo(alarm)
-                    }else{
-                        Timber.d("alarmDate -> ${alarmWithDate.alarmDate}")
-                        Timber.d("fast alarmDate -> ${alarmWithDate.findFastDate()}")
-                        Calendar.getInstance().apply {
-                            time = alarmWithDate.alarmDate.find { alarmDate ->
-                                alarmDate.date == alarmWithDate.findFastDate()
-                            }?.date ?: Date()
-                        }.add(Calendar.DAY_OF_MONTH, 7)
 
-                        Timber.d("result alarmDate -> ${alarmWithDate.alarmDate}")
-                    }
-                }
+
+
             }
         }
         Timber.d("Alarm Receiver Active")

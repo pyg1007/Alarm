@@ -36,7 +36,7 @@ data class Alarm(
 data class AlarmDate(
     @PrimaryKey(autoGenerate = true)
     val index: Long? = null,
-    var alarmId: Long? = null, var date: Date
+    var alarmIndex: Long? = null, var date: Date
 ): Parcelable
 
 @Parcelize

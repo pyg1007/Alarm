@@ -20,6 +20,9 @@ interface AlarmDao {
      * Alarm Dao
      *
      */
+    @Query("SELECT * FROM Alarm WHERE `index` = :alarmIndex")
+    suspend fun getAlarmInfo(alarmIndex: Int) : Alarm
+
     @Update
     suspend fun updateAlarmInfo(alarm: Alarm)
 
@@ -57,7 +60,7 @@ interface AlarmDao {
     suspend fun insertAlarm(alarm: Alarm, alarmDate: List<AlarmDate>){
         val id = insertAlarmInfo(alarm)
 
-        alarmDate.forEach { it.alarmId = id }
+        alarmDate.forEach { it.alarmIndex = id }
         insertAlarmDate(alarmDate)
     }
 
