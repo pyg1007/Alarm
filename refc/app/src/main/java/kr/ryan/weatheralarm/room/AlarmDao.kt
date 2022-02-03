@@ -20,8 +20,8 @@ interface AlarmDao {
      * Alarm Dao
      *
      */
-    @Query("SELECT * FROM Alarm WHERE `index` = :alarmIndex")
-    suspend fun getAlarmInfo(alarmIndex: Int) : Alarm
+    @Query("SELECT * FROM alarm WHERE `index` = :alarmIndex")
+    suspend fun getAlarmInfo(alarmIndex: Long) : Alarm
 
     @Update
     suspend fun updateAlarmInfo(alarm: Alarm)
@@ -37,6 +37,10 @@ interface AlarmDao {
      * AlarmDate Dao
      *
      */
+
+    @Query("SELECT * FROM date WHERE `alarmIndex` = :alarmIndex")
+    suspend fun getAlarmDate(alarmIndex: Long) : List<AlarmDate>
+
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insertAlarmDate(alarmDate: List<AlarmDate>)
 
@@ -51,6 +55,10 @@ interface AlarmDao {
      * Alarm Alarm Date Relation
      *
      */
+
+    @Transaction
+    @Query("SELECT * FROM alarm WHERE `index` = :index")
+    suspend fun getAlarmWithDate(index: Long) : AlarmWithDate
 
     @Transaction
     @Query("Select * from alarm")

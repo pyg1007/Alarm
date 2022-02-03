@@ -20,7 +20,7 @@
 
         <variable
             name="days"
-            type="List&lt;Integer>" />
+            type="List&lt;Boolean>" />
 
         <variable
             name="onOff"
@@ -77,13 +77,12 @@
 
             <TextView
                 android:id="@+id/tv_sunday"
-                drawCircle="@{days}"
+                draw="@={days[0]}"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:gravity="center"
                 android:text="@string/sunday"
                 android:textColor="@color/red"
-                android:textSize="@dimen/day_text_size"
                 android:textStyle="bold"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintDimensionRatio="1"
@@ -93,13 +92,12 @@
 
             <TextView
                 android:id="@+id/tv_monday"
-                drawCircle="@{days}"
+                draw="@={days[1]}"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:gravity="center"
                 android:text="@string/monday"
                 android:textColor="@color/black"
-                android:textSize="@dimen/day_text_size"
                 android:textStyle="bold"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintDimensionRatio="1"
@@ -109,13 +107,12 @@
 
             <TextView
                 android:id="@+id/tv_tuesday"
-                drawCircle="@{days}"
+                draw="@={days[2]}"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:gravity="center"
                 android:text="@string/tuesday"
                 android:textColor="@color/black"
-                android:textSize="@dimen/day_text_size"
                 android:textStyle="bold"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintDimensionRatio="1"
@@ -125,13 +122,12 @@
 
             <TextView
                 android:id="@+id/tv_wednesday"
-                drawCircle="@{days}"
+                draw="@={days[3]}"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:gravity="center"
                 android:text="@string/wednesday"
                 android:textColor="@color/black"
-                android:textSize="@dimen/day_text_size"
                 android:textStyle="bold"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintDimensionRatio="1"
@@ -141,13 +137,12 @@
 
             <TextView
                 android:id="@+id/tv_thursday"
-                drawCircle="@{days}"
+                draw="@={days[4]}"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:gravity="center"
                 android:text="@string/thursday"
                 android:textColor="@color/black"
-                android:textSize="@dimen/day_text_size"
                 android:textStyle="bold"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintDimensionRatio="1"
@@ -157,13 +152,12 @@
 
             <TextView
                 android:id="@+id/tv_friday"
-                drawCircle="@{days}"
+                draw="@={days[5]}"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:gravity="center"
                 android:text="@string/friday"
                 android:textColor="@color/black"
-                android:textSize="@dimen/day_text_size"
                 android:textStyle="bold"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintDimensionRatio="1"
@@ -173,13 +167,12 @@
 
             <TextView
                 android:id="@+id/tv_saturday"
-                drawCircle="@{days}"
+                draw="@={days[6]}"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:gravity="center"
                 android:text="@string/saturday"
                 android:textColor="@color/blue"
-                android:textSize="@dimen/day_text_size"
                 android:textStyle="bold"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintDimensionRatio="1"

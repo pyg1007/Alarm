@@ -27,7 +27,7 @@ data class Alarm(
         ForeignKey(
             entity = Alarm::class,
             parentColumns = arrayOf("index"),
-            childColumns = arrayOf("alarmId"),
+            childColumns = arrayOf("alarmIndex"),
             onDelete = ForeignKey.CASCADE
         )
     ]
@@ -44,7 +44,7 @@ data class AlarmWithDate(
     @Embedded val alarm: Alarm,
     @Relation(
         parentColumn = "index",
-        entityColumn = "alarmId"
+        entityColumn = "alarmIndex"
     )
     val alarmDate: List<AlarmDate>
 ): Parcelable

@@ -17,8 +17,12 @@ class AlarmRepositoryImpl(
     private val dao: AlarmDao
 ) : AlarmRepository {
 
-    override suspend fun selectAlarmInfo(alarmIndex: Int): Alarm {
+    override suspend fun selectAlarmInfo(alarmIndex: Long): Alarm {
         return dao.getAlarmInfo(alarmIndex)
+    }
+
+    override suspend fun selectAlarmDate(alarmIndex: Long): List<AlarmDate> {
+        return dao.getAlarmDate(alarmIndex)
     }
 
     override suspend fun updateAlarmInfo(alarm: Alarm) {
@@ -41,7 +45,11 @@ class AlarmRepositoryImpl(
         dao.deleteAlarmDate(alarmDate)
     }
 
-    override fun getAllAlarmList(): Flow<List<AlarmWithDate>> {
+    override suspend fun selectAlarmWithDate(index: Long): AlarmWithDate {
+        return dao.getAlarmWithDate(index)
+    }
+
+    override fun selectAllAlarmList(): Flow<List<AlarmWithDate>> {
         return dao.getAllAlarmList()
     }
 

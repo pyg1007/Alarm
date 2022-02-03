@@ -180,7 +180,6 @@ class MainActivity : BaseActivity<ActivityMainBinding>(R.layout.activity_main) {
 
     private fun observeAlarmWithDate() {
         alarmViewModel.alarmList.observe(this, Observer {
-            Timber.d("Relation -> $it")
             alarmList = it
             alarmAdapter.submitList(it.toMutableList())
         })

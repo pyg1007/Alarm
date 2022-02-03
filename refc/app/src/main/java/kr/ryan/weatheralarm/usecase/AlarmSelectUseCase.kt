@@ -14,8 +14,12 @@ class AlarmSelectUseCase @Inject constructor(
     private val alarmRepository: AlarmRepository
 ) {
 
-    suspend fun selectAlarmInfo(alarmIndex: Int) = alarmRepository.selectAlarmInfo(alarmIndex)
+    suspend fun selectAlarmWithDate(index: Long) = alarmRepository.selectAlarmWithDate(index)
 
-    fun selectAlarmList() = alarmRepository.getAllAlarmList()
+    suspend fun selectAlarmInfo(alarmIndex: Long) = alarmRepository.selectAlarmInfo(alarmIndex)
+
+    suspend fun selectAlarmDate(index: Long) = alarmRepository.selectAlarmDate(index)
+
+    fun selectAlarmList() = alarmRepository.selectAllAlarmList()
 
 }

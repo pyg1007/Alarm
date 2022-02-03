@@ -13,6 +13,8 @@ import kr.ryan.weatheralarm.usecase.AlarmInsertUseCase
 import kr.ryan.weatheralarm.usecase.AlarmSelectUseCase
 import kr.ryan.weatheralarm.usecase.AlarmUpdateUseCase
 import kr.ryan.weatheralarm.util.*
+import kr.ryan.weatheralarm.util.Route.ADD_MODE
+import kr.ryan.weatheralarm.util.Route.EDIT_MODE
 import timber.log.Timber
 import java.util.*
 import javax.inject.Inject
@@ -30,6 +32,8 @@ class AlarmEditViewModel @Inject constructor(
     private val insertUseCase: AlarmInsertUseCase,
     private val updateUseCase: AlarmUpdateUseCase
 ) : ViewModel() {
+
+    private val _mode = MutableStateFlow(Mode(ADD_MODE))
 
     private val _randomPendingNumber = flow {
         selectUseCase.selectAlarmList().map {
@@ -50,7 +54,14 @@ class AlarmEditViewModel @Inject constructor(
     private val _selectedMonth = MutableStateFlow(Date().getCurrentMonth())
     private val _selectedDate = MutableStateFlow(Date().getCurrentDate())
 
-    private val _selectedDays = MutableStateFlow<List<Int>>(emptyList())
+    val flowSelectedDays = MutableStateFlow(listOf(false, false, false, false, false, false, false))
+
+    fun changeStatus(index: Int) = viewModelScope.launch {
+        Timber.d("change -> $index")
+        val changeTestList = flowSelectedDays.value.toMutableList()
+        changeTestList[index] = !changeTestList[index]
+        flowSelectedDays.emit(changeTestList.toList())
+    }
 
     /**
      *
@@ -58,15 +69,14 @@ class AlarmEditViewModel @Inject constructor(
      *
      */
 
-    val selectedDays = _selectedDays.map {
+    val selectedDays = flowSelectedDays.map {
         val convertStringList = mutableListOf<String>()
-        it.forEach { index ->
-            convertStringList.add(dayList[index])
+        it.forEachIndexed { index, boolean ->
+            if (boolean)
+                convertStringList.add(dayList[index])
         }
         convertStringList.joinToString(", ")
     }.asLiveData()
-
-    private val selectedDayList = mutableListOf<Int>()
 
     /**
      *
@@ -94,26 +104,6 @@ class AlarmEditViewModel @Inject constructor(
         it.convertDateWithDayToString()
     }.asLiveData()
 
-    /**
-     *
-     * 요일 클릭시 동작하는 부분
-     *
-     */
-    val onClickDays = { index: Int ->
-        viewModelScope.launch {
-            Timber.d(Calendar.getInstance().apply {
-                set(Calendar.DAY_OF_WEEK, index)
-            }.time.convertDateWithDayToString())
-
-            if (selectedDayList.contains(index))
-                selectedDayList.remove(index)
-            else
-                selectedDayList.add(index)
-
-            _selectedDays.emit(selectedDayList.sorted().toList())
-        }
-    }
-
     val alarmTitle = MutableStateFlow("")
 
     fun changeHour(hour: Int) = viewModelScope.launch {
@@ -137,36 +127,86 @@ class AlarmEditViewModel @Inject constructor(
     }
 
     fun changeDays(days: List<AlarmDate>) = viewModelScope.launch {
-        val convertInt = mutableListOf<Int>()
+        val convertDateToBoolean = MutableList(7) { false }
+        Timber.d("change Days Boolean List -> $convertDateToBoolean")
         days.forEach {
-            convertInt.add(Calendar.getInstance().apply {
+
+            val index = Calendar.getInstance().apply {
                 time = it.date
-            }.get(Calendar.DAY_OF_WEEK) - 1)
+            }.get(Calendar.DAY_OF_WEEK) - 1
+
+            Timber.d("change Days -> $index")
+
+            convertDateToBoolean[index] = !convertDateToBoolean[index]
         }
-        _selectedDays.emit(convertInt)
+        flowSelectedDays.emit(convertDateToBoolean)
     }
 
     fun changeTitle(title: String?) = viewModelScope.launch {
-        alarmTitle.emit(title?: "")
+        alarmTitle.emit(title ?: "")
     }
 
-    suspend fun insert(success: (alarmWithDate: AlarmWithDate) -> Unit, failure: (t: Throwable) -> Unit) =
+    fun changeMode(mode: Mode) = viewModelScope.launch {
+        _mode.emit(mode)
+    }
+
+    fun onActive(success: (alarmWithDate: AlarmWithDate) -> Unit, failure: (t: Throwable) -> Unit) =
+        viewModelScope.launch {
+            _mode.collect {
+                when (it.mode) {
+                    ADD_MODE -> {
+                        insert({ alarmWithDate ->
+                            success(alarmWithDate)
+                        }, { failure ->
+                            failure(failure)
+                        })
+                    }
+                    EDIT_MODE -> {
+                        update({ alarmWithDate ->
+                            success(alarmWithDate)
+                        }, { failure ->
+                            failure(failure)
+                        })
+                    }
+                    else -> {
+                        throw IllegalStateException("unKnown Mode")
+                    }
+                }
+            }
+        }
+
+    private suspend fun update(
+        success: (alarmWithDate: AlarmWithDate) -> Unit,
+        failure: (t: Throwable) -> Unit
+    ) = viewModelScope.launch {
+
+    }
+
+    private suspend fun insert(
+        success: (alarmWithDate: AlarmWithDate) -> Unit,
+        failure: (t: Throwable) -> Unit
+    ) =
         viewModelScope.launch {
             runCatching {
 
                 var randomNumber: Int
-                while (true){
+                while (true) {
                     randomNumber = createRandomNumber()
                     if (!_randomPendingNumber.value.contains(randomNumber))
                         break
                 }
 
-                val alarm : Alarm
+                val alarm: Alarm
                 val dateList: List<AlarmDate>
 
-                if (_selectedDays.value.isNullOrEmpty()) {
+                if (flowSelectedDays.value.isNullOrEmpty()) {
 
-                    alarm = Alarm(pendingId = randomNumber, title = alarmTitle.value, isRepeat = false, onOff = true)
+                    alarm = Alarm(
+                        pendingId = randomNumber,
+                        title = alarmTitle.value,
+                        isRepeat = false,
+                        onOff = true
+                    )
 
                     dateList = listOf(
                         AlarmDate(date = Calendar.getInstance().apply {
@@ -182,24 +222,31 @@ class AlarmEditViewModel @Inject constructor(
 
                 } else {
 
-                    alarm = Alarm(pendingId = randomNumber, title = alarmTitle.value, isRepeat = true, onOff = true)
+                    alarm = Alarm(
+                        pendingId = randomNumber,
+                        title = alarmTitle.value,
+                        isRepeat = true,
+                        onOff = true
+                    )
 
                     dateList = mutableListOf<AlarmDate>()
 
-                    _selectedDays.value.forEach {
+                    flowSelectedDays.value.forEachIndexed { index, boolean ->
 
-                        val date = Calendar.getInstance().apply {
-                            set(Calendar.YEAR, _selectedYear.value)
-                            set(Calendar.MONTH, _selectedMonth.value - 1)
-                            set(Calendar.DAY_OF_WEEK, it + 1)
-                            set(Calendar.HOUR_OF_DAY, selectedHour.value)
-                            set(Calendar.MINUTE, selectedMinute.value)
+                        if (boolean) {
+                            val date = Calendar.getInstance().apply {
+                                set(Calendar.YEAR, _selectedYear.value)
+                                set(Calendar.MONTH, _selectedMonth.value - 1)
+                                set(Calendar.DAY_OF_WEEK, index + 1)
+                                set(Calendar.HOUR_OF_DAY, selectedHour.value)
+                                set(Calendar.MINUTE, selectedMinute.value)
+                            }
+
+                            if (date.time <= Date())
+                                date.add(Calendar.DAY_OF_MONTH, 7)
+
+                            dateList.add(AlarmDate(date = date.time))
                         }
-
-                        if(date.time <= Date())
-                            date.add(Calendar.DAY_OF_MONTH, 7)
-
-                        dateList.add(AlarmDate(date = date.time))
                     }
 
                     insertUseCase.insertAlarm(alarm, dateList)

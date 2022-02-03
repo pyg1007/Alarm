@@ -38,9 +38,16 @@ class DaysViewHolder constructor(private val binding: RecyclerDaysBinding) : Rec
                 meridiem = it.getMeridiem()
                 time = it.convertTime()
             }
-            days = alarmWithDate.alarmDate.map { Calendar.getInstance().apply {
-                time = it.date
-            }.get(Calendar.DAY_OF_WEEK) }
+
+            val convertDateToBoolean = MutableList(7){false}
+            alarmWithDate.alarmDate.forEach { alarmDate ->
+                val index = Calendar.getInstance().apply {
+                    time = alarmDate.date
+                }.get(Calendar.DAY_OF_WEEK) - 1
+                convertDateToBoolean[index] = !convertDateToBoolean[index]
+            }
+
+            days = convertDateToBoolean
             onOff = alarmWithDate.alarm.onOff
         }
     }

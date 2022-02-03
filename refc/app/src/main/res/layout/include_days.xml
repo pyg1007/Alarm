@@ -15,10 +15,11 @@
 
         <TextView
             android:id="@+id/tv_sunday"
-            drawCircleListener="@{viewModel.onClickDays}"
+            draw="@={viewModel.flowSelectedDays[0]}"
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:gravity="center"
+            android:onClick="@{() -> viewModel.changeStatus(0)}"
             android:text="@string/sunday"
             android:textColor="@color/red"
             android:textSize="@dimen/day_text_size"
@@ -31,10 +32,11 @@
 
         <TextView
             android:id="@+id/tv_monday"
-            drawCircleListener="@{viewModel.onClickDays}"
+            draw="@={viewModel.flowSelectedDays[1]}"
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:gravity="center"
+            android:onClick="@{() -> viewModel.changeStatus(1)}"
             android:text="@string/monday"
             android:textColor="@color/black"
             android:textSize="@dimen/day_text_size"
@@ -47,10 +49,11 @@
 
         <TextView
             android:id="@+id/tv_tuesday"
-            drawCircleListener="@{viewModel.onClickDays}"
+            draw="@={viewModel.flowSelectedDays[2]}"
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:gravity="center"
+            android:onClick="@{() -> viewModel.changeStatus(2)}"
             android:text="@string/tuesday"
             android:textColor="@color/black"
             android:textSize="@dimen/day_text_size"
@@ -63,10 +66,11 @@
 
         <TextView
             android:id="@+id/tv_wednesday"
-            drawCircleListener="@{viewModel.onClickDays}"
+            draw="@={viewModel.flowSelectedDays[3]}"
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:gravity="center"
+            android:onClick="@{() -> viewModel.changeStatus(3)}"
             android:text="@string/wednesday"
             android:textColor="@color/black"
             android:textSize="@dimen/day_text_size"
@@ -79,10 +83,11 @@
 
         <TextView
             android:id="@+id/tv_thursday"
-            drawCircleListener="@{viewModel.onClickDays}"
+            draw="@={viewModel.flowSelectedDays[4]}"
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:gravity="center"
+            android:onClick="@{() -> viewModel.changeStatus(4)}"
             android:text="@string/thursday"
             android:textColor="@color/black"
             android:textSize="@dimen/day_text_size"
@@ -95,10 +100,11 @@
 
         <TextView
             android:id="@+id/tv_friday"
-            drawCircleListener="@{viewModel.onClickDays}"
+            draw="@={viewModel.flowSelectedDays[5]}"
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:gravity="center"
+            android:onClick="@{() -> viewModel.changeStatus(5)}"
             android:text="@string/friday"
             android:textColor="@color/black"
             android:textSize="@dimen/day_text_size"
@@ -111,10 +117,11 @@
 
         <TextView
             android:id="@+id/tv_saturday"
-            drawCircleListener="@{viewModel.onClickDays}"
+            draw="@={viewModel.flowSelectedDays[6]}"
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:gravity="center"
+            android:onClick="@{() -> viewModel.changeStatus(6)}"
             android:text="@string/saturday"
             android:textColor="@color/blue"
             android:textSize="@dimen/day_text_size"

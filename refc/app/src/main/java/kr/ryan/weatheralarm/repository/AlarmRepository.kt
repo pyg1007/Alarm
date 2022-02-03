@@ -23,7 +23,7 @@ interface AlarmRepository {
      * Alarm Dao
      *
      */
-    suspend fun selectAlarmInfo(alarmIndex: Int) : Alarm
+    suspend fun selectAlarmInfo(alarmIndex: Long) : Alarm
 
     suspend fun updateAlarmInfo(alarm: Alarm)
 
@@ -34,6 +34,8 @@ interface AlarmRepository {
      * AlarmDate Dao
      *
      */
+    suspend fun selectAlarmDate(alarmIndex: Long): List<AlarmDate>
+
     suspend fun insertAlarmDate(alarmDate: List<AlarmDate>)
 
     suspend fun updateAlarmDate(alarmDate: List<AlarmDate>)
@@ -46,7 +48,9 @@ interface AlarmRepository {
      *
      */
 
-    fun getAllAlarmList() : Flow<List<AlarmWithDate>>
+    suspend fun selectAlarmWithDate(index: Long) : AlarmWithDate
+
+    fun selectAllAlarmList() : Flow<List<AlarmWithDate>>
 
     suspend fun insertAlarm(alarm: Alarm, alarmDate: List<AlarmDate>)
 

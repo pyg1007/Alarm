@@ -8,16 +8,16 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.*
-import androidx.lifecycle.Observer
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.launch
 import kr.ryan.baseui.BaseDialogFragment
 import kr.ryan.weatheralarm.R
 import kr.ryan.weatheralarm.data.Alarm
 import kr.ryan.weatheralarm.data.AlarmWithDate
 import kr.ryan.weatheralarm.databinding.DialogAlarmBinding
 import kr.ryan.weatheralarm.util.*
+import kr.ryan.weatheralarm.util.Route.EDIT_MODE
 import kr.ryan.weatheralarm.viewModel.AlarmEditViewModel
 import kr.ryan.weatheralarm.viewModel.AlarmViewModel
 import timber.log.Timber
@@ -119,6 +119,7 @@ class AlarmDialogFragment : BaseDialogFragment<DialogAlarmBinding>(R.layout.dial
                 changeTitle(it.alarm.title)
                 if (it.alarm.isRepeat)
                     changeDays(it.alarmDate)
+                changeMode(Mode(EDIT_MODE))
             }
         } ?: run {
             val date = Date()
@@ -155,19 +156,17 @@ class AlarmDialogFragment : BaseDialogFragment<DialogAlarmBinding>(R.layout.dial
                         cancelEvent()
                         alarmViewModel.sendEvent(UiEvent.PopUpStack)
                     } else if (it.route == Route.SAVE) {
-                        editViewModel.insert({ alarmWithDate ->
+                        editViewModel.onActive({ alarmWithDate ->
 
                             Timber.d("insert -> $alarmWithDate")
 
-                            val alarmManager = requireContext().getSystemService(Context.ALARM_SERVICE) as? AlarmManager
-                            if (alarmWithDate.alarm.isRepeat){
-                                alarmManager?.registerAlarm(requireContext(), alarmWithDate)
-                            }else{
-                                alarmManager?.registerAlarm(requireContext(), alarmWithDate)
+                            val alarmManager =
+                                requireContext().getSystemService(Context.ALARM_SERVICE) as? AlarmManager
+                            if (requireContext().isRegisterAlarm(alarmWithDate)) {
+                                alarmManager?.cancelAlarm(requireContext(), alarmWithDate)
                             }
 
-
-
+                            alarmManager?.registerAlarm(requireContext(), alarmWithDate)
 
                             saveEvent()
                             alarmViewModel.sendEvent(UiEvent.PopUpStack)
