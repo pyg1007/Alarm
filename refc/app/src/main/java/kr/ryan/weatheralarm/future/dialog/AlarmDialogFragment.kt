@@ -163,15 +163,18 @@ class AlarmDialogFragment : BaseDialogFragment<DialogAlarmBinding>(R.layout.dial
                             val alarmManager =
                                 requireContext().getSystemService(Context.ALARM_SERVICE) as? AlarmManager
                             if (requireContext().isRegisterAlarm(alarmWithDate)) {
+                                Timber.d("already alarm")
                                 alarmManager?.cancelAlarm(requireContext(), alarmWithDate)
+                                Timber.d("cancel alarm")
                             }
 
                             alarmManager?.registerAlarm(requireContext(), alarmWithDate)
+                            Timber.d("register Alarm")
 
                             saveEvent()
                             alarmViewModel.sendEvent(UiEvent.PopUpStack)
                         }, { throwable ->
-                            Timber.d("insert failure -> $throwable")
+                            Timber.d("failure -> $throwable")
                         })
                     }
                 }

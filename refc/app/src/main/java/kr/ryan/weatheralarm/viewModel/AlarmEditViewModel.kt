@@ -34,6 +34,7 @@ class AlarmEditViewModel @Inject constructor(
 ) : ViewModel() {
 
     private val _mode = MutableStateFlow(Mode(ADD_MODE))
+    private val _preAlarmWithDate = MutableStateFlow<AlarmWithDate?>(null)
 
     private val _randomPendingNumber = flow {
         selectUseCase.selectAlarmList().map {
@@ -150,6 +151,10 @@ class AlarmEditViewModel @Inject constructor(
         _mode.emit(mode)
     }
 
+    fun changeAlarmWithDate(alarmWithDate: AlarmWithDate) = viewModelScope.launch {
+        _preAlarmWithDate.emit(alarmWithDate)
+    }
+
     fun onActive(success: (alarmWithDate: AlarmWithDate) -> Unit, failure: (t: Throwable) -> Unit) =
         viewModelScope.launch {
             _mode.collect {
@@ -179,7 +184,50 @@ class AlarmEditViewModel @Inject constructor(
         success: (alarmWithDate: AlarmWithDate) -> Unit,
         failure: (t: Throwable) -> Unit
     ) = viewModelScope.launch {
+        runCatching {
 
+            val alarm: Alarm = _preAlarmWithDate.value!!.alarm
+            val alarmDate: List<AlarmDate> = _preAlarmWithDate.value!!.alarmDate
+
+            alarm.run {
+                title = alarmTitle.value
+                isRepeat = !flowSelectedDays.value.filter { it }.isNullOrEmpty()
+                onOff = true
+            }
+
+            val currentAlarmDate = mutableListOf<AlarmDate>()
+
+            flowSelectedDays.value.forEachIndexed { index, selectDay->
+
+                if(selectDay){
+                    val date = Calendar.getInstance().apply {
+                        set(Calendar.YEAR, _selectedYear.value)
+                        set(Calendar.MONTH, _selectedMonth.value - 1)
+                        set(Calendar.DAY_OF_WEEK, index + 1)
+                        set(Calendar.HOUR_OF_DAY, selectedHour.value)
+                        set(Calendar.MINUTE, selectedMinute.value)
+                    }
+                }
+
+            }
+
+            alarmDate.forEach {
+
+
+
+
+            }
+
+            if (_preAlarmWithDate.value!!.alarm == alarm)
+                updateUseCase.updateAlarmInfo(alarm)
+
+
+
+        }.onSuccess {
+
+        }.onFailure {
+            failure(it)
+        }
     }
 
     private suspend fun insert(
