@@ -29,7 +29,7 @@ interface AlarmDao {
     @Delete
     suspend fun deleteAlarmInfo(alarm: Alarm)
 
-    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertAlarmInfo(alarm: Alarm) : Long
 
     /**
@@ -41,7 +41,7 @@ interface AlarmDao {
     @Query("SELECT * FROM date WHERE `alarmIndex` = :alarmIndex")
     suspend fun getAlarmDate(alarmIndex: Long) : List<AlarmDate>
 
-    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertAlarmDate(alarmDate: List<AlarmDate>)
 
     @Update

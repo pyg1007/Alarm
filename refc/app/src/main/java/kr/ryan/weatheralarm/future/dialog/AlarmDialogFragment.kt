@@ -119,6 +119,7 @@ class AlarmDialogFragment : BaseDialogFragment<DialogAlarmBinding>(R.layout.dial
                 changeTitle(it.alarm.title)
                 if (it.alarm.isRepeat)
                     changeDays(it.alarmDate)
+                changeAlarmWithDate(it)
                 changeMode(Mode(EDIT_MODE))
             }
         } ?: run {

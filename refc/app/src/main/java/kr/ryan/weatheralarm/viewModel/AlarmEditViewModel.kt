@@ -9,6 +9,7 @@ import kotlinx.coroutines.launch
 import kr.ryan.weatheralarm.data.Alarm
 import kr.ryan.weatheralarm.data.AlarmDate
 import kr.ryan.weatheralarm.data.AlarmWithDate
+import kr.ryan.weatheralarm.usecase.AlarmDeleteUseCase
 import kr.ryan.weatheralarm.usecase.AlarmInsertUseCase
 import kr.ryan.weatheralarm.usecase.AlarmSelectUseCase
 import kr.ryan.weatheralarm.usecase.AlarmUpdateUseCase
@@ -30,7 +31,8 @@ import javax.inject.Inject
 class AlarmEditViewModel @Inject constructor(
     private val selectUseCase: AlarmSelectUseCase,
     private val insertUseCase: AlarmInsertUseCase,
-    private val updateUseCase: AlarmUpdateUseCase
+    private val updateUseCase: AlarmUpdateUseCase,
+    private val deleteUseCase: AlarmDeleteUseCase
 ) : ViewModel() {
 
     private val _mode = MutableStateFlow(Mode(ADD_MODE))
@@ -187,7 +189,7 @@ class AlarmEditViewModel @Inject constructor(
         runCatching {
 
             val alarm: Alarm = _preAlarmWithDate.value!!.alarm
-            val alarmDate: List<AlarmDate> = _preAlarmWithDate.value!!.alarmDate
+            var alarmDate: List<AlarmDate> = _preAlarmWithDate.value!!.alarmDate
 
             alarm.run {
                 title = alarmTitle.value
@@ -195,36 +197,74 @@ class AlarmEditViewModel @Inject constructor(
                 onOff = true
             }
 
-            val currentAlarmDate = mutableListOf<AlarmDate>()
+            if (alarm.isRepeat) {
 
-            flowSelectedDays.value.forEachIndexed { index, selectDay->
+                val currentAlarmDate = mutableListOf<AlarmDate>()
 
-                if(selectDay){
-                    val date = Calendar.getInstance().apply {
-                        set(Calendar.YEAR, _selectedYear.value)
-                        set(Calendar.MONTH, _selectedMonth.value - 1)
-                        set(Calendar.DAY_OF_WEEK, index + 1)
-                        set(Calendar.HOUR_OF_DAY, selectedHour.value)
-                        set(Calendar.MINUTE, selectedMinute.value)
+                flowSelectedDays.value.forEachIndexed { index, selectDay ->
+
+                    if (selectDay) {
+                        val date = Calendar.getInstance().apply {
+                            set(Calendar.YEAR, _selectedYear.value)
+                            set(Calendar.MONTH, _selectedMonth.value - 1)
+                            set(Calendar.DAY_OF_WEEK, index + 1)
+                            set(Calendar.HOUR_OF_DAY, selectedHour.value)
+                            set(Calendar.MINUTE, selectedMinute.value)
+                        }
+                        alarmDate.find {
+                            Calendar.getInstance().apply {
+                                time = it.date
+                            }.get(Calendar.DAY_OF_WEEK) - 1 == index
+                        }?.let {
+
+                            currentAlarmDate.add(
+                                AlarmDate(
+                                    it.index, it.alarmIndex, date.time
+                                )
+                            )
+
+                        } ?: run {
+                            currentAlarmDate.add(
+                                AlarmDate(
+                                    alarmIndex = alarm.index,
+                                    date = date.time
+                                )
+                            )
+                        }
                     }
+
                 }
 
+                Timber.d("before DateList => ${_preAlarmWithDate.value!!.alarmDate}")
+                Timber.d("current DateList => $currentAlarmDate")
+                Timber.d("equals? -> ${_preAlarmWithDate.value!!.alarmDate == currentAlarmDate}")
+
+                alarmDate = currentAlarmDate
+            }else{
+
+                 alarmDate[0].date = Calendar.getInstance().apply {
+                     set(Calendar.YEAR, _selectedYear.value)
+                     set(Calendar.MONTH, _selectedMonth.value - 1)
+                     set(Calendar.DAY_OF_MONTH, _selectedDate.value)
+                     set(Calendar.HOUR_OF_DAY, selectedHour.value)
+                     set(Calendar.MINUTE, selectedMinute.value)
+                 }.time
+
             }
 
-            alarmDate.forEach {
-
-
-
-
-            }
-
-            if (_preAlarmWithDate.value!!.alarm == alarm)
+            if (_preAlarmWithDate.value!!.alarm != alarm) {
+                Timber.d("update alarm")
                 updateUseCase.updateAlarmInfo(alarm)
+            }
 
+            if (_preAlarmWithDate.value!!.alarmDate != alarmDate) {
+                Timber.d("update alarmDate")
+                insertUseCase.insertAlarmDate(alarmDate)
+            }
 
-
+            AlarmWithDate(alarm, alarmDate)
         }.onSuccess {
-
+            success(it)
         }.onFailure {
             failure(it)
         }
