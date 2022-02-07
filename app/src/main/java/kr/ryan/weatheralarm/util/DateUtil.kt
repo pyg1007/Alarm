@@ -29,6 +29,11 @@ fun Date.convertTime(): String {
     return simpleDateFormat.format(this)
 }
 
+fun Date.convertRemainTime() : String {
+    val simpleDateFormat = SimpleDateFormat("HH시간 mm분이 남았습니다.", Locale.getDefault())
+    return simpleDateFormat.format(this)
+}
+
 fun Date.getCurrentYear(): Int {
     val simpleDateFormat = SimpleDateFormat("yyyy", Locale.getDefault())
     return simpleDateFormat.format(this).toInt()
