@@ -31,14 +31,14 @@ fun List<AlarmWithDate>?.findFastAlarmDate() : String? {
         null
 
     return if (null == fastDate && null != fastDays){
-        fastDays.convertTime()
+        fastDays.convertRemainTime()
     }else if (null != fastDate && null == fastDays){
-        fastDate.convertTime()
+        fastDate.convertRemainTime()
     }else if (null != fastDate && null != fastDays){
         if (fastDate.after(fastDays))
-            fastDays.convertTime()
+            fastDays.convertRemainTime()
         else
-            fastDate.convertTime()
+            fastDate.convertRemainTime()
     }else{
         null
     }

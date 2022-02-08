@@ -5,6 +5,8 @@ import kr.ryan.weatheralarm.data.AlarmWithDate
 import timber.log.Timber
 import java.text.SimpleDateFormat
 import java.util.*
+import kotlin.time.DurationUnit
+import kotlin.time.toDuration
 
 /**
  * WeatherAlarm
@@ -30,7 +32,17 @@ fun Date.convertTime(): String {
 }
 
 fun Date.convertRemainTime() : String {
-    val simpleDateFormat = SimpleDateFormat("HH시간 mm분이 남았습니다.", Locale.getDefault())
+    val calTime = (Date().time - time) / 1000
+    Timber.d("calTime => $calTime")
+    val simpleDateFormat = when{
+        (36 * 24 * 365).toDuration(DurationUnit.MILLISECONDS).inWholeMilliseconds > calTime ->  SimpleDateFormat("y년이 남았습니다.", Locale.getDefault())
+        (36 * 24 * 365).toDuration(DurationUnit.MILLISECONDS).inWholeMilliseconds <= calTime ->  SimpleDateFormat("ddd일 HH시간 mm분이 남았습니다.", Locale.getDefault())
+        (36 * 24 * 100).toDuration(DurationUnit.MILLISECONDS).inWholeMilliseconds <= calTime ->  SimpleDateFormat("dd일 HH시간 mm분이 남았습니다.", Locale.getDefault())
+        (36 * 24 * 10).toDuration(DurationUnit.MILLISECONDS).inWholeMilliseconds <= calTime ->  SimpleDateFormat("d일 HH시간 mm분이 남았습니다.", Locale.getDefault())
+        (36 * 24).toDuration(DurationUnit.MILLISECONDS).inWholeMilliseconds <= calTime -> SimpleDateFormat("HH시간 mm분이 남았습니다.", Locale.getDefault())
+        36.toDuration(DurationUnit.MILLISECONDS).inWholeMilliseconds < calTime -> SimpleDateFormat("HH시간 mm분이 남았습니다.", Locale.getDefault())
+        else -> SimpleDateFormat("잠시후 알람이 울립니다.", Locale.getDefault())
+    }
     return simpleDateFormat.format(this)
 }
 

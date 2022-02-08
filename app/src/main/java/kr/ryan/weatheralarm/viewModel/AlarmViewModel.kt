@@ -4,7 +4,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import kr.ryan.weatheralarm.data.Alarm
@@ -12,10 +13,9 @@ import kr.ryan.weatheralarm.data.AlarmWithDate
 import kr.ryan.weatheralarm.usecase.AlarmDeleteUseCase
 import kr.ryan.weatheralarm.usecase.AlarmInsertUseCase
 import kr.ryan.weatheralarm.usecase.AlarmSelectUseCase
-import kr.ryan.weatheralarm.util.AlarmEvent
-import kr.ryan.weatheralarm.util.Route
-import kr.ryan.weatheralarm.util.UiEvent
+import kr.ryan.weatheralarm.util.*
 import timber.log.Timber
+import java.util.*
 import javax.inject.Inject
 
 /**
@@ -32,18 +32,53 @@ class AlarmViewModel @Inject constructor(
     private val deleteUseCase: AlarmDeleteUseCase
 ) : ViewModel() {
 
-    val alarmList = flow {
-        selectUseCase.selectAlarmList().collect {
-            emit(it)
-        }
-    }.catch {e ->
-        Timber.d("Exception $e")
-    }.asLiveData()
+    private var timeJob: Job? = null
+
+    private val _alarmList = MutableStateFlow<List<AlarmWithDate>>(emptyList())
+    val alarmList = _alarmList.asStateFlow()
+
+    private val _remainTime = MutableStateFlow("")
+    val remainTime = _remainTime.asStateFlow()
 
     private val _uiEvent = MutableSharedFlow<UiEvent>()
     val uiEvent = _uiEvent.asSharedFlow()
 
     var deleteAlarmDate: AlarmWithDate? = null
+
+    init {
+        selectAlarmList()
+        timeLoop()
+    }
+
+    private fun selectAlarmList() = viewModelScope.launch {
+        selectUseCase.selectAlarmList().collect {
+            _alarmList.emit(it)
+        }
+    }
+
+    fun startTimeLoopJob(){
+        timeJob?.let {
+            if (!it.isActive)
+                it.start()
+        }
+    }
+
+    private fun timeLoop(){
+        timeJob = viewModelScope.launch {
+            Timber.d("startLoop")
+            while (true){
+                val currentTime = Date()
+                if ((currentTime.time / 1000) % 60 == 0L) {
+                    _remainTime.emit(_alarmList.value.findFastAlarmDate()?: "")
+                }
+                delay(1000L)
+            }
+        }
+    }
+
+    fun cancelTimeLoopJob(){
+        timeJob?.cancel()
+    }
 
     fun onEvent(event: AlarmEvent) {
         when (event) {

@@ -10,7 +10,6 @@ import android.view.Gravity
 import android.widget.PopupMenu
 import androidx.activity.viewModels
 import androidx.lifecycle.*
-import androidx.lifecycle.Observer
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
@@ -18,15 +17,12 @@ import kotlinx.coroutines.launch
 import kr.ryan.baseui.BaseActivity
 import kr.ryan.weatheralarm.R
 import kr.ryan.weatheralarm.adapter.AlarmAdapter
-import kr.ryan.weatheralarm.data.Alarm
-import kr.ryan.weatheralarm.data.AlarmDate
 import kr.ryan.weatheralarm.data.AlarmWithDate
 import kr.ryan.weatheralarm.databinding.ActivityMainBinding
 import kr.ryan.weatheralarm.future.dialog.AlarmDialogFragment
 import kr.ryan.weatheralarm.util.*
 import kr.ryan.weatheralarm.viewModel.AlarmViewModel
 import timber.log.Timber
-import java.util.*
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -46,12 +42,16 @@ class MainActivity : BaseActivity<ActivityMainBinding>(R.layout.activity_main) {
 
         lifecycleScope.launch {
 
+            whenStarted {
+                checkAlarmPermission()
+                //startLoop()
+            }
+
             whenCreated {
                 initBinding()
                 initRecyclerView()
                 recyclerViewItemClick()
                 recyclerViewItemLongClick()
-                testAlarm()
             }
 
             repeatOnLifecycle(Lifecycle.State.STARTED) {
@@ -66,11 +66,24 @@ class MainActivity : BaseActivity<ActivityMainBinding>(R.layout.activity_main) {
         }
     }
 
-    private fun testAlarm() {
+    override fun onStop() {
+        super.onStop()
+        stopLoop()
+    }
+
+    private fun startLoop() {
+        alarmViewModel.startTimeLoopJob()
+    }
+
+    private fun stopLoop() {
+        alarmViewModel.cancelTimeLoopJob()
+    }
+
+    private fun checkAlarmPermission() {
         val alarmManager = getSystemService(Context.ALARM_SERVICE) as AlarmManager
 
-        if (Build.VERSION.SDK_INT >= 31){
-            when{
+        if (Build.VERSION.SDK_INT >= 31) {
+            when {
                 alarmManager.canScheduleExactAlarms() -> {
                     Timber.d("Grant Permission")
                 }
@@ -105,8 +118,9 @@ class MainActivity : BaseActivity<ActivityMainBinding>(R.layout.activity_main) {
             popup.setOnMenuItemClickListener {
                 if (it.itemId == R.id.action_delete) {
                     alarmList?.let { alarmDate ->
-                        if (isRegisterAlarm(alarmDate[position])){
-                            val alarmManager = getSystemService(Context.ALARM_SERVICE) as? AlarmManager
+                        if (isRegisterAlarm(alarmDate[position])) {
+                            val alarmManager =
+                                getSystemService(Context.ALARM_SERVICE) as? AlarmManager
                             alarmManager?.cancelAlarm(this@MainActivity, alarmDate[position])
                         }
                         alarmViewModel.onEvent(AlarmEvent.OnDeleteClick(alarmDate[position]))
@@ -178,11 +192,11 @@ class MainActivity : BaseActivity<ActivityMainBinding>(R.layout.activity_main) {
         }
     }
 
-    private fun observeAlarmWithDate() {
-        alarmViewModel.alarmList.observe(this, Observer {
+    private suspend fun observeAlarmWithDate() {
+        alarmViewModel.alarmList.collect {
             alarmList = it
             alarmAdapter.submitList(it.toMutableList())
-        })
+        }
     }
 
 }
