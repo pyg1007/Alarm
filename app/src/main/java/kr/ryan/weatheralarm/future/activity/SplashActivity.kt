@@ -3,14 +3,11 @@ package kr.ryan.weatheralarm.future.activity
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import kr.ryan.weatheralarm.R
 
 @SuppressLint("CustomSplashScreen")
 class SplashActivity : Activity() {
