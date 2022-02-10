@@ -32,18 +32,22 @@ fun Date.convertTime(): String {
 }
 
 fun Date.convertRemainTime() : String {
-    val calTime = (Date().time - time) / 1000
-    Timber.d("calTime => $calTime")
+    val calTime = (time - Date().time) / 1000L
     val simpleDateFormat = when{
-        (36 * 24 * 365).toDuration(DurationUnit.MILLISECONDS).inWholeMilliseconds > calTime ->  SimpleDateFormat("y년이 남았습니다.", Locale.getDefault())
-        (36 * 24 * 365).toDuration(DurationUnit.MILLISECONDS).inWholeMilliseconds <= calTime ->  SimpleDateFormat("ddd일 HH시간 mm분이 남았습니다.", Locale.getDefault())
-        (36 * 24 * 100).toDuration(DurationUnit.MILLISECONDS).inWholeMilliseconds <= calTime ->  SimpleDateFormat("dd일 HH시간 mm분이 남았습니다.", Locale.getDefault())
-        (36 * 24 * 10).toDuration(DurationUnit.MILLISECONDS).inWholeMilliseconds <= calTime ->  SimpleDateFormat("d일 HH시간 mm분이 남았습니다.", Locale.getDefault())
-        (36 * 24).toDuration(DurationUnit.MILLISECONDS).inWholeMilliseconds <= calTime -> SimpleDateFormat("HH시간 mm분이 남았습니다.", Locale.getDefault())
-        36.toDuration(DurationUnit.MILLISECONDS).inWholeMilliseconds < calTime -> SimpleDateFormat("HH시간 mm분이 남았습니다.", Locale.getDefault())
+        (3600 * 24 * 365).toDuration(DurationUnit.MILLISECONDS).inWholeMilliseconds <= calTime  ->  SimpleDateFormat("y년이 남았습니다.", Locale.getDefault())
+        (3600 * 24 * 100).toDuration(DurationUnit.MILLISECONDS).inWholeMilliseconds <= calTime
+                && (3600 * 24 * 365).toDuration(DurationUnit.MILLISECONDS).inWholeMilliseconds > calTime ->  SimpleDateFormat("D일 HH시간 mm분이 남았습니다.", Locale.getDefault())
+        (3600 * 24 * 10).toDuration(DurationUnit.MILLISECONDS).inWholeMilliseconds <= calTime
+                && (3600 * 24 * 100).toDuration(DurationUnit.MILLISECONDS).inWholeMilliseconds > calTime ->  SimpleDateFormat("dd일 HH시간 mm분이 남았습니다.", Locale.getDefault())
+        (3600 * 24).toDuration(DurationUnit.MILLISECONDS).inWholeMilliseconds <= calTime
+                && (3600 * 24 * 10).toDuration(DurationUnit.MILLISECONDS).inWholeMilliseconds > calTime-> SimpleDateFormat("d일 HH시간 mm분이 남았습니다.", Locale.getDefault())
+        3600.toDuration(DurationUnit.MILLISECONDS).inWholeMilliseconds <= calTime
+                && (3600 * 24).toDuration(DurationUnit.MILLISECONDS).inWholeMilliseconds > calTime-> SimpleDateFormat("HH시간 mm분이 남았습니다.", Locale.getDefault())
+        60.toDuration(DurationUnit.MILLISECONDS).inWholeMilliseconds <= calTime
+                && 3600.toDuration(DurationUnit.MILLISECONDS).inWholeMilliseconds > calTime -> SimpleDateFormat("mm분이 남았습니다.", Locale.getDefault())
         else -> SimpleDateFormat("잠시후 알람이 울립니다.", Locale.getDefault())
     }
-    return simpleDateFormat.format(this)
+    return simpleDateFormat.format(calTime*1000)
 }
 
 fun Date.getCurrentYear(): Int {

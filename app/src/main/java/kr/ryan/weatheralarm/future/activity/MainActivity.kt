@@ -22,6 +22,7 @@ import kr.ryan.weatheralarm.databinding.ActivityMainBinding
 import kr.ryan.weatheralarm.future.dialog.AlarmDialogFragment
 import kr.ryan.weatheralarm.util.*
 import kr.ryan.weatheralarm.viewModel.AlarmViewModel
+import kr.ryan.weatheralarm.viewModel.RemainTimerViewModel
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -30,6 +31,8 @@ class MainActivity : BaseActivity<ActivityMainBinding>(R.layout.activity_main) {
 
 
     private val alarmViewModel by viewModels<AlarmViewModel>()
+
+    private val loopRemainTimer by viewModels<RemainTimerViewModel>()
 
     @Inject
     lateinit var alarmAdapter: AlarmAdapter
@@ -44,7 +47,7 @@ class MainActivity : BaseActivity<ActivityMainBinding>(R.layout.activity_main) {
 
             whenStarted {
                 checkAlarmPermission()
-                //startLoop()
+                startTimer()
             }
 
             whenCreated {
@@ -68,15 +71,15 @@ class MainActivity : BaseActivity<ActivityMainBinding>(R.layout.activity_main) {
 
     override fun onStop() {
         super.onStop()
-        stopLoop()
+        stopTimer()
     }
 
-    private fun startLoop() {
-        alarmViewModel.startTimeLoopJob()
+    private fun stopTimer() {
+        loopRemainTimer.cancelJob()
     }
 
-    private fun stopLoop() {
-        alarmViewModel.cancelTimeLoopJob()
+    private fun startTimer() {
+        loopRemainTimer.startJob()
     }
 
     private fun checkAlarmPermission() {
@@ -101,6 +104,7 @@ class MainActivity : BaseActivity<ActivityMainBinding>(R.layout.activity_main) {
     private fun initBinding() {
         binding.apply {
             viewModel = alarmViewModel
+            loopViewModel = loopRemainTimer
             lifecycleOwner = this@MainActivity
         }
     }
