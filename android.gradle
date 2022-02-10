@@ -1,3 +1,6 @@
+Properties properties = new Properties()
+properties.load(project.rootProject.file('local.properties').newDataInputStream())
+
 android {
     compileSdkVersion 32
     buildToolsVersion "30.0.3"
@@ -7,6 +10,7 @@ android {
         targetSdkVersion 32
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        buildConfigField "String", "weather_api_key", properties['weather_api_key']
     }
 
     buildTypes {
@@ -53,5 +57,7 @@ dependencies {
     implementation "com.squareup.okhttp3:logging-interceptor:$okhttp_version"
 
     implementation "com.jakewharton.timber:timber:$timber_version"
+
+    implementation "io.github.ParkSangGwon:tedpermission-coroutine:$tedpermission_version"
 
 }
