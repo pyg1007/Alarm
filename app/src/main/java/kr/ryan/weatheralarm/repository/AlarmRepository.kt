@@ -1,9 +1,5 @@
 package kr.ryan.weatheralarm.repository
 
-import androidx.room.*
-import dagger.hilt.EntryPoint
-import dagger.hilt.InstallIn
-import dagger.hilt.components.SingletonComponent
 import kotlinx.coroutines.flow.Flow
 import kr.ryan.weatheralarm.data.Alarm
 import kr.ryan.weatheralarm.data.AlarmDate
@@ -23,7 +19,7 @@ interface AlarmRepository {
      * Alarm Dao
      *
      */
-    suspend fun selectAlarmInfo(alarmIndex: Long) : Alarm
+    suspend fun selectAlarmInfo(alarmIndex: Long): Alarm
 
     suspend fun updateAlarmInfo(alarm: Alarm)
 
@@ -48,9 +44,9 @@ interface AlarmRepository {
      *
      */
 
-    suspend fun selectAlarmWithDate(index: Long) : AlarmWithDate
+    suspend fun selectAlarmWithDate(index: Long): AlarmWithDate
 
-    fun selectAllAlarmList() : Flow<List<AlarmWithDate>>
+    fun selectAllAlarmList(): Flow<List<AlarmWithDate>>
 
     suspend fun insertAlarm(alarm: Alarm, alarmDate: List<AlarmDate>)
 

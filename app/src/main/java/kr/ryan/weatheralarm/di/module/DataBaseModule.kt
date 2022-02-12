@@ -8,6 +8,8 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import kr.ryan.weatheralarm.repository.AlarmRepository
 import kr.ryan.weatheralarm.repository.AlarmRepositoryImpl
+import kr.ryan.weatheralarm.repository.DBWeatherRepository
+import kr.ryan.weatheralarm.repository.DBWeatherRepositoryImpl
 import kr.ryan.weatheralarm.room.AlarmDao
 import kr.ryan.weatheralarm.room.AlarmDatabase
 import javax.inject.Singleton
@@ -33,6 +35,12 @@ object DataBaseModule {
     @Singleton
     fun provideAlarmRepository(alarmDatabase: AlarmDatabase): AlarmRepository {
         return AlarmRepositoryImpl(alarmDatabase.alarmDao())
+    }
+
+    @Provides
+    @Singleton
+    fun provideWeatherRepository(alarmDatabase: AlarmDatabase): DBWeatherRepository {
+        return DBWeatherRepositoryImpl(alarmDatabase.weatherDao())
     }
 
 }
