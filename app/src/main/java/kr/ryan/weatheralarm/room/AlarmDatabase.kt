@@ -22,7 +22,7 @@ import java.util.concurrent.Executors
  * Description:
  */
 @Database(entities = [Alarm::class, AlarmDate::class, InternalWeather::class], version = 1)
-@TypeConverters(RoomConverter::class)
+@TypeConverters(value = [DateConverter::class, JsonConverter::class])
 abstract class AlarmDatabase : RoomDatabase() {
     abstract fun alarmDao(): AlarmDao
     abstract fun weatherDao() : WeatherDao

@@ -1,6 +1,8 @@
 package kr.ryan.weatheralarm.room
 
 import androidx.room.TypeConverter
+import com.google.gson.Gson
+import kr.ryan.weatheralarm.data.InternalItem
 import java.util.*
 
 /**
@@ -10,7 +12,7 @@ import java.util.*
  * Created On 2021-10-28.
  * Description:
  */
-class RoomConverter {
+class DateConverter {
 
     @TypeConverter
     fun fromTimestamp(value: Long?): Date? {
@@ -22,4 +24,13 @@ class RoomConverter {
         return value?.time
     }
 
+}
+
+class JsonConverter {
+
+    @TypeConverter
+    fun listToJson(value: List<InternalItem>): String? = Gson().toJson(value)
+
+    @TypeConverter
+    fun jsonToList(value: String): List<InternalItem> = Gson().fromJson(value, Array<InternalItem>::class.java).toList()
 }

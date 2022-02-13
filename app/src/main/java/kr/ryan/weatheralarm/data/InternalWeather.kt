@@ -1,6 +1,5 @@
 package kr.ryan.weatheralarm.data
 
-import androidx.room.Embedded
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import java.util.*
@@ -19,7 +18,6 @@ data class InternalWeather(
     val date: Date,
     val nx: Int,
     val ny: Int,
-    @Embedded
     val item: List<InternalItem>
 )
 
