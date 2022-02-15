@@ -30,6 +30,9 @@ dependencies {
     implementation "androidx.core:core-splashscreen:$splash_version"
     annotationProcessor "androidx.room:room-compiler:$room_version"
 
+    // Kotlin + coroutines
+    implementation "androidx.work:work-runtime-ktx:$work_version"
+
     // To use Kotlin annotation processing tool (kapt)
     kapt("androidx.room:room-compiler:$room_version")
 

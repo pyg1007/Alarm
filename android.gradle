@@ -49,6 +49,7 @@ dependencies {
 
     implementation "androidx.hilt:hilt-lifecycle-viewmodel:$viewmodel_hilt_version"
     kapt "androidx.hilt:hilt-compiler:$viewmodel_hilt_version"
+    implementation "androidx.hilt:hilt-work:$worker_hilt_version"
 
     implementation "com.squareup.retrofit2:retrofit:$retrofit_version"
     implementation "com.squareup.retrofit2:converter-gson:$retrofit_version"
