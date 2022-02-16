@@ -2,6 +2,7 @@ package kr.ryan.weatheralarm.di
 
 import android.app.Application
 import androidx.hilt.work.HiltWorker
+import androidx.hilt.work.HiltWorkerFactory
 import androidx.work.*
 import dagger.hilt.android.HiltAndroidApp
 import kotlinx.coroutines.CoroutineScope
@@ -21,20 +22,25 @@ import javax.inject.Inject
  * Description:
  */
 @HiltAndroidApp
-class AlarmApplication : Application(){
+class AlarmApplication : Application(), Configuration.Provider{
 
     companion object{
-        private const val WORKER_UNIQUE_ID = "Weather"
+        const val WORKER_UNIQUE_ID = "Weather"
     }
 
+    @Inject lateinit var workerFactory: HiltWorkerFactory
+
     private val backgroundCoroutine = CoroutineScope(Dispatchers.IO)
+
+    override fun getWorkManagerConfiguration(): Configuration =
+        Configuration.Builder().setMinimumLoggingLevel(android.util.Log.DEBUG).setWorkerFactory(workerFactory).build()
 
     override fun onCreate() {
         super.onCreate()
 
-//        backgroundCoroutine.launch {
-//            createWorkManager()
-//        }
+        backgroundCoroutine.launch {
+            createWorkManager()
+        }
 
         Timber.plant(Timber.DebugTree())
     }

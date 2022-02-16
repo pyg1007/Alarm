@@ -31,6 +31,16 @@ fun Date.convertTime(): String {
     return simpleDateFormat.format(this)
 }
 
+fun Date.convertBaseDate(): String {
+    val simpleDateFormat = SimpleDateFormat("yyyyMMdd", Locale.getDefault())
+    return simpleDateFormat.format(this)
+}
+
+fun Date.convertBaseTime() : String {
+    val simpleDateFormat = SimpleDateFormat("HHmm", Locale.getDefault())
+    return simpleDateFormat.format(this)
+}
+
 fun Date.convertRemainTime() : String {
     val calTime = (time - Date().time) / 1000L
     val simpleDateFormat = when{

@@ -28,7 +28,7 @@ object Mapping {
                 nx = response.weatherBody.weatherItems.weatherItem[0].nx,
                 ny = response.weatherBody.weatherItems.weatherItem[0].ny,
                 item = response.weatherBody.weatherItems.weatherItem.map {
-                    InternalItem(it.category, it.obsrValue)
+                    InternalItem(it.category, it.fcstValue)
                 }
             )
         }.getOrNull()

@@ -287,7 +287,7 @@ class AlarmEditViewModel @Inject constructor(
                 val alarm: Alarm
                 val dateList: List<AlarmDate>
 
-                if (flowSelectedDays.value.isNullOrEmpty()) {
+                if (flowSelectedDays.value.filter { it }.isNullOrEmpty()) {
 
                     alarm = Alarm(
                         pendingId = randomNumber,

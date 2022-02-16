@@ -25,7 +25,7 @@ class WeatherViewModel @Inject constructor(
 
     /**
      *
-     * param = serviceKey, nx, ny, numOfRows, pageNo, dataType, base_date, base_time
+     * param = serviceKey, nx, ny, dataType, base_date, base_time
      *
      */
 

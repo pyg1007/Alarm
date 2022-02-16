@@ -44,7 +44,7 @@ class RemainTimerViewModel @Inject constructor(
         selectUseCase.selectAlarmList().collect {
             alarmList.emit(it)
 
-            if (!it.isNullOrEmpty()) {
+            if (!it.filter { alarmWithDate -> alarmWithDate.alarm.onOff }.isNullOrEmpty()) {
                 receiveData = true
                 remainTimerJob?.let { job ->
                     if (job.isActive) {
@@ -56,6 +56,10 @@ class RemainTimerViewModel @Inject constructor(
                 }
             } else {
                 _alarmStatus.emit("등록된 알람이 없습니다.")
+                remainTimerJob?.let { job ->
+                    if (job.isActive)
+                        cancelJob()
+                }
             }
         }
     }

@@ -42,7 +42,9 @@ data class WeatherItem(
     val baseDate: String,
     val baseTime: String,
     val category: String,
+    val fcstDate: String,
+    val fcstTime: String,
     val nx: Int,
     val ny: Int,
-    val obsrValue: String
+    val fcstValue: String
 )

@@ -14,7 +14,7 @@ import retrofit2.http.QueryMap
  */
 interface WeatherService {
 
-    @GET("getUltraSrtNcst")
+    @GET("getVilageFcst")
     suspend fun getWeatherInfo(@QueryMap params: HashMap<String, String>) : NetWorkResult<Weather>
 
 }

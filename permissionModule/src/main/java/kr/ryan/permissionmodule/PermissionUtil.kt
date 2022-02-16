@@ -12,9 +12,9 @@ import com.gun0912.tedpermission.coroutine.TedPermission
  */
 
 
-suspend fun Context.requestPermission(
-    grant: () -> Unit,
-    denied: (MutableList<String>?) -> Unit,
+suspend fun requestPermission(
+    grant: suspend () -> Unit,
+    denied: suspend (MutableList<String>?) -> Unit,
     vararg permissions: String
 ) {
     val result = TedPermission
