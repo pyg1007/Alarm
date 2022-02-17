@@ -16,5 +16,7 @@
         <item name="windowSplashScreenBackground">@color/gray_400</item>
 
         <item name="windowSplashScreenAnimatedIcon">@drawable/ic_alarm</item>
+
+        <item name="postSplashScreenTheme">@style/Theme.WeatherAlarm</item>
     </style>
 </resources>

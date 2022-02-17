@@ -12,7 +12,7 @@ import kr.ryan.weatheralarm.data.InternalWeather
  */
 interface DBWeatherRepository {
 
-    fun selectWeatherInfo(): Flow<InternalWeather>
+    fun selectWeatherInfo(): Flow<InternalWeather?>
 
     suspend fun insertWeatherInfo(internalWeather: InternalWeather)
 }

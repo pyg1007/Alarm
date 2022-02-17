@@ -18,7 +18,7 @@ import kr.ryan.weatheralarm.data.InternalWeather
 interface WeatherDao {
 
     @Query("SELECT * FROM internalweather")
-    fun selectWeatherInfo() : Flow<InternalWeather>
+    fun selectWeatherInfo() : Flow<InternalWeather?>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertWeatherInfo(internalWeather: InternalWeather)

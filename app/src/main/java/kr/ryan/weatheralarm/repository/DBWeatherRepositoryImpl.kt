@@ -15,7 +15,7 @@ class DBWeatherRepositoryImpl(
     private val dao: WeatherDao
 ) : DBWeatherRepository{
 
-    override fun selectWeatherInfo(): Flow<InternalWeather> {
+    override fun selectWeatherInfo(): Flow<InternalWeather?> {
         return dao.selectWeatherInfo()
     }
 

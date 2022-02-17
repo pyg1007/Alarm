@@ -61,13 +61,7 @@ class WeatherWorker @AssistedInject constructor(
                     applicationContext.getSystemService(Context.LOCATION_SERVICE) as LocationManager
 
                 requestPermission({
-                    var location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER)
-                    if (location == null)
-                        location =
-                            locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER)
-
-
-                    val latXLngY = CalculatorLatitudeAndLongitude.convertGRIDTOGPS(TO_GRID, location!!.latitude, location.longitude)
+                    val latXLngY = applicationContext.getCurrentLatXLngY()!!
                     val result = useCase.getWeatherInfo(
                         hashMapOf(
                             "serviceKey" to BuildConfig.weather_api_key,
