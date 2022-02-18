@@ -57,8 +57,6 @@ class WeatherWorker @AssistedInject constructor(
         runCatching {
 
             CoroutineScope(Dispatchers.Default).launch {
-                val locationManager =
-                    applicationContext.getSystemService(Context.LOCATION_SERVICE) as LocationManager
 
                 requestPermission({
                     val latXLngY = applicationContext.getCurrentLatXLngY()!!

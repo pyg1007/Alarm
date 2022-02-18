@@ -23,20 +23,16 @@ import kotlin.coroutines.resume
  */
 
 @SuppressLint("MissingPermission")
-suspend fun Context.getCurrentLatXLngY(enableGps: Boolean): LatXLngY? {
+suspend fun Context.getCurrentLatXLngY(): LatXLngY? {
     return CoroutineScope(Dispatchers.Main).async {
         return@async runCatching {
             val locationManager = getSystemService(Context.LOCATION_SERVICE) as LocationManager
 
-            val location: Location? = null
-            if (enableGps)
-                locationManager.getLocationWithGPSListener()
-            else
-                locationManager.getLocationWithNetWorkListener()
+            val location = locationManager.getLocationWithGPSListener()
 
             CalculatorLatitudeAndLongitude.convertGRIDTOGPS(
                 TO_GRID,
-                location!!.latitude,
+                location.latitude,
                 location.longitude
             )
         }.onFailure {
@@ -47,42 +43,6 @@ suspend fun Context.getCurrentLatXLngY(enableGps: Boolean): LatXLngY? {
 
 @SuppressLint("MissingPermission")
 private suspend fun LocationManager.getLocationWithGPSListener() = suspendCancellableCoroutine<Location> {
-
-    val gpsListener = object : LocationListener{
-        override fun onLocationChanged(p0: Location) {
-            it.resume(p0)
-            removeUpdates(this)
-        }
-
-        override fun onLocationChanged(locations: MutableList<Location>) {
-            super.onLocationChanged(locations)
-        }
-
-        override fun onFlushComplete(requestCode: Int) {
-            super.onFlushComplete(requestCode)
-        }
-
-        override fun onStatusChanged(provider: String?, status: Int, extras: Bundle?) {
-            super.onStatusChanged(provider, status, extras)
-        }
-
-        override fun onProviderEnabled(provider: String) {
-            super.onProviderEnabled(provider)
-        }
-
-        override fun onProviderDisabled(provider: String) {
-            super.onProviderDisabled(provider)
-        }
-    }
-
-    requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0f, gpsListener)
-
-    it.invokeOnCancellation { removeUpdates(gpsListener) }
-
-}
-
-@SuppressLint("MissingPermission")
-private suspend fun LocationManager.getLocationWithNetWorkListener() = suspendCancellableCoroutine<Location> {
 
     val gpsListener = object : LocationListener{
         override fun onLocationChanged(p0: Location) {

@@ -2,7 +2,6 @@ package kr.ryan.weatheralarm.future.activity
 
 import android.annotation.SuppressLint
 import android.content.Intent
-import android.os.Build
 import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
@@ -16,7 +15,6 @@ import kotlinx.coroutines.launch
 import kr.ryan.permissionmodule.requestPermission
 import kr.ryan.weatheralarm.R
 import kr.ryan.weatheralarm.util.getCurrentLatXLngY
-import kr.ryan.weatheralarm.util.isEnableLocationSystem
 import kr.ryan.weatheralarm.viewModel.WeatherViewModel
 import timber.log.Timber
 
@@ -43,7 +41,7 @@ class SplashActivity : AppCompatActivity() {
             weatherViewModel.weather.collect {
                 if (it == null) {
                     requestPermission({
-                        this@SplashActivity.getCurrentLatXLngY(this@SplashActivity.isEnableLocationSystem())?.let { latXLngY ->
+                        this@SplashActivity.getCurrentLatXLngY()?.let { latXLngY ->
                             Timber.d("location x = ${latXLngY.x} y = ${latXLngY.y} lat = ${latXLngY.lat} lon = ${latXLngY.lng}")
                             routeNextActivity()
                         } ?: run {
