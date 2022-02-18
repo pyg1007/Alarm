@@ -16,6 +16,7 @@ import kotlinx.coroutines.launch
 import kr.ryan.permissionmodule.requestPermission
 import kr.ryan.weatheralarm.R
 import kr.ryan.weatheralarm.util.getCurrentLatXLngY
+import kr.ryan.weatheralarm.util.isEnableLocationSystem
 import kr.ryan.weatheralarm.viewModel.WeatherViewModel
 import timber.log.Timber
 
@@ -42,7 +43,7 @@ class SplashActivity : AppCompatActivity() {
             weatherViewModel.weather.collect {
                 if (it == null) {
                     requestPermission({
-                        this@SplashActivity.getCurrentLatXLngY()?.let { latXLngY ->
+                        this@SplashActivity.getCurrentLatXLngY(this@SplashActivity.isEnableLocationSystem())?.let { latXLngY ->
                             Timber.d("location x = ${latXLngY.x} y = ${latXLngY.y} lat = ${latXLngY.lat} lon = ${latXLngY.lng}")
                             routeNextActivity()
                         } ?: run {
