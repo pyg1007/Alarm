@@ -28,7 +28,11 @@ suspend fun Context.getCurrentLatXLngY(): LatXLngY? {
         return@async runCatching {
             val locationManager = getSystemService(Context.LOCATION_SERVICE) as LocationManager
 
-            val location = locationManager.getLocationWithGPSListener()
+            var location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER)
+            if (location == null)
+                location = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER)
+            if (location == null)
+                location = locationManager.getLocationWithGPSListener()
 
             CalculatorLatitudeAndLongitude.convertGRIDTOGPS(
                 TO_GRID,

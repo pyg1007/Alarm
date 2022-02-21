@@ -20,6 +20,7 @@ import kr.ryan.weatheralarm.usecase.WeatherUseCase
 import kr.ryan.weatheralarm.util.*
 import kr.ryan.weatheralarm.util.CalculatorLatitudeAndLongitude.TO_GRID
 import timber.log.Timber
+import java.net.URLDecoder
 import java.util.*
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
@@ -59,19 +60,18 @@ class WeatherWorker @AssistedInject constructor(
             CoroutineScope(Dispatchers.Default).launch {
 
                 requestPermission({
+                    val baseDate = Calendar.getInstance()
                     val latXLngY = applicationContext.getCurrentLatXLngY()!!
                     val result = useCase.getWeatherInfo(
                         hashMapOf(
-                            "serviceKey" to BuildConfig.weather_api_key,
-                            "nx" to latXLngY.x.toString(),
-                            "ny" to latXLngY.y.toString(),
+                            "serviceKey" to URLDecoder.decode(BuildConfig.weather_api_key, "UTF-8"),
+                            "nx" to latXLngY.x.toInt().toString(),
+                            "ny" to latXLngY.y.toInt().toString(),
                             "dataType" to "JSON",
-                            "base_date" to Date().convertBaseDate(),
-                            "base_time" to Calendar.getInstance().apply {
-                                time = Date()
+                            "base_date" to baseDate.time.convertBaseDate(),
+                            "base_time" to baseDate.apply {
                                 set(Calendar.HOUR_OF_DAY, 2)
                                 set(Calendar.MINUTE, 0)
-                                set(Calendar.SECOND, 0)
                             }.time.convertBaseTime()
                         )
                     )
