@@ -104,35 +104,14 @@ class SplashActivity : AppCompatActivity() {
     }
 
     private suspend fun observeWeather(){
+        Timber.d("observe Weather Active")
         weatherViewModel.weather.collect {
             if (it == null) {
                 requestPermission({
                     if (this@SplashActivity.isEnableLocationSystem()) {
+                        Timber.d("enable Location System")
                         this@SplashActivity.getCurrentLatXLngY()?.let { latXLngY ->
-                            val standardDate = Calendar.getInstance().apply {
-                                set(Calendar.HOUR_OF_DAY, 2)
-                                set(Calendar.MINUTE, 30)
-                                set(Calendar.SECOND, 0)
-                            }
-                            val baseDate = Calendar.getInstance()
-                            if(baseDate.before(standardDate))
-                                baseDate.add(Calendar.DAY_OF_MONTH, -1)
-
-                            Timber.d("time -> ${baseDate.time.convertDateWithDayToString()} ${baseDate.time.convertTime()}")
-
-                            weatherViewModel.weatherInfo(hashMapOf(
-                                "serviceKey" to URLDecoder.decode(BuildConfig.weather_api_key, "UTF-8"),
-                                "nx" to latXLngY.x.toInt().toString(),
-                                "ny" to latXLngY.y.toInt().toString(),
-                                "dataType" to "JSON",
-                                "base_date" to baseDate.time.convertBaseDate(),
-                                "base_time" to baseDate.apply {
-                                    set(Calendar.HOUR_OF_DAY, 2)
-                                    set(Calendar.MINUTE, 0)
-                                }.time.convertBaseTime()
-                            )) {
-                                routeNextActivity()
-                            }
+                            callApi(latXLngY)
                             Timber.d("location x = ${latXLngY.x} y = ${latXLngY.y} lat = ${latXLngY.lat} lon = ${latXLngY.lng}")
                         } ?: run {
                             Timber.d("location Error")
@@ -148,6 +127,33 @@ class SplashActivity : AppCompatActivity() {
                 Timber.d("not null $it")
                 routeNextActivity()
             }
+        }
+    }
+
+    private fun callApi(latXLngY: CalculatorLatitudeAndLongitude.LatXLngY) {
+        val standardDate = Calendar.getInstance().apply {
+            set(Calendar.HOUR_OF_DAY, 2)
+            set(Calendar.MINUTE, 30)
+            set(Calendar.SECOND, 0)
+        }
+        val baseDate = Calendar.getInstance()
+        if(baseDate.before(standardDate))
+            baseDate.add(Calendar.DAY_OF_MONTH, -1)
+
+        Timber.d("time -> ${baseDate.time.convertDateWithDayToString()} ${baseDate.time.convertTime()}")
+
+        weatherViewModel.weatherInfo(hashMapOf(
+            "serviceKey" to URLDecoder.decode(BuildConfig.weather_api_key, "UTF-8"),
+            "nx" to latXLngY.x.toInt().toString(),
+            "ny" to latXLngY.y.toInt().toString(),
+            "dataType" to "JSON",
+            "base_date" to baseDate.time.convertBaseDate(),
+            "base_time" to baseDate.apply {
+                set(Calendar.HOUR_OF_DAY, 2)
+                set(Calendar.MINUTE, 0)
+            }.time.convertBaseTime()
+        )) {
+            routeNextActivity()
         }
     }
 

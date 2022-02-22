@@ -61,4 +61,6 @@ dependencies {
 
     implementation "io.github.ParkSangGwon:tedpermission-coroutine:$tedpermission_version"
 
+    implementation "com.google.android.gms:play-services-location:$google_location_version"
+
 }

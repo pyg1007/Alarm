@@ -20,6 +20,7 @@ buildscript {
     ext.tedpermission_version = '3.3.0'
     ext.splash_version = '1.0.0-beta01'
     ext.work_version = '2.7.1'
+    ext.google_location_version = '19.0.1'
 
 
     repositories {
