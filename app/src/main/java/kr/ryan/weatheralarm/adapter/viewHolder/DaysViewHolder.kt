@@ -1,11 +1,21 @@
 package kr.ryan.weatheralarm.adapter.viewHolder
 
 import android.view.View
+import androidx.lifecycle.coroutineScope
+import androidx.lifecycle.findViewTreeLifecycleOwner
 import androidx.recyclerview.widget.RecyclerView
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import kr.ryan.weatheralarm.data.AlarmWithDate
 import kr.ryan.weatheralarm.databinding.RecyclerDaysBinding
 import kr.ryan.weatheralarm.util.convertTime
 import kr.ryan.weatheralarm.util.getMeridiem
+import kr.ryan.weatheralarm.util.onLongSingleClicks
+import kr.ryan.weatheralarm.util.onSingleClicks
+import timber.log.Timber
 import java.util.*
 
 /**
@@ -15,20 +25,26 @@ import java.util.*
  * Created On 2021-10-26.
  * Description:
  */
+@ExperimentalCoroutinesApi
 class DaysViewHolder constructor(private val binding: RecyclerDaysBinding) : RecyclerView.ViewHolder(binding.root){
+
+    private val coroutineScope = CoroutineScope(Dispatchers.Main)
 
     fun bind(alarmWithDate: AlarmWithDate){
 
         initBinding(alarmWithDate)
 
-        binding.root.setOnLongClickListener {
-            onLongItemClick(it, adapterPosition, alarmWithDate)
-            true
-        }
+        binding.root.onSingleClicks().onEach {
+            onItemClick(binding.root, adapterPosition, alarmWithDate)
+        }.launchIn(
+            coroutineScope
+        )
 
-        binding.root.setOnClickListener {
-            onItemClick(it, adapterPosition, alarmWithDate)
-        }
+        binding.root.onLongSingleClicks().onEach {
+            onLongItemClick(binding.root, adapterPosition, alarmWithDate)
+        }.launchIn(
+            coroutineScope
+        )
     }
 
     private fun initBinding(alarmWithDate: AlarmWithDate){

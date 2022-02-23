@@ -131,7 +131,6 @@ class AlarmEditViewModel @Inject constructor(
 
     fun changeDays(days: List<AlarmDate>) = viewModelScope.launch {
         val convertDateToBoolean = MutableList(7) { false }
-        Timber.d("change Days Boolean List -> $convertDateToBoolean")
         days.forEach {
 
             val index = Calendar.getInstance().apply {
@@ -142,6 +141,8 @@ class AlarmEditViewModel @Inject constructor(
 
             convertDateToBoolean[index] = !convertDateToBoolean[index]
         }
+
+        Timber.d("change Days Boolean List -> $convertDateToBoolean")
         flowSelectedDays.emit(convertDateToBoolean)
     }
 
