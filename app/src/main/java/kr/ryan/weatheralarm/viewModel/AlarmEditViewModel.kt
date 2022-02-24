@@ -218,6 +218,9 @@ class AlarmEditViewModel @Inject constructor(
                             }.get(Calendar.DAY_OF_WEEK) - 1 == index
                         }?.let {
 
+                            if (date.time <= Date())
+                                date.add(Calendar.DAY_OF_MONTH, 7)
+
                             currentAlarmDate.add(
                                 AlarmDate(
                                     it.index, it.alarmIndex, date.time
@@ -225,6 +228,10 @@ class AlarmEditViewModel @Inject constructor(
                             )
 
                         } ?: run {
+
+                            if (date.time <= Date())
+                                date.add(Calendar.DAY_OF_MONTH, 7)
+
                             currentAlarmDate.add(
                                 AlarmDate(
                                     alarmIndex = alarm.index,
@@ -263,6 +270,7 @@ class AlarmEditViewModel @Inject constructor(
                 insertUseCase.insertAlarmDate(alarmDate)
             }
 
+            Timber.d("$alarm $alarmDate")
             AlarmWithDate(alarm, alarmDate)
         }.onSuccess {
             success(it)

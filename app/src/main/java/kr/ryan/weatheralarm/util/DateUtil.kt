@@ -87,7 +87,7 @@ fun Date.getCurrentMin(): Int {
 
 fun AlarmWithDate.findFastDate() : AlarmDate?{
 
-    Timber.d("$alarmDate")
+    Timber.d("$alarmDate current Date -> ${Date().convertDateWithDayToString()} ${Date().convertTime()}")
     Timber.d("${alarmDate.filter { it.date >= Date() }}")
     Timber.d("${alarmDate.filter { it.date >= Date() }.minByOrNull { it.date }}")
     Timber.d("${alarmDate.filter { it.date >= Date() }.minByOrNull { it.date }?.date}")
