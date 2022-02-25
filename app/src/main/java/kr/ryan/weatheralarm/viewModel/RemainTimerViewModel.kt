@@ -13,6 +13,7 @@ import kotlinx.coroutines.launch
 import kr.ryan.weatheralarm.data.AlarmWithDate
 import kr.ryan.weatheralarm.usecase.AlarmSelectUseCase
 import kr.ryan.weatheralarm.util.findFastAlarmDate
+import timber.log.Timber
 import javax.inject.Inject
 
 /**
@@ -44,6 +45,8 @@ class RemainTimerViewModel @Inject constructor(
         selectUseCase.selectAlarmList().collect {
             alarmList.emit(it)
 
+            Timber.d(" select Alarm List ")
+
             if (!it.filter { alarmWithDate -> alarmWithDate.alarm.onOff }.isNullOrEmpty()) {
                 receiveData = true
                 remainTimerJob?.let { job ->
@@ -66,6 +69,7 @@ class RemainTimerViewModel @Inject constructor(
 
     private fun remainTimer() {
         remainTimerJob = viewModelScope.launch {
+            Timber.d("active remain Timer")
             while (true) {
                 val currentDate = SystemClock.elapsedRealtime()
                 if (!flag) {

@@ -3,15 +3,17 @@ package kr.ryan.weatheralarm.util
 import android.annotation.SuppressLint
 import android.content.Context
 import android.location.Location
-import android.location.LocationListener
 import android.location.LocationManager
 import android.os.Build
-import android.os.Bundle
+import android.os.Looper
 import android.provider.Settings
+import com.google.android.gms.location.LocationCallback
+import com.google.android.gms.location.LocationRequest
+import com.google.android.gms.location.LocationResult
+import com.google.android.gms.location.LocationServices
 import kotlinx.coroutines.*
 import kr.ryan.weatheralarm.util.CalculatorLatitudeAndLongitude.TO_GRID
 import kr.ryan.weatheralarm.util.CalculatorLatitudeAndLongitude.LatXLngY
-import kr.ryan.weatheralarm.util.Location.lastLocationListener
 import timber.log.Timber
 import kotlin.coroutines.resume
 
@@ -38,6 +40,43 @@ suspend fun Context.getCurrentLatXLngY(): LatXLngY? {
             Timber.d("Location Error => $it")
         }.getOrNull()
     }.await()
+}
+
+@SuppressLint("MissingPermission")
+suspend fun lastLocationListener(context: Context) = suspendCancellableCoroutine<Location> { result ->
+
+    val fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(context)
+
+    fusedLocationProviderClient.lastLocation.addOnSuccessListener { location ->
+        if (location == null){
+
+            val request = LocationRequest.create().also {
+                it.priority = LocationRequest.PRIORITY_HIGH_ACCURACY
+                it.interval = 5 * 1000
+            }
+
+            val locationCallback = object : LocationCallback(){
+                override fun onLocationResult(locationResult: LocationResult) {
+
+                    for (locations in locationResult.locations){
+                        if (locations != null){
+                            result.resume(locations)
+                        }
+                    }
+
+                }
+            }
+
+            fusedLocationProviderClient.requestLocationUpdates(request, locationCallback, Looper.getMainLooper())
+
+            result.invokeOnCancellation { fusedLocationProviderClient.removeLocationUpdates(locationCallback) }
+
+        }else{
+            result.resume(location)
+        }
+    }
+
+
 }
 
 fun Context.isEnableLocationSystem(): Boolean {

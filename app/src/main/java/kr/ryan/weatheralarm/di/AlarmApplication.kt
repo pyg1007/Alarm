@@ -53,7 +53,7 @@ class AlarmApplication : Application(), Configuration.Provider{
             .setRequiresDeviceIdle(true)
             .build()
 
-        // 새벽 두시마다 등록
+        // 새벽 두시 30분 마다 등록
         val oneTimeWorkRequest = OneTimeWorkRequestBuilder<WeatherWorker>()
             .setConstraints(constraint)
             .setInitialDelay(getCertainTime(), TimeUnit.MILLISECONDS)

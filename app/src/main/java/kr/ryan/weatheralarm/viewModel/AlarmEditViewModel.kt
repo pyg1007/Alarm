@@ -9,7 +9,6 @@ import kotlinx.coroutines.launch
 import kr.ryan.weatheralarm.data.Alarm
 import kr.ryan.weatheralarm.data.AlarmDate
 import kr.ryan.weatheralarm.data.AlarmWithDate
-import kr.ryan.weatheralarm.usecase.AlarmDeleteUseCase
 import kr.ryan.weatheralarm.usecase.AlarmInsertUseCase
 import kr.ryan.weatheralarm.usecase.AlarmSelectUseCase
 import kr.ryan.weatheralarm.usecase.AlarmUpdateUseCase
@@ -31,8 +30,7 @@ import javax.inject.Inject
 class AlarmEditViewModel @Inject constructor(
     private val selectUseCase: AlarmSelectUseCase,
     private val insertUseCase: AlarmInsertUseCase,
-    private val updateUseCase: AlarmUpdateUseCase,
-    private val deleteUseCase: AlarmDeleteUseCase
+    private val updateUseCase: AlarmUpdateUseCase
 ) : ViewModel() {
 
     private val _mode = MutableStateFlow(Mode(ADD_MODE))
@@ -248,15 +246,15 @@ class AlarmEditViewModel @Inject constructor(
                 Timber.d("equals? -> ${_preAlarmWithDate.value!!.alarmDate == currentAlarmDate}")
 
                 alarmDate = currentAlarmDate
-            }else{
+            } else {
 
-                 alarmDate[0].date = Calendar.getInstance().apply {
-                     set(Calendar.YEAR, _selectedYear.value)
-                     set(Calendar.MONTH, _selectedMonth.value - 1)
-                     set(Calendar.DAY_OF_MONTH, _selectedDate.value)
-                     set(Calendar.HOUR_OF_DAY, selectedHour.value)
-                     set(Calendar.MINUTE, selectedMinute.value)
-                 }.time
+                alarmDate[0].date = Calendar.getInstance().apply {
+                    set(Calendar.YEAR, _selectedYear.value)
+                    set(Calendar.MONTH, _selectedMonth.value - 1)
+                    set(Calendar.DAY_OF_MONTH, _selectedDate.value)
+                    set(Calendar.HOUR_OF_DAY, selectedHour.value)
+                    set(Calendar.MINUTE, selectedMinute.value)
+                }.time
 
             }
 

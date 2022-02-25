@@ -101,7 +101,7 @@ class WeatherWorker @AssistedInject constructor(
                 .setRequiresDeviceIdle(true)
                 .build()
 
-            // 새벽 두시 20분마다 등록
+            // 새벽 두시 30분마다 등록
             val oneTimeWorkRequest = OneTimeWorkRequestBuilder<WeatherWorker>()
                 .setConstraints(constraint)
                 .setInitialDelay(getCertainTime(), TimeUnit.MILLISECONDS)

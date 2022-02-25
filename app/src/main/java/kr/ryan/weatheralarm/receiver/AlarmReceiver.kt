@@ -13,10 +13,7 @@ import kr.ryan.weatheralarm.data.AlarmDate
 import kr.ryan.weatheralarm.data.AlarmWithDate
 import kr.ryan.weatheralarm.usecase.AlarmSelectUseCase
 import kr.ryan.weatheralarm.usecase.AlarmUpdateUseCase
-import kr.ryan.weatheralarm.util.cancelAlarm
-import kr.ryan.weatheralarm.util.findFastDate
-import kr.ryan.weatheralarm.util.isRegisterAlarm
-import kr.ryan.weatheralarm.util.registerAlarm
+import kr.ryan.weatheralarm.util.*
 import timber.log.Timber
 import java.util.*
 import javax.inject.Inject
@@ -104,6 +101,7 @@ class AlarmReceiver : BroadcastReceiver() {
             }
         }
         Timber.d("Alarm Receiver Active")
+        context?.createNotification()
     }
 
 }
