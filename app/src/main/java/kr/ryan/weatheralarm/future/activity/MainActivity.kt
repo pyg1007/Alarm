@@ -47,7 +47,6 @@ class MainActivity : BaseActivity<ActivityMainBinding>(R.layout.activity_main) {
 
             whenStarted {
                 checkAlarmPermission()
-                startTimer()
             }
 
             whenCreated {
@@ -67,19 +66,6 @@ class MainActivity : BaseActivity<ActivityMainBinding>(R.layout.activity_main) {
                 }
             }
         }
-    }
-
-    override fun onStop() {
-        super.onStop()
-        stopTimer()
-    }
-
-    private fun stopTimer() {
-        loopRemainTimer.cancelJob()
-    }
-
-    private fun startTimer() {
-        loopRemainTimer.startJob()
     }
 
     private fun checkAlarmPermission() {

@@ -1,19 +1,16 @@
 package kr.ryan.weatheralarm.viewModel
 
-import android.os.SystemClock
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.delay
+import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.launch
 import kr.ryan.weatheralarm.data.AlarmWithDate
 import kr.ryan.weatheralarm.usecase.AlarmSelectUseCase
 import kr.ryan.weatheralarm.util.findFastAlarmDate
-import timber.log.Timber
+import java.util.*
 import javax.inject.Inject
 
 /**
@@ -23,76 +20,56 @@ import javax.inject.Inject
  * Created On 2022-02-09.
  * Description:
  */
+
 @HiltViewModel
 class RemainTimerViewModel @Inject constructor(
     private val selectUseCase: AlarmSelectUseCase
 ) : ViewModel() {
 
-    private var receiveData = false
+    private var timerJob: Job? = null
+
     private var flag = false
-    private var remainTimerJob: Job? = null
 
-    private val alarmList = MutableStateFlow<List<AlarmWithDate>>(emptyList())
+    private val _remainTime = MutableStateFlow("등록되어있는 알람이 없습니다.")
+    val remainTime = _remainTime.asStateFlow()
 
-    private val _alarmStatus = MutableStateFlow("")
-    val alarmStatus = _alarmStatus.asStateFlow()
+    private val alarmList = MutableStateFlow(emptyList<AlarmWithDate>())
 
     init {
-        selectAlarmList()
+        getAlarmList()
     }
 
-    private fun selectAlarmList() = viewModelScope.launch {
+    private fun getAlarmList() = viewModelScope.launch {
         selectUseCase.selectAlarmList().collect {
             alarmList.emit(it)
 
-            Timber.d(" select Alarm List ")
+            if (flag)
+                flag = false
 
-            if (!it.filter { alarmWithDate -> alarmWithDate.alarm.onOff }.isNullOrEmpty()) {
-                receiveData = true
-                remainTimerJob?.let { job ->
-                    if (job.isActive) {
-                        cancelJob()
-                        startJob()
-                    }
-                } ?: run {
-                    startJob()
-                }
-            } else {
-                _alarmStatus.emit("등록된 알람이 없습니다.")
-                remainTimerJob?.let { job ->
-                    if (job.isActive)
-                        cancelJob()
-                }
-            }
+            start()
         }
     }
 
-    private fun remainTimer() {
-        remainTimerJob = viewModelScope.launch {
-            Timber.d("active remain Timer")
-            while (true) {
-                val currentDate = SystemClock.elapsedRealtime()
+    private suspend fun start() {
+        timerJob?.cancelAndJoin()
+        timerJob = viewModelScope.launch(Dispatchers.IO) {
+            while (isActive) {
+                val currentDate = Date().time
                 if (!flag) {
                     flag = true
-                    _alarmStatus.emit(alarmList.value.findFastAlarmDate() ?: "등록된 알람이 없습니다.")
+                    _remainTime.emit(alarmList.value.findFastAlarmDate() ?: "등록되어있는 알람이 없습니다.")
                 } else {
                     if ((currentDate / 1000) % 60 == 0L) {
-                        _alarmStatus.emit(alarmList.value.findFastAlarmDate() ?: "등록된 알람이 없습니다.")
+                        withContext(Dispatchers.Main) {
+                            _remainTime.emit(
+                                alarmList.value.findFastAlarmDate() ?: "등록되어있는 알람이 없습니다."
+                            )
+                        }
                     }
                 }
-                delay(1000L)
+                delay(timeMillis = 1000)
             }
         }
-    }
-
-    fun startJob() {
-        if (receiveData)
-            remainTimer()
-    }
-
-    fun cancelJob() {
-        remainTimerJob?.cancel()
-        remainTimerJob = null
     }
 
 }
