@@ -60,11 +60,9 @@ class RemainTimerViewModel @Inject constructor(
                     _remainTime.emit(alarmList.value.findFastAlarmDate() ?: "등록되어있는 알람이 없습니다.")
                 } else {
                     if ((currentDate / 1000) % 60 == 0L) {
-                        withContext(Dispatchers.Main) {
-                            _remainTime.emit(
-                                alarmList.value.findFastAlarmDate() ?: "등록되어있는 알람이 없습니다."
-                            )
-                        }
+                        _remainTime.emit(
+                            alarmList.value.findFastAlarmDate() ?: "등록되어있는 알람이 없습니다."
+                        )
                     }
                 }
                 delay(timeMillis = 1000)
