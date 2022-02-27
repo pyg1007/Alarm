@@ -29,11 +29,13 @@ import kotlin.coroutines.resume
 suspend fun Context.getCurrentLatXLngY(): LatXLngY? {
     return CoroutineScope(Dispatchers.Main).async {
         return@async runCatching {
-            val location = lastLocationListener(this@getCurrentLatXLngY)
+            var location = lastLocationListener(this@getCurrentLatXLngY)
+            if (location == null)
+                location = lastLocationListener(this@getCurrentLatXLngY)
 
             CalculatorLatitudeAndLongitude.convertGRIDTOGPS(
                 TO_GRID,
-                location.latitude,
+                location!!.latitude,
                 location.longitude
             )
         }.onFailure {
@@ -43,40 +45,43 @@ suspend fun Context.getCurrentLatXLngY(): LatXLngY? {
 }
 
 @SuppressLint("MissingPermission")
-suspend fun lastLocationListener(context: Context) = suspendCancellableCoroutine<Location> { result ->
+suspend fun lastLocationListener(context: Context) = suspendCancellableCoroutine<Location?> { result ->
 
-    val fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(context)
+    runCatching {
+        val fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(context)
 
-    fusedLocationProviderClient.lastLocation.addOnSuccessListener { location ->
-        if (location == null){
+        fusedLocationProviderClient.lastLocation.addOnSuccessListener { location ->
+            if (location == null){
 
-            val request = LocationRequest.create().also {
-                it.priority = LocationRequest.PRIORITY_HIGH_ACCURACY
-                it.interval = 5 * 1000
-            }
-
-            val locationCallback = object : LocationCallback(){
-                override fun onLocationResult(locationResult: LocationResult) {
-
-                    for (locations in locationResult.locations){
-                        if (locations != null){
-                            result.resume(locations)
-                        }
-                    }
-
+                val request = LocationRequest.create().also {
+                    it.priority = LocationRequest.PRIORITY_HIGH_ACCURACY
+                    it.interval = 5 * 1000
                 }
+
+                val locationCallback = object : LocationCallback(){
+                    override fun onLocationResult(locationResult: LocationResult) {
+
+                        for (locations in locationResult.locations){
+                            if (locations != null && result.isActive){
+                                result.resume(locations)
+                            }
+                        }
+
+                    }
+                }
+
+                fusedLocationProviderClient.requestLocationUpdates(request, locationCallback, Looper.getMainLooper())
+
+                result.invokeOnCancellation { fusedLocationProviderClient.removeLocationUpdates(locationCallback) }
+
+            }else{
+                if (result.isActive)
+                    result.resume(location)
             }
-
-            fusedLocationProviderClient.requestLocationUpdates(request, locationCallback, Looper.getMainLooper())
-
-            result.invokeOnCancellation { fusedLocationProviderClient.removeLocationUpdates(locationCallback) }
-
-        }else{
-            result.resume(location)
         }
+    }.onFailure {
+        Timber.d("Failure -> $it")
     }
-
-
 }
 
 fun Context.isEnableLocationSystem(): Boolean {
