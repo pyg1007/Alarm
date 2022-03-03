@@ -34,6 +34,10 @@ class MainActivity : BaseActivity<ActivityMainBinding>(R.layout.activity_main) {
 
     private val loopRemainTimer by viewModels<RemainTimerViewModel>()
 
+    private val alarmManager by lazy {
+        getSystemService(Context.ALARM_SERVICE) as AlarmManager
+    }
+
     @Inject
     lateinit var alarmAdapter: AlarmAdapter
 
@@ -109,9 +113,7 @@ class MainActivity : BaseActivity<ActivityMainBinding>(R.layout.activity_main) {
                 if (it.itemId == R.id.action_delete) {
                     alarmList?.let { alarmDate ->
                         if (isRegisterAlarm(alarmDate[position])) {
-                            val alarmManager =
-                                getSystemService(Context.ALARM_SERVICE) as? AlarmManager
-                            alarmManager?.cancelAlarm(this@MainActivity, alarmDate[position])
+                            alarmManager.cancelAlarm(this@MainActivity, alarmDate[position])
                         }
                         alarmViewModel.onEvent(AlarmEvent.OnDeleteClick(alarmDate[position]))
                     }
@@ -173,6 +175,12 @@ class MainActivity : BaseActivity<ActivityMainBinding>(R.layout.activity_main) {
                     snackBar.setAction(it.action) {
                         alarmViewModel.deleteAlarmDate?.let { deletedAlarm ->
                             alarmViewModel.onEvent(AlarmEvent.OnUndoDeleteClick(deletedAlarm))
+                            if(deletedAlarm.alarm.onOff) {
+                                if (isRegisterAlarm(deletedAlarm)) {
+                                    alarmManager.cancelAlarm(this@MainActivity, deletedAlarm)
+                                }
+                                alarmManager.registerAlarm(this@MainActivity, deletedAlarm)
+                            }
                         }
                         snackBar.dismiss()
                     }

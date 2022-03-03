@@ -152,7 +152,7 @@ class SplashActivity : AppCompatActivity() {
                 set(Calendar.HOUR_OF_DAY, 2)
                 set(Calendar.MINUTE, 0)
             }.time.convertBaseTime()
-        )) {
+        ), latXLngY) {
             routeNextActivity()
         }
     }

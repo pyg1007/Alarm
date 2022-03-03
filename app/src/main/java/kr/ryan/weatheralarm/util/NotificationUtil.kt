@@ -11,6 +11,7 @@ import androidx.annotation.RequiresApi
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import kr.ryan.weatheralarm.R
+import kr.ryan.weatheralarm.data.InternalWeather
 import timber.log.Timber
 
 /**
@@ -28,7 +29,7 @@ private const val channelName = "Notify_Weather"
 private const val property = NotificationManager.IMPORTANCE_MIN
 
 @SuppressLint("RemoteViewLayout")
-fun Context.createNotification(){
+fun Context.createNotification(internalWeather: InternalWeather){
 
     Timber.d("createNotify")
 
@@ -36,6 +37,8 @@ fun Context.createNotification(){
 
     val remoteSummaryView = RemoteViews(packageName, R.layout.layout_summary)
     val remoteExpandView = RemoteViews(packageName, R.layout.layout_expand)
+
+    remoteExpandView.setTextViewText(R.id.tv_expand_location, currentLocation(internalWeather.nx, internalWeather.ny) ?: "알 수 없는 장소")
 
     val builder = NotificationCompat.Builder(this, CHANNEL_ID)
         .setSmallIcon(R.drawable.ic_alarm)

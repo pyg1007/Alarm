@@ -8,10 +8,14 @@ import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.launch
 import kr.ryan.retrofitmodule.NetWorkResult
+import kr.ryan.weatheralarm.data.InternalWeather
 import kr.ryan.weatheralarm.data.Mapping.convertWeatherToInternalWeather
 import kr.ryan.weatheralarm.usecase.WeatherInsertUseCase
 import kr.ryan.weatheralarm.usecase.WeatherSelectUseCase
 import kr.ryan.weatheralarm.usecase.WeatherUseCase
+import kr.ryan.weatheralarm.util.CalculatorLatitudeAndLongitude
+import kr.ryan.weatheralarm.util.CalculatorLatitudeAndLongitude.TO_GRID
+import kr.ryan.weatheralarm.util.CalculatorLatitudeAndLongitude.convertGRIDTOGPS
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -43,11 +47,12 @@ class WeatherViewModel @Inject constructor(
      *
      */
 
-    fun weatherInfo(param: HashMap<String, String>, complete: () -> Unit) = viewModelScope.launch{
+    fun weatherInfo(param: HashMap<String, String>, latXLngY: CalculatorLatitudeAndLongitude.LatXLngY, complete: () -> Unit) = viewModelScope.launch{
         when(val result = weatherUseCase.getWeatherInfo(param)){
             is NetWorkResult.Success -> {
                 result.data.convertWeatherToInternalWeather()?.let {
-                    insertWeatherUseCase.insertWeatherInfo(it)
+                    val weatherInfo = InternalWeather(it.index, it.date, latXLngY.lat.toInt(), latXLngY.lng.toInt(), it.item)
+                    insertWeatherUseCase.insertWeatherInfo(weatherInfo)
                 }
                 complete()
             }

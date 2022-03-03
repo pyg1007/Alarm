@@ -13,6 +13,7 @@ import kr.ryan.weatheralarm.data.AlarmDate
 import kr.ryan.weatheralarm.data.AlarmWithDate
 import kr.ryan.weatheralarm.usecase.AlarmSelectUseCase
 import kr.ryan.weatheralarm.usecase.AlarmUpdateUseCase
+import kr.ryan.weatheralarm.usecase.WeatherSelectUseCase
 import kr.ryan.weatheralarm.util.*
 import timber.log.Timber
 import java.util.*
@@ -34,6 +35,9 @@ class AlarmReceiver : BroadcastReceiver() {
     @Inject
     lateinit var selectUseCase: AlarmSelectUseCase
 
+    @Inject
+    lateinit var selectWeather: WeatherSelectUseCase
+
     override fun onReceive(context: Context?, intent: Intent?) {
 
         val alarmManager = context?.getSystemService(Context.ALARM_SERVICE) as? AlarmManager
@@ -41,26 +45,18 @@ class AlarmReceiver : BroadcastReceiver() {
         CoroutineScope(Dispatchers.IO).launch {
             intent?.let { it ->
 
-                Timber.d("Alarm Receiver Intent Not Null")
-
                 it.getParcelableExtra<AlarmDate>("alarm")?.let { alarmDate ->
 
-                    Timber.d("Alarm Receiver Parcel Data Not null")
                     val alarmInfo = selectUseCase.selectAlarmInfo(alarmDate.alarmIndex ?: -1)
 
-                    Timber.d("Alarm Receiver receive Alarm Info $alarmInfo")
                     if (!alarmInfo.isRepeat){ // 요일
 
                         alarmInfo.onOff = false
                         updateUseCase.updateAlarmInfo(alarmInfo)
 
-                        Timber.d("Alarm Receiver alarm Info Update")
-
                     }else{ // 날짜
 
                         val alarmList = selectUseCase.selectAlarmDate(alarmInfo.index ?: -1)
-
-                        Timber.d("Alarm Receiver Alarm List $alarmList")
 
                         if (!alarmList.isNullOrEmpty()){
 
@@ -73,7 +69,6 @@ class AlarmReceiver : BroadcastReceiver() {
                                 }
                             }
 
-                            Timber.d("index -> $index")
                             val nextTime = Calendar.getInstance().apply {
                                 time = alarmDate.date
                             }
@@ -91,17 +86,22 @@ class AlarmReceiver : BroadcastReceiver() {
                                 alarmManager?.registerAlarm(it, alarm)
                             }
 
-
-                            Timber.d("Alarm Receiver alarm List Update")
                         }
                     }
 
                 }
 
+                selectWeather.selectWeatherInfo().collect {
+                    Timber.d("$it")
+                    it?.let { internalWeather ->
+
+                        context?.createNotification(internalWeather)
+
+                    }
+                }
+
             }
         }
-        Timber.d("Alarm Receiver Active")
-        context?.createNotification()
     }
 
 }
