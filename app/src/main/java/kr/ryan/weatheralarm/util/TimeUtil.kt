@@ -50,7 +50,7 @@ fun getCertainTime(): Long{
     val dueDate = Calendar.getInstance().apply {
 
         set(Calendar.HOUR_OF_DAY, 2)
-        set(Calendar.MINUTE, 30)
+        set(Calendar.MINUTE, 40)
         set(Calendar.SECOND, 0)
 
     }

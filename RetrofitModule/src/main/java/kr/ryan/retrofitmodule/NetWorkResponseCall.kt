@@ -18,6 +18,8 @@ import timber.log.Timber
 class NetWorkResponseCall<T> constructor(
     private val callDelegate: Call<T>
 ): Call<NetWorkResult<T>>{
+    private var tryCount = 0
+
     override fun clone(): Call<NetWorkResult<T>> = NetWorkResponseCall(callDelegate.clone())
 
     override fun execute(): Response<NetWorkResult<T>> = throw UnsupportedOperationException("ResponseCall does not support execute.")
@@ -31,16 +33,33 @@ class NetWorkResponseCall<T> constructor(
             response.body()?.let {
                 when(response.code()){
                     in 200..299 -> callback.onResponse(this@NetWorkResponseCall, Response.success(NetWorkResult.Success(it, response.code())))
-                    in 400..409 -> callback.onResponse(this@NetWorkResponseCall, Response.success(NetWorkResult.ApiError(response.message(), response.code())))
+                    in 400..409 -> {
+                        callback.onResponse(this@NetWorkResponseCall, Response.success(NetWorkResult.ApiError(response.message(), response.code())))
+                        if (tryCount < 2)
+                            retry(callback)
+                    }
+                    else -> {
+                        callback.onResponse(this@NetWorkResponseCall, Response.success(NetWorkResult.ApiError(response.message(), response.code())))
+                        if (tryCount < 2)
+                            retry(callback)
+                    }
                 }
             } ?: callback.onResponse(this@NetWorkResponseCall, Response.success(NetWorkResult.NullResult()))
         }
 
         override fun onFailure(call: Call<T>, t: Throwable) {
             callback.onResponse(this@NetWorkResponseCall, Response.success(NetWorkResult.NetWorkError(t)))
-            call.cancel()
+            if (tryCount < 2)
+                retry(callback)
+            else
+                call.cancel()
         }
     })
+
+    private fun retry(callback: Callback<NetWorkResult<T>>){
+        tryCount++
+        clone().enqueue(callback)
+    }
 
     override fun isExecuted(): Boolean = callDelegate.isExecuted
 

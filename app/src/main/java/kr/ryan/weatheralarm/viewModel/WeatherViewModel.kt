@@ -17,6 +17,8 @@ import kr.ryan.weatheralarm.util.CalculatorLatitudeAndLongitude
 import kr.ryan.weatheralarm.util.CalculatorLatitudeAndLongitude.TO_GRID
 import kr.ryan.weatheralarm.util.CalculatorLatitudeAndLongitude.convertGRIDTOGPS
 import timber.log.Timber
+import java.net.SocketException
+import java.net.SocketTimeoutException
 import javax.inject.Inject
 
 /**
@@ -54,6 +56,16 @@ class WeatherViewModel @Inject constructor(
                     val weatherInfo = InternalWeather(it.index, it.date, latXLngY.lat.toInt(), latXLngY.lng.toInt(), it.item)
                     insertWeatherUseCase.insertWeatherInfo(weatherInfo)
                 }
+                complete()
+            }
+
+            is NetWorkResult.NetWorkError -> {
+                Timber.d(" NetWorkError Error  - > ${result.throwable}")
+                complete()
+            }
+
+            is NetWorkResult.ApiError -> {
+                Timber.d(" Api Error  - > error Code : ${result.code} error Message : ${result.message}")
                 complete()
             }
 

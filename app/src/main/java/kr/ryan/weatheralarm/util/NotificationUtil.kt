@@ -39,6 +39,9 @@ fun Context.createNotification(internalWeather: InternalWeather){
     val remoteExpandView = RemoteViews(packageName, R.layout.layout_expand)
 
     remoteExpandView.setTextViewText(R.id.tv_expand_location, currentLocation(internalWeather.nx, internalWeather.ny) ?: "알 수 없는 장소")
+    internalWeather.setRemoteViewImage(remoteExpandView)
+    remoteExpandView.setTextViewText(R.id.tv_temperature, internalWeather.item.find { it.category == "TMP" }?.value ?: "unknown")
+
 
     val builder = NotificationCompat.Builder(this, CHANNEL_ID)
         .setSmallIcon(R.drawable.ic_alarm)
@@ -55,6 +58,25 @@ fun Context.createNotification(internalWeather: InternalWeather){
     with(NotificationManagerCompat.from(this)){
         Timber.d("notification notify")
         notify(14, builder)
+    }
+}
+
+private fun InternalWeather.setRemoteViewImage(remoteViews: RemoteViews){
+    item.find { it.category == "SKY" }?.let {
+        when(it.value){
+            "1" -> {
+                remoteViews.setImageViewResource(R.id.iv_weather_status, R.drawable.circle_date_black)
+                Timber.d("1 ${item.find { weatherItem -> weatherItem.category == "PTY" }?.value}")
+            }
+            "3" -> {
+                remoteViews.setImageViewResource(R.id.iv_weather_status, R.drawable.circle_date_red)
+                Timber.d("3 ${item.find { weatherItem -> weatherItem.category == "PTY" }?.value}")
+            }
+            "4" -> {
+                remoteViews.setImageViewResource(R.id.iv_weather_status, R.drawable.circle_date_blue)
+                Timber.d("4 ${item.find { weatherItem -> weatherItem.category == "PTY" }?.value}")
+            }
+        }
     }
 }
 
