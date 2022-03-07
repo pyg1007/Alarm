@@ -1,5 +1,6 @@
 package kr.ryan.retrofitmodule
 
+import kotlinx.coroutines.delay
 import okhttp3.Request
 import okio.Timeout
 import retrofit2.Call
@@ -29,30 +30,37 @@ class NetWorkResponseCall<T> constructor(
             call: Call<T>,
             response: Response<T>
         ) {
-            Timber.e("${response.body()}")
             response.body()?.let {
                 when(response.code()){
                     in 200..299 -> callback.onResponse(this@NetWorkResponseCall, Response.success(NetWorkResult.Success(it, response.code())))
                     in 400..409 -> {
-                        callback.onResponse(this@NetWorkResponseCall, Response.success(NetWorkResult.ApiError(response.message(), response.code())))
                         if (tryCount < 2)
                             retry(callback)
+                        else{
+                            callback.onResponse(this@NetWorkResponseCall, Response.success(NetWorkResult.ApiError(response.message(), response.code())))
+                            call.cancel()
+                        }
+
                     }
                     else -> {
-                        callback.onResponse(this@NetWorkResponseCall, Response.success(NetWorkResult.ApiError(response.message(), response.code())))
                         if (tryCount < 2)
                             retry(callback)
+                        else{
+                            callback.onResponse(this@NetWorkResponseCall, Response.success(NetWorkResult.ApiError(response.message(), response.code())))
+                            call.cancel()
+                        }
                     }
                 }
             } ?: callback.onResponse(this@NetWorkResponseCall, Response.success(NetWorkResult.NullResult()))
         }
 
         override fun onFailure(call: Call<T>, t: Throwable) {
-            callback.onResponse(this@NetWorkResponseCall, Response.success(NetWorkResult.NetWorkError(t)))
             if (tryCount < 2)
                 retry(callback)
-            else
+            else{
+                callback.onResponse(this@NetWorkResponseCall, Response.success(NetWorkResult.NetWorkError(t)))
                 call.cancel()
+            }
         }
     })
 

@@ -136,6 +136,7 @@ class SplashActivity : AppCompatActivity() {
             set(Calendar.MINUTE, 30)
             set(Calendar.SECOND, 0)
         }
+
         val baseDate = Calendar.getInstance()
         if(baseDate.before(standardDate))
             baseDate.add(Calendar.DAY_OF_MONTH, -1)
@@ -146,6 +147,7 @@ class SplashActivity : AppCompatActivity() {
             "serviceKey" to URLDecoder.decode(BuildConfig.weather_api_key, "UTF-8"),
             "nx" to latXLngY.x.toInt().toString(),
             "ny" to latXLngY.y.toInt().toString(),
+            "numOfRows" to "180",
             "dataType" to "JSON",
             "base_date" to baseDate.time.convertBaseDate(),
             "base_time" to baseDate.apply {

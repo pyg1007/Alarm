@@ -1,5 +1,6 @@
 package kr.ryan.weatheralarm.data
 
+import timber.log.Timber
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -27,7 +28,9 @@ object Mapping {
                 }.time,
                 nx = response.weatherBody.weatherItems.weatherItem[0].nx,
                 ny = response.weatherBody.weatherItems.weatherItem[0].ny,
-                item = response.weatherBody.weatherItems.weatherItem.map {
+                item = response.weatherBody.weatherItems.weatherItem.filter {
+                    it.category == "SKY" || it.category == "POP" || it.category == "PTY" || it.category == "TMP" || it.category == "TMN" || it.category == "TMX"
+                }.distinctBy { it.category }.map {
                     InternalItem(it.category, it.fcstValue)
                 }
             )

@@ -13,4 +13,6 @@
     <string name="friday">금</string>
     <string name="saturday">토</string>
     <string name="title_domain">Module Title</string>
+    <string name="temperature">%s℃</string>
+    <string name="max_min_temperature">%s℃ / %s℃</string>
 </resources>

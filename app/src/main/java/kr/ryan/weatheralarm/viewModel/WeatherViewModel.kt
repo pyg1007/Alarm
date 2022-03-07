@@ -6,6 +6,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.retry
 import kotlinx.coroutines.launch
 import kr.ryan.retrofitmodule.NetWorkResult
 import kr.ryan.weatheralarm.data.InternalWeather
@@ -45,7 +46,7 @@ class WeatherViewModel @Inject constructor(
 
     /**
      *
-     * param = serviceKey, nx, ny, dataType, base_date, base_time
+     * param = serviceKey, nx, ny, numOfRows, dataType, base_date, base_time
      *
      */
 

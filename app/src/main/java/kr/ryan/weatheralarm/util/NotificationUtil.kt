@@ -29,7 +29,7 @@ private const val channelName = "Notify_Weather"
 private const val property = NotificationManager.IMPORTANCE_MIN
 
 @SuppressLint("RemoteViewLayout")
-fun Context.createNotification(internalWeather: InternalWeather){
+fun Context.createNotification(internalWeather: InternalWeather?){
 
     Timber.d("createNotify")
 
@@ -38,10 +38,12 @@ fun Context.createNotification(internalWeather: InternalWeather){
     val remoteSummaryView = RemoteViews(packageName, R.layout.layout_summary)
     val remoteExpandView = RemoteViews(packageName, R.layout.layout_expand)
 
-    remoteExpandView.setTextViewText(R.id.tv_expand_location, currentLocation(internalWeather.nx, internalWeather.ny) ?: "알 수 없는 장소")
-    internalWeather.setRemoteViewImage(remoteExpandView)
-    remoteExpandView.setTextViewText(R.id.tv_temperature, internalWeather.item.find { it.category == "TMP" }?.value ?: "unknown")
-
+    internalWeather?.let { weather ->
+        remoteExpandView.setTextViewText(R.id.tv_expand_location, currentLocation(weather.nx, weather.ny) ?: "알 수 없는 장소")
+        weather.setRemoteViewImage(remoteExpandView)
+        remoteExpandView.setTextViewText(R.id.tv_temperature, weather.item.find { it.category == "TMP" }?.value?.let { getString(R.string.temperature, it) }?: run { "unKnown" } )
+        remoteExpandView.setTextViewText(R.id.tv_max_min_temperature, getString(R.string.max_min_temperature, weather.item.find { it.category == "TMX" }?.value ?: "unKnown", weather.item.find { it.category == "TMN" }?.value ?: "unKnown") )
+    }
 
     val builder = NotificationCompat.Builder(this, CHANNEL_ID)
         .setSmallIcon(R.drawable.ic_alarm)
