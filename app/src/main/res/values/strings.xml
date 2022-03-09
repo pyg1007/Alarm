@@ -15,4 +15,5 @@
     <string name="title_domain">Module Title</string>
     <string name="temperature">%s℃</string>
     <string name="max_min_temperature">%s℃ / %s℃</string>
+    <string name="weather">날씨</string>
 </resources>

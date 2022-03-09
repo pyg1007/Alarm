@@ -52,15 +52,15 @@ object CalculatorLatitudeAndLongitude {
             var theta = lng * DEGRAD - olon
             if (theta > Math.PI) theta -= 2.0 * Math.PI
             if (theta < -Math.PI) theta += 2.0 * Math.PI
-            theta *= sn;
+            theta *= sn
             rs.x = floor(ra * sin(theta) + XO + 0.5)
             rs.y = floor(ro - ra * cos(theta) + YO + 0.5)
         } else {
             rs.x = lat
             rs.y = lng
-            val xn = lat - XO;
-            val yn = ro - lng + YO;
-            var ra = sqrt(xn * xn + yn * yn);
+            val xn = lat - XO
+            val yn = ro - lng + YO
+            var ra = sqrt(xn * xn + yn * yn)
             if (sn < 0.0) {
                 ra = -ra
             }

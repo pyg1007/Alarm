@@ -2,4 +2,7 @@
 <resources>
     <dimen name="item_alarm_height">56.25dp</dimen>
     <dimen name="day_text_size">12dp</dimen>
+
+    <dimen name="remote_image_width">37.5dp</dimen>
+    <dimen name="remote_image_height">37.5dp</dimen>
 </resources>
