@@ -35,7 +35,6 @@ fun Context.createNotification(internalWeather: InternalWeather?){
 
     val notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
 
-    //val remoteSummaryView = RemoteViews(packageName, R.layout.layout_summary)
     val remoteExpandView = RemoteViews(packageName, R.layout.layout_expand)
 
     internalWeather?.let { weather ->
@@ -70,7 +69,6 @@ private fun InternalWeather.setRemoteViewImage(remoteViews: RemoteViews){
             "1" -> {
                 remoteViews.setImageViewResource(R.id.iv_weather_status, R.drawable.circle_date_black)
                 remoteViews.setTextViewText(R.id.tv_weather_state, "맑음")
-                Timber.d("1 ${item.find { weatherItem -> weatherItem.category == "PTY" }?.value}")
             }
             "3" -> {
                 remoteViews.setImageViewResource(R.id.iv_weather_status, R.drawable.circle_date_red)
@@ -79,8 +77,14 @@ private fun InternalWeather.setRemoteViewImage(remoteViews: RemoteViews){
             }
             "4" -> {
                 remoteViews.setImageViewResource(R.id.iv_weather_status, R.drawable.circle_date_blue)
-                remoteViews.setTextViewText(R.id.tv_weather_state, "흐림")
-                Timber.d("4 ${item.find { weatherItem -> weatherItem.category == "PTY" }?.value}")
+                when(item.find { weatherItem -> weatherItem.category == "PTY" }?.value){
+                    "0" -> remoteViews.setTextViewText(R.id.tv_weather_state, "흐림")
+                    "1" -> remoteViews.setTextViewText(R.id.tv_weather_state, "비")
+                    "2" -> remoteViews.setTextViewText(R.id.tv_weather_state, "비/눈")
+                    "3" -> remoteViews.setTextViewText(R.id.tv_weather_state, "눈")
+                    "4" -> remoteViews.setTextViewText(R.id.tv_weather_state, "소나기")
+                    else -> remoteViews.setTextViewText(R.id.tv_weather_state, "흐림")
+                }
             }
         }
     }
