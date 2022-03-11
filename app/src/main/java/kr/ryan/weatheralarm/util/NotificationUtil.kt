@@ -24,6 +24,7 @@ import timber.log.Timber
 
 private const val CHANNEL_ID = "Weather"
 private const val channelName = "Notify_Weather"
+private const val NOTIFICATION_ID = 14
 
 @RequiresApi(Build.VERSION_CODES.N)
 private const val property = NotificationManager.IMPORTANCE_MIN
@@ -59,7 +60,7 @@ fun Context.createNotification(internalWeather: InternalWeather?){
 
     with(NotificationManagerCompat.from(this)){
         Timber.d("notification notify")
-        notify(14, builder)
+        notify(NOTIFICATION_ID, builder)
     }
 }
 
