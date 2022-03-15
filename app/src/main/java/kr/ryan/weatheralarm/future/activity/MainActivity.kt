@@ -12,6 +12,7 @@ import androidx.activity.viewModels
 import androidx.lifecycle.*
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import kr.ryan.baseui.BaseActivity
@@ -26,6 +27,7 @@ import kr.ryan.weatheralarm.viewModel.RemainTimerViewModel
 import timber.log.Timber
 import javax.inject.Inject
 
+@ExperimentalCoroutinesApi
 @AndroidEntryPoint
 class MainActivity : BaseActivity<ActivityMainBinding>(R.layout.activity_main) {
 
@@ -141,8 +143,12 @@ class MainActivity : BaseActivity<ActivityMainBinding>(R.layout.activity_main) {
             dialogFragment?.arguments = bundle
         }
 
-        dialogFragment?.show(supportFragmentManager, "Alarm")
-        responseAlarmDialog()
+        dialogFragment?.let {
+            if (!it.isAdded){
+                dialogFragment?.show(supportFragmentManager, "Alarm")
+                responseAlarmDialog()
+            }
+        }
     }
 
     private fun responseAlarmDialog() {

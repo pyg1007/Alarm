@@ -14,6 +14,7 @@
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/root_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
@@ -41,9 +42,16 @@
 
                 <TextView
                     android:id="@+id/tv_selected_date"
-                    android:layout_width="match_parent"
+                    android:layout_width="0dp"
                     android:layout_height="0dp"
+                    android:background="@drawable/round_view"
                     android:gravity="center_vertical"
+                    android:textStyle="bold"
+                    android:paddingStart="8dp"
+                    android:layout_marginBottom="5dp"
+                    app:layout_constraintWidth_percent="0.9"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
                     android:text="@{editViewModel.selectedDays.empty ? editViewModel.showDate : editViewModel.selectedDays}"
                     app:layout_constraintHeight_percent="0.15"
                     app:layout_constraintTop_toTopOf="parent" />
@@ -53,17 +61,26 @@
                     layout="@layout/include_days"
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginBottom="5dp"
                     app:layout_constraintHeight_percent="0.15"
                     app:layout_constraintTop_toBottomOf="@id/tv_selected_date" />
 
                 <EditText
                     android:id="@+id/et_alarm_title"
-                    android:layout_width="match_parent"
+                    android:layout_width="0dp"
                     android:layout_height="0dp"
                     android:importantForAutofill="no"
                     android:inputType="text"
+                    android:background="@drawable/round_view"
+                    android:hint="@string/title"
+                    android:paddingStart="8dp"
+                    android:layout_marginTop="5dp"
                     android:text="@={editViewModel.alarmTitle}"
-                    app:layout_constraintHeight_percent="0.25"
+                    app:layout_constraintWidth_percent="0.9"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHeight_percent="0.15"
                     app:layout_constraintTop_toBottomOf="@id/include_day"
                     tools:ignore="LabelFor" />
 

@@ -30,7 +30,7 @@ abstract class BaseDialogFragment<VDB : ViewDataBinding>(@LayoutRes private val 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         initDialog()
-        //isCancelable = false
+        isCancelable = false
     }
 
     private fun initDialog() {

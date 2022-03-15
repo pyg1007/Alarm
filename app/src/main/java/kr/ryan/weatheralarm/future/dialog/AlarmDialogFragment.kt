@@ -6,10 +6,15 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.*
+import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import kr.ryan.baseui.BaseDialogFragment
 import kr.ryan.weatheralarm.R
@@ -30,6 +35,7 @@ import java.util.*
  * Created On 2021-11-18.
  * Description:
  */
+@ExperimentalCoroutinesApi
 @AndroidEntryPoint
 class AlarmDialogFragment : BaseDialogFragment<DialogAlarmBinding>(R.layout.dialog_alarm) {
 
@@ -72,6 +78,9 @@ class AlarmDialogFragment : BaseDialogFragment<DialogAlarmBinding>(R.layout.dial
             lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 launch {
                     observeUiState()
+                }
+                launch {
+                    disMissFocusEditText()
                 }
             }
         }
@@ -149,6 +158,13 @@ class AlarmDialogFragment : BaseDialogFragment<DialogAlarmBinding>(R.layout.dial
         }
     }
 
+    private suspend fun disMissFocusEditText(){
+        binding.rootLayout.onSingleClicks().onEach {
+            binding.etAlarmTitle.clearFocus()
+            requireContext().hideKeyboard(binding.etAlarmTitle)
+        }.stateIn(viewLifecycleOwner.lifecycleScope)
+    }
+
     private suspend fun observeUiState() {
         alarmViewModel.uiEvent.collect {
             when (it) {
@@ -159,28 +175,38 @@ class AlarmDialogFragment : BaseDialogFragment<DialogAlarmBinding>(R.layout.dial
                     } else if (it.route == Route.SAVE) {
                         editViewModel.onActive({ alarmWithDate ->
 
-                            Timber.d("insert -> $alarmWithDate")
+                            Timber.d("SAVE")
 
-                            val alarmManager =
-                                requireContext().getSystemService(Context.ALARM_SERVICE) as? AlarmManager
-                            if (requireContext().isRegisterAlarm(alarmWithDate)) {
-                                Timber.d("already alarm")
-                                alarmManager?.cancelAlarm(requireContext(), alarmWithDate)
-                                Timber.d("cancel alarm")
+                            if (Date() < alarmWithDate.alarmDate.sortedBy {date ->  date.date }[0].date){
+                                Timber.d("insert -> $alarmWithDate")
+
+                                val alarmManager =
+                                    requireContext().getSystemService(Context.ALARM_SERVICE) as? AlarmManager
+                                if (requireContext().isRegisterAlarm(alarmWithDate)) {
+                                    Timber.d("already alarm")
+                                    alarmManager?.cancelAlarm(requireContext(), alarmWithDate)
+                                    Timber.d("cancel alarm")
+                                }
+
+                                alarmManager?.registerAlarm(requireContext(), alarmWithDate)
+                                Timber.d("register Alarm")
+
+                                saveEvent()
+                                alarmViewModel.sendEvent(UiEvent.PopUpStack)
+                            }else{
+                                Timber.d("설정한 시간이 현재 시각 이전입니다.")
+                                alarmViewModel.sendEvent(UiEvent.ShowSnackBar("설정한 시간이 현재 시각 이전입니다."))
                             }
 
-                            alarmManager?.registerAlarm(requireContext(), alarmWithDate)
-                            Timber.d("register Alarm")
 
-                            saveEvent()
-                            alarmViewModel.sendEvent(UiEvent.PopUpStack)
                         }, { throwable ->
                             Timber.d("failure -> $throwable")
                         })
                     }
                 }
                 is UiEvent.ShowSnackBar -> {
-
+                    Timber.d("show SnackBar ${it.message}")
+                    Snackbar.make(binding.rootLayout, it.message, Snackbar.LENGTH_SHORT).show()
                 }
                 is UiEvent.PopUpStack -> {
                     dismiss()
