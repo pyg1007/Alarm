@@ -18,6 +18,7 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import kr.ryan.baseui.BaseDialogFragment
 import kr.ryan.weatheralarm.R
+import kr.ryan.weatheralarm.adapter.AlarmAdapter
 import kr.ryan.weatheralarm.data.Alarm
 import kr.ryan.weatheralarm.data.AlarmWithDate
 import kr.ryan.weatheralarm.databinding.DialogAlarmBinding
@@ -27,6 +28,7 @@ import kr.ryan.weatheralarm.viewModel.AlarmEditViewModel
 import kr.ryan.weatheralarm.viewModel.AlarmViewModel
 import timber.log.Timber
 import java.util.*
+import javax.inject.Inject
 
 /**
  * WeatherAlarm
@@ -43,6 +45,9 @@ class AlarmDialogFragment : BaseDialogFragment<DialogAlarmBinding>(R.layout.dial
     private val alarmViewModel by viewModels<AlarmViewModel>()
 
     private var alarm: Alarm? = null
+
+    @Inject
+    lateinit var adapter: AlarmAdapter
 
     private var preHour = 0
     private var preMin = 0
@@ -178,23 +183,18 @@ class AlarmDialogFragment : BaseDialogFragment<DialogAlarmBinding>(R.layout.dial
                             Timber.d("SAVE")
 
                             if (Date() < alarmWithDate.alarmDate.sortedBy {date ->  date.date }[0].date){
-                                Timber.d("insert -> $alarmWithDate")
 
                                 val alarmManager =
                                     requireContext().getSystemService(Context.ALARM_SERVICE) as? AlarmManager
                                 if (requireContext().isRegisterAlarm(alarmWithDate)) {
-                                    Timber.d("already alarm")
                                     alarmManager?.cancelAlarm(requireContext(), alarmWithDate)
-                                    Timber.d("cancel alarm")
                                 }
 
                                 alarmManager?.registerAlarm(requireContext(), alarmWithDate)
-                                Timber.d("register Alarm")
 
                                 saveEvent()
                                 alarmViewModel.sendEvent(UiEvent.PopUpStack)
                             }else{
-                                Timber.d("설정한 시간이 현재 시각 이전입니다.")
                                 alarmViewModel.sendEvent(UiEvent.ShowSnackBar("설정한 시간이 현재 시각 이전입니다."))
                             }
 

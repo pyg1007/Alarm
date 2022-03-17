@@ -20,6 +20,8 @@ class AlarmSelectUseCase @Inject constructor(
 
     suspend fun selectAlarmDate(index: Long) = alarmRepository.selectAlarmDate(index)
 
+    
+
     fun selectAlarmList() = alarmRepository.selectAllAlarmList()
 
 }

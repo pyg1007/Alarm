@@ -74,7 +74,7 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintLeft_toRightOf="@id/tv_meridiem"
                 app:layout_constraintTop_toBottomOf="@id/tv_alarm_title"
-                app:layout_constraintWidth_percent="0.25" />
+                app:layout_constraintWidth_percent="0.15" />
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/const_date"
@@ -83,7 +83,7 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintLeft_toRightOf="@id/tv_time"
                 app:layout_constraintTop_toBottomOf="@id/tv_alarm_title"
-                app:layout_constraintWidth_percent="0.45">
+                app:layout_constraintWidth_percent="0.55">
 
                 <TextView
                     android:id="@+id/tv_sunday"

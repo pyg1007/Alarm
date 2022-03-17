@@ -144,7 +144,7 @@ class MainActivity : BaseActivity<ActivityMainBinding>(R.layout.activity_main) {
         }
 
         dialogFragment?.let {
-            if (!it.isAdded){
+            if (!it.isAdded) {
                 dialogFragment?.show(supportFragmentManager, "Alarm")
                 responseAlarmDialog()
             }
@@ -153,12 +153,10 @@ class MainActivity : BaseActivity<ActivityMainBinding>(R.layout.activity_main) {
 
     private fun responseAlarmDialog() {
         AlarmDialogFragment.setOnCancelEvent {
-            Timber.d("Cancel Active")
             alarmViewModel.sendEvent(UiEvent.ShowSnackBar("취소하였습니다."))
         }
 
         AlarmDialogFragment.setOnSaveEvent {
-            Timber.d("Save Active")
             alarmViewModel.sendEvent(UiEvent.ShowSnackBar("저장되었습니다."))
         }
     }
@@ -167,10 +165,12 @@ class MainActivity : BaseActivity<ActivityMainBinding>(R.layout.activity_main) {
         alarmViewModel.uiEvent.collect {
             when (it) {
                 is UiEvent.Navigate -> {
-                    if (it.route == Route.ADD_MODE)
+                    if (it.route == Route.ADD_MODE) {
                         openAlarmDialog(null)
-                    else
+                    }
+                    else {
                         openAlarmDialog(it.alarmWithDate)
+                    }
                 }
                 is UiEvent.PopUpStack -> {
 
@@ -181,7 +181,7 @@ class MainActivity : BaseActivity<ActivityMainBinding>(R.layout.activity_main) {
                     snackBar.setAction(it.action) {
                         alarmViewModel.deleteAlarmDate?.let { deletedAlarm ->
                             alarmViewModel.onEvent(AlarmEvent.OnUndoDeleteClick(deletedAlarm))
-                            if(deletedAlarm.alarm.onOff) {
+                            if (deletedAlarm.alarm.onOff) {
                                 if (isRegisterAlarm(deletedAlarm)) {
                                     alarmManager.cancelAlarm(this@MainActivity, deletedAlarm)
                                 }
