@@ -55,13 +55,13 @@ class AlarmDialogFragment : BaseDialogFragment<DialogAlarmBinding>(R.layout.dial
     companion object {
 
         private lateinit var cancelEvent: () -> Unit
-        private lateinit var saveEvent: () -> Unit
+        private lateinit var saveEvent: (String?) -> Unit
 
         fun setOnCancelEvent(onClick: () -> Unit) {
             cancelEvent = onClick
         }
 
-        fun setOnSaveEvent(onClick: () -> Unit) {
+        fun setOnSaveEvent(onClick: (String?) -> Unit) {
             saveEvent = onClick
         }
     }
@@ -178,24 +178,30 @@ class AlarmDialogFragment : BaseDialogFragment<DialogAlarmBinding>(R.layout.dial
                         cancelEvent()
                         alarmViewModel.sendEvent(UiEvent.PopUpStack)
                     } else if (it.route == Route.SAVE) {
-                        editViewModel.onActive({ alarmWithDate ->
+                        editViewModel.onActive({ alarmWithDate, isExist ->
 
                             Timber.d("SAVE")
 
-                            if (Date() < alarmWithDate.alarmDate.sortedBy {date ->  date.date }[0].date){
-
-                                val alarmManager =
-                                    requireContext().getSystemService(Context.ALARM_SERVICE) as? AlarmManager
-                                if (requireContext().isRegisterAlarm(alarmWithDate)) {
-                                    alarmManager?.cancelAlarm(requireContext(), alarmWithDate)
-                                }
-
-                                alarmManager?.registerAlarm(requireContext(), alarmWithDate)
-
-                                saveEvent()
+                            if (isExist){
+                                saveEvent("이미 등록되어있는 날짜입니다.")
                                 alarmViewModel.sendEvent(UiEvent.PopUpStack)
-                            }else{
-                                alarmViewModel.sendEvent(UiEvent.ShowSnackBar("설정한 시간이 현재 시각 이전입니다."))
+                            }else {
+
+                                if (Date() < alarmWithDate.alarmDate.sortedBy { date -> date.date }[0].date) {
+
+                                    val alarmManager =
+                                        requireContext().getSystemService(Context.ALARM_SERVICE) as? AlarmManager
+                                    if (requireContext().isRegisterAlarm(alarmWithDate)) {
+                                        alarmManager?.cancelAlarm(requireContext(), alarmWithDate)
+                                    }
+
+                                    alarmManager?.registerAlarm(requireContext(), alarmWithDate)
+
+                                    saveEvent(null)
+                                    alarmViewModel.sendEvent(UiEvent.PopUpStack)
+                                } else {
+                                    alarmViewModel.sendEvent(UiEvent.ShowSnackBar("설정한 시간이 현재 시각 이전입니다."))
+                                }
                             }
 
 

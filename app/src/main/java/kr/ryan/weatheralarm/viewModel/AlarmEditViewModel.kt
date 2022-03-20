@@ -4,8 +4,11 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.suspendCancellableCoroutine
+import kotlinx.coroutines.withContext
 import kr.ryan.weatheralarm.data.Alarm
 import kr.ryan.weatheralarm.data.AlarmDate
 import kr.ryan.weatheralarm.data.AlarmWithDate
@@ -18,6 +21,7 @@ import kr.ryan.weatheralarm.util.Route.EDIT_MODE
 import timber.log.Timber
 import java.util.*
 import javax.inject.Inject
+import kotlin.coroutines.resume
 
 /**
  * WeatherAlarm
@@ -105,6 +109,46 @@ class AlarmEditViewModel @Inject constructor(
         it.convertDateWithDayToString()
     }.asLiveData()
 
+
+    /*
+
+        등록한 날짜가 완전히 일치하는것이 있는지 체크
+
+     */
+    private suspend fun isExistAlarmDate(alarmDate: List<AlarmDate>) = suspendCancellableCoroutine<Boolean>{
+
+        runCatching {
+
+            viewModelScope.launch {
+
+                selectUseCase.selectAlarmList().collect { alarmWithDateList ->
+                    var exist = false
+                    run {
+                        alarmWithDateList.forEach { alarmWithDate ->
+                            if (alarmWithDate.alarmDate == alarmDate){
+                                exist = true
+                                return@run
+                            }
+                        }
+                    }
+                    if (it.isActive)
+                        it.resume(exist)
+                }
+
+            }
+
+        }.onFailure { throwable ->
+            Timber.d("isExistAlarmDate Failure -> $throwable")
+        }
+
+        it.invokeOnCancellation {
+
+        }
+
+    }
+
+
+
     val alarmTitle = MutableStateFlow("")
 
     fun changeHour(hour: Int) = viewModelScope.launch {
@@ -156,20 +200,20 @@ class AlarmEditViewModel @Inject constructor(
         _preAlarmWithDate.emit(alarmWithDate)
     }
 
-    fun onActive(success: (alarmWithDate: AlarmWithDate) -> Unit, failure: (t: Throwable) -> Unit) =
+    fun onActive(success: (alarmWithDate: AlarmWithDate, isExist: Boolean) -> Unit, failure: (t: Throwable) -> Unit) =
         viewModelScope.launch {
             _mode.collect {
                 when (it.mode) {
                     ADD_MODE -> {
-                        insert({ alarmWithDate ->
-                            success(alarmWithDate)
+                        insert({ alarmWithDate, isExist ->
+                            success(alarmWithDate, isExist)
                         }, { failure ->
                             failure(failure)
                         })
                     }
                     EDIT_MODE -> {
                         update({ alarmWithDate ->
-                            success(alarmWithDate)
+                            success(alarmWithDate, false)
                         }, { failure ->
                             failure(failure)
                         })
@@ -278,7 +322,7 @@ class AlarmEditViewModel @Inject constructor(
     }
 
     private suspend fun insert(
-        success: (alarmWithDate: AlarmWithDate) -> Unit,
+        success: (alarmWithDate: AlarmWithDate, isExist: Boolean) -> Unit,
         failure: (t: Throwable) -> Unit
     ) =
         viewModelScope.launch {
@@ -313,8 +357,6 @@ class AlarmEditViewModel @Inject constructor(
                         }.time)
                     )
 
-                    insertUseCase.insertAlarm(alarm, dateList)
-
                 } else {
 
                     alarm = Alarm(
@@ -344,13 +386,16 @@ class AlarmEditViewModel @Inject constructor(
                         }
                     }
 
-                    insertUseCase.insertAlarm(alarm, dateList)
 
                 }
 
-                AlarmWithDate(alarm, dateList)
+                val exist = isExistAlarmDate(dateList)
+                if (!exist){
+                    insertUseCase.insertAlarm(alarm, dateList)
+                }
+                Pair(AlarmWithDate(alarm, dateList), exist)
             }.onSuccess {
-                success(it)
+                success(it.first, it.second)
             }.onFailure {
                 failure(it)
             }

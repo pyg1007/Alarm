@@ -157,7 +157,7 @@ class MainActivity : BaseActivity<ActivityMainBinding>(R.layout.activity_main) {
         }
 
         AlarmDialogFragment.setOnSaveEvent {
-            alarmViewModel.sendEvent(UiEvent.ShowSnackBar("저장되었습니다."))
+            alarmViewModel.sendEvent(UiEvent.ShowSnackBar(it ?: "저장되었습니다."))
         }
     }
 
