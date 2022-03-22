@@ -4,11 +4,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.suspendCancellableCoroutine
-import kotlinx.coroutines.withContext
 import kr.ryan.weatheralarm.data.Alarm
 import kr.ryan.weatheralarm.data.AlarmDate
 import kr.ryan.weatheralarm.data.AlarmWithDate
@@ -21,7 +18,6 @@ import kr.ryan.weatheralarm.util.Route.EDIT_MODE
 import timber.log.Timber
 import java.util.*
 import javax.inject.Inject
-import kotlin.coroutines.resume
 
 /**
  * WeatherAlarm
@@ -39,6 +35,8 @@ class AlarmEditViewModel @Inject constructor(
 
     private val _mode = MutableStateFlow(Mode(ADD_MODE))
     private val _preAlarmWithDate = MutableStateFlow<AlarmWithDate?>(null)
+
+    private var savedAlarmWithDateList = mutableListOf<AlarmWithDate>()
 
     private val _randomPendingNumber = flow {
         selectUseCase.selectAlarmList().map {
@@ -60,6 +58,10 @@ class AlarmEditViewModel @Inject constructor(
     private val _selectedDate = MutableStateFlow(Date().getCurrentDate())
 
     val flowSelectedDays = MutableStateFlow(listOf(false, false, false, false, false, false, false))
+
+    init {
+        selectAlarmDate()
+    }
 
     fun changeStatus(index: Int) = viewModelScope.launch {
         Timber.d("change -> $index")
@@ -104,49 +106,56 @@ class AlarmEditViewModel @Inject constructor(
             set(Calendar.DAY_OF_MONTH, ints[2])
             set(Calendar.HOUR_OF_DAY, ints[3])
             set(Calendar.MINUTE, ints[4])
+            set(Calendar.SECOND, 0)
         }.time
     }.map {
         it.convertDateWithDayToString()
     }.asLiveData()
 
+    /*
+
+        저장된 날짜 데이터 가져오기
+
+     */
+    private fun selectAlarmDate() = viewModelScope.launch {
+        selectUseCase.selectAlarmList().collect {
+            savedAlarmWithDateList = it.toMutableList()
+        }
+    }
 
     /*
 
         등록한 날짜가 완전히 일치하는것이 있는지 체크
 
      */
-    private suspend fun isExistAlarmDate(alarmDate: List<AlarmDate>) = suspendCancellableCoroutine<Boolean>{
+    private fun isExistAlarmDate(listAlarmDate: List<AlarmDate>): Boolean {
 
-        runCatching {
-
-            viewModelScope.launch {
-
-                selectUseCase.selectAlarmList().collect { alarmWithDateList ->
-                    var exist = false
-                    run {
-                        alarmWithDateList.forEach { alarmWithDate ->
-                            if (alarmWithDate.alarmDate == alarmDate){
-                                exist = true
-                                return@run
-                            }
-                        }
-                    }
-                    if (it.isActive)
-                        it.resume(exist)
-                }
-
+        return runCatching {
+            var exist = false
+            val currentDateList = listAlarmDate.map { alarmDate ->
+                alarmDate.date.convertDate()
             }
-
+            run {
+                savedAlarmWithDateList.forEach { alarmWithDate ->
+                    val savedDateList = alarmWithDate.alarmDate.map { alarmDate ->
+                        alarmDate.date.convertDate()
+                    }
+                    Timber.d("Saved -> $savedDateList current -> $currentDateList isEquals -> ${currentDateList.containsAll(savedDateList)}")
+                    val checkDuplicateList =
+                        currentDateList.toSet().minus(savedDateList.toSet())
+                    Timber.d("check -> $checkDuplicateList")
+                    if (checkDuplicateList.isEmpty()) {
+                        exist = true
+                        return@run
+                    }
+                }
+            }
+            exist
         }.onFailure { throwable ->
             Timber.d("isExistAlarmDate Failure -> $throwable")
-        }
-
-        it.invokeOnCancellation {
-
-        }
+        }.getOrDefault(false)
 
     }
-
 
 
     val alarmTitle = MutableStateFlow("")
@@ -200,7 +209,10 @@ class AlarmEditViewModel @Inject constructor(
         _preAlarmWithDate.emit(alarmWithDate)
     }
 
-    fun onActive(success: (alarmWithDate: AlarmWithDate, isExist: Boolean) -> Unit, failure: (t: Throwable) -> Unit) =
+    fun onActive(
+        success: (alarmWithDate: AlarmWithDate, isExist: Boolean) -> Unit,
+        failure: (t: Throwable) -> Unit
+    ) =
         viewModelScope.launch {
             _mode.collect {
                 when (it.mode) {
@@ -253,6 +265,7 @@ class AlarmEditViewModel @Inject constructor(
                             set(Calendar.DAY_OF_WEEK, index + 1)
                             set(Calendar.HOUR_OF_DAY, selectedHour.value)
                             set(Calendar.MINUTE, selectedMinute.value)
+                            set(Calendar.SECOND, 0)
                         }
                         alarmDate.find {
                             Calendar.getInstance().apply {
@@ -298,6 +311,7 @@ class AlarmEditViewModel @Inject constructor(
                     set(Calendar.DAY_OF_MONTH, _selectedDate.value)
                     set(Calendar.HOUR_OF_DAY, selectedHour.value)
                     set(Calendar.MINUTE, selectedMinute.value)
+                    set(Calendar.SECOND, 0)
                 }.time
 
             }
@@ -354,6 +368,7 @@ class AlarmEditViewModel @Inject constructor(
                             set(Calendar.DAY_OF_MONTH, _selectedDate.value)
                             set(Calendar.HOUR_OF_DAY, selectedHour.value)
                             set(Calendar.MINUTE, selectedMinute.value)
+                            set(Calendar.SECOND, 0)
                         }.time)
                     )
 
@@ -377,6 +392,7 @@ class AlarmEditViewModel @Inject constructor(
                                 set(Calendar.DAY_OF_WEEK, index + 1)
                                 set(Calendar.HOUR_OF_DAY, selectedHour.value)
                                 set(Calendar.MINUTE, selectedMinute.value)
+                                set(Calendar.SECOND, 0)
                             }
 
                             if (date.time <= Date())
@@ -390,7 +406,7 @@ class AlarmEditViewModel @Inject constructor(
                 }
 
                 val exist = isExistAlarmDate(dateList)
-                if (!exist){
+                if (!exist) {
                     insertUseCase.insertAlarm(alarm, dateList)
                 }
                 Pair(AlarmWithDate(alarm, dateList), exist)
