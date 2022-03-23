@@ -16,35 +16,22 @@ import kotlin.time.toDuration
  * Description:
  */
 
-fun Date.convertDateWithDayToString(): String {
-    val simpleDateFormat = SimpleDateFormat("MM월 dd일 (E)", Locale.getDefault())
+private fun Date.dateToString(pattern: String, locale: Locale = Locale.getDefault()): String{
+    val simpleDateFormat = SimpleDateFormat(pattern, locale)
     return simpleDateFormat.format(this)
 }
 
-fun Date.getMeridiem(): String {
-    val simpleDateFormat = SimpleDateFormat("a", Locale.getDefault())
-    return simpleDateFormat.format(this)
-}
+fun Date.convertDateWithDayToString(): String = dateToString("MM월 dd일 (E)")
 
-fun Date.convertTime(): String {
-    val simpleDateFormat = SimpleDateFormat("HH : mm", Locale.getDefault())
-    return simpleDateFormat.format(this)
-}
+fun Date.getMeridiem(): String = dateToString("a")
 
-fun Date.convertBaseDate(): String {
-    val simpleDateFormat = SimpleDateFormat("yyyyMMdd", Locale.getDefault())
-    return simpleDateFormat.format(this)
-}
+fun Date.convertTime(): String = dateToString("HH : mm")
 
-fun Date.convertBaseTime() : String {
-    val simpleDateFormat = SimpleDateFormat("HHmm", Locale.getDefault())
-    return simpleDateFormat.format(this)
-}
+fun Date.convertBaseDate(): String = dateToString("yyyyMMdd")
 
-fun Date.convertDate() : String {
-    val simpleDateFormat = SimpleDateFormat("yyyyMMdd (E) HH:mm", Locale.getDefault())
-    return simpleDateFormat.format(this)
-}
+fun Date.convertBaseTime() : String = dateToString("HHmm")
+
+fun Date.convertDate() : String = dateToString("yyyyMMdd (E) HH:mm")
 
 fun Date.convertRemainTime() : String {
     val calTime = (time - Date().time) / 1000L
@@ -65,30 +52,15 @@ fun Date.convertRemainTime() : String {
     return simpleDateFormat.format(calTime*1000)
 }
 
-fun Date.getCurrentYear(): Int {
-    val simpleDateFormat = SimpleDateFormat("yyyy", Locale.getDefault())
-    return simpleDateFormat.format(this).toInt()
-}
+fun Date.getCurrentYear(): Int = dateToString("yyyy").toInt()
 
-fun Date.getCurrentMonth(): Int {
-    val simpleDateFormat = SimpleDateFormat("MM", Locale.getDefault())
-    return simpleDateFormat.format(this).toInt()
-}
+fun Date.getCurrentMonth(): Int = dateToString("MM").toInt()
 
-fun Date.getCurrentDate(): Int {
-    val simpleDateFormat = SimpleDateFormat("dd", Locale.getDefault())
-    return simpleDateFormat.format(this).toInt()
-}
+fun Date.getCurrentDate(): Int = dateToString("dd").toInt()
 
-fun Date.getCurrentHour(): Int {
-    val simpleDateFormat = SimpleDateFormat("HH", Locale.getDefault())
-    return simpleDateFormat.format(this).toInt()
-}
+fun Date.getCurrentHour(): Int = dateToString("HH").toInt()
 
-fun Date.getCurrentMin(): Int {
-    val simpleDateFormat = SimpleDateFormat("mm", Locale.getDefault())
-    return simpleDateFormat.format(this).toInt()
-}
+fun Date.getCurrentMin(): Int = dateToString("mm").toInt()
 
 fun AlarmWithDate.findFastDate() : AlarmDate?{
 

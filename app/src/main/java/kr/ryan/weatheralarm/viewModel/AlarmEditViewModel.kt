@@ -188,12 +188,9 @@ class AlarmEditViewModel @Inject constructor(
                 time = it.date
             }.get(Calendar.DAY_OF_WEEK) - 1
 
-            Timber.d("change Days -> $index")
-
             convertDateToBoolean[index] = !convertDateToBoolean[index]
         }
 
-        Timber.d("change Days Boolean List -> $convertDateToBoolean")
         flowSelectedDays.emit(convertDateToBoolean)
     }
 
@@ -297,10 +294,6 @@ class AlarmEditViewModel @Inject constructor(
                     }
 
                 }
-
-                Timber.d("before DateList => ${_preAlarmWithDate.value!!.alarmDate}")
-                Timber.d("current DateList => $currentAlarmDate")
-                Timber.d("equals? -> ${_preAlarmWithDate.value!!.alarmDate == currentAlarmDate}")
 
                 alarmDate = currentAlarmDate
             } else {

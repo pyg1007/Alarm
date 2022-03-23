@@ -1,7 +1,6 @@
 package kr.ryan.weatheralarm.util
 
 import android.annotation.SuppressLint
-import android.app.Notification
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.content.Context
@@ -32,8 +31,6 @@ private const val property = NotificationManager.IMPORTANCE_MIN
 @SuppressLint("RemoteViewLayout")
 fun Context.createNotification(internalWeather: InternalWeather?){
 
-    Timber.d("createNotify")
-
     val notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
 
     val remoteExpandView = RemoteViews(packageName, R.layout.layout_expand)
@@ -59,7 +56,6 @@ fun Context.createNotification(internalWeather: InternalWeather?){
     }
 
     with(NotificationManagerCompat.from(this)){
-        Timber.d("notification notify")
         notify(NOTIFICATION_ID, builder)
     }
 }
@@ -68,23 +64,40 @@ private fun InternalWeather.setRemoteViewImage(remoteViews: RemoteViews){
     item.find { it.category == "SKY" }?.let {
         when(it.value){
             "1" -> {
-                remoteViews.setImageViewResource(R.id.iv_weather_status, R.drawable.circle_date_black)
+                remoteViews.setImageViewResource(R.id.iv_weather_status, R.drawable.sunny)
                 remoteViews.setTextViewText(R.id.tv_weather_state, "맑음")
             }
             "3" -> {
-                remoteViews.setImageViewResource(R.id.iv_weather_status, R.drawable.circle_date_red)
+                remoteViews.setImageViewResource(R.id.iv_weather_status, R.drawable.cloud)
                 remoteViews.setTextViewText(R.id.tv_weather_state, "구름많음")
                 Timber.d("3 ${item.find { weatherItem -> weatherItem.category == "PTY" }?.value}")
             }
             "4" -> {
-                remoteViews.setImageViewResource(R.id.iv_weather_status, R.drawable.circle_date_blue)
                 when(item.find { weatherItem -> weatherItem.category == "PTY" }?.value){
-                    "0" -> remoteViews.setTextViewText(R.id.tv_weather_state, "흐림")
-                    "1" -> remoteViews.setTextViewText(R.id.tv_weather_state, "비")
-                    "2" -> remoteViews.setTextViewText(R.id.tv_weather_state, "비/눈")
-                    "3" -> remoteViews.setTextViewText(R.id.tv_weather_state, "눈")
-                    "4" -> remoteViews.setTextViewText(R.id.tv_weather_state, "소나기")
-                    else -> remoteViews.setTextViewText(R.id.tv_weather_state, "흐림")
+                    "0" -> {
+                        remoteViews.setImageViewResource(R.id.iv_weather_status, R.drawable.cloud)
+                        remoteViews.setTextViewText(R.id.tv_weather_state, "흐림")
+                    }
+                    "1" -> {
+                        remoteViews.setImageViewResource(R.id.iv_weather_status, R.drawable.rain)
+                        remoteViews.setTextViewText(R.id.tv_weather_state, "비")
+                    }
+                    "2" -> {
+                        remoteViews.setImageViewResource(R.id.iv_weather_status, R.drawable.rain)
+                        remoteViews.setTextViewText(R.id.tv_weather_state, "비/눈")
+                    }
+                    "3" -> {
+                        remoteViews.setImageViewResource(R.id.iv_weather_status, R.drawable.rain)
+                        remoteViews.setTextViewText(R.id.tv_weather_state, "눈")
+                    }
+                    "4" -> {
+                        remoteViews.setImageViewResource(R.id.iv_weather_status, R.drawable.rain)
+                        remoteViews.setTextViewText(R.id.tv_weather_state, "소나기")
+                    }
+                    else -> {
+                        remoteViews.setImageViewResource(R.id.iv_weather_status, R.drawable.cloud)
+                        remoteViews.setTextViewText(R.id.tv_weather_state, "흐림")
+                    }
                 }
             }
         }
