@@ -78,7 +78,7 @@ class AlarmViewModel @Inject constructor(
             "ADD" -> _uiEvent.emit(UiEvent.Navigate(Route.ADD_MODE))
             "CANCEL" -> _uiEvent.emit(UiEvent.Navigate(Route.CANCEL))
             "SAVE" -> _uiEvent.emit(UiEvent.Navigate(Route.SAVE))
-            else -> _uiEvent.emit(UiEvent.ShowSnackBar("${route}를 클릭하셨습니다."))
+            else -> throw IllegalStateException("알 수 없는 루트")
         }
     }
 

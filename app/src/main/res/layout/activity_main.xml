@@ -45,6 +45,17 @@
             app:layout_constraintTop_toTopOf="@id/top_layout"
             app:layout_constraintWidth_percent="0.9" />
 
+        <RadioButton
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:text="모두 삭제"
+            app:layout_constraintBottom_toTopOf="@id/recycler_alarm"
+            app:layout_constraintWidth_percent="0.3"
+            app:layout_constraintHeight_percent="0.1"
+            app:layout_constraintLeft_toLeftOf="@id/tv_remain_time"
+            app:layout_constraintTop_toBottomOf="@id/tv_remain_time"
+            android:layout_marginEnd="5dp"/>
+
         <androidx.cardview.widget.CardView
             android:id="@+id/card_add"
             android:layout_width="0dp"
