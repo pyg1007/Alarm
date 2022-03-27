@@ -67,6 +67,9 @@ class AlarmViewModel @Inject constructor(
                     )
                 )
             }
+            is AlarmEvent.OnAllDeleteClick ->{
+                allDeleteAlarm(event.alarmWithDate)
+            }
             is AlarmEvent.OnAlarmClick -> { // 설정되어있는 알람 클릭
                 sendEvent(UiEvent.Navigate(Route.EDIT_MODE, event.alarmWithDate))
             }
@@ -80,6 +83,10 @@ class AlarmViewModel @Inject constructor(
             "SAVE" -> _uiEvent.emit(UiEvent.Navigate(Route.SAVE))
             else -> throw IllegalStateException("알 수 없는 루트")
         }
+    }
+
+    private fun allDeleteAlarm(vararg alarmWithDate: List<AlarmWithDate>) = viewModelScope.launch {
+        deleteUseCase.deleteAllAlarmList(*alarmWithDate)
     }
 
     private fun deleteAlarm(alarm: Alarm) = viewModelScope.launch {

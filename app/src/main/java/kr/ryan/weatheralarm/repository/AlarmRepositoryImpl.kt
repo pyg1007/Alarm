@@ -25,6 +25,10 @@ class AlarmRepositoryImpl(
         return dao.getAlarmDate(alarmIndex)
     }
 
+    override suspend fun deleteAllAlarmList(vararg alarmDate: List<AlarmWithDate>) {
+        dao.deleteAllAlarmList(*alarmDate)
+    }
+
     override suspend fun updateAlarmInfo(alarm: Alarm) {
         dao.updateAlarmInfo(alarm)
     }

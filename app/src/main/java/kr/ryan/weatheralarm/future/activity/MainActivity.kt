@@ -7,8 +7,10 @@ import android.os.Build
 import android.os.Bundle
 import android.provider.Settings.ACTION_REQUEST_SCHEDULE_EXACT_ALARM
 import android.view.Gravity
+import android.view.View
 import android.widget.PopupMenu
 import androidx.activity.viewModels
+import androidx.annotation.MenuRes
 import androidx.lifecycle.*
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
@@ -109,20 +111,7 @@ class MainActivity : BaseActivity<ActivityMainBinding>(R.layout.activity_main) {
 
     private fun recyclerViewItemLongClick() {
         alarmAdapter.setOnLongClickListener { view, position, _ ->
-            val popup = PopupMenu(this@MainActivity, view, Gravity.END)
-            menuInflater.inflate(R.menu.item_popup_alarm, popup.menu)
-            popup.setOnMenuItemClickListener {
-                if (it.itemId == R.id.action_delete) {
-                    alarmList?.let { alarmDate ->
-                        if (isRegisterAlarm(alarmDate[position])) {
-                            alarmManager.cancelAlarm(this@MainActivity, alarmDate[position])
-                        }
-                        alarmViewModel.onEvent(AlarmEvent.OnDeleteClick(alarmDate[position]))
-                    }
-                }
-                false
-            }
-            popup.show()
+            showDeletePopupMenu(createPopupMenu(view, R.menu.item_popup_alarm), position)
         }
     }
 
@@ -165,11 +154,21 @@ class MainActivity : BaseActivity<ActivityMainBinding>(R.layout.activity_main) {
         alarmViewModel.uiEvent.collect {
             when (it) {
                 is UiEvent.Navigate -> {
-                    if (it.route == Route.ADD_MODE) {
-                        openAlarmDialog(null)
-                    }
-                    else {
-                        openAlarmDialog(it.alarmWithDate)
+                    when (it.route) {
+                        Route.ADD_MODE -> {
+                            openAlarmDialog(null)
+                        }
+                        Route.EDIT_MODE -> {
+                            openAlarmDialog(it.alarmWithDate)
+                        }
+                        else -> {
+                            showAllDeletePopupMenu(
+                                createPopupMenu(
+                                    binding.ivMore,
+                                    R.menu.item_popup_all_delete
+                                )
+                            )
+                        }
                     }
                 }
                 is UiEvent.PopUpStack -> {
@@ -194,6 +193,44 @@ class MainActivity : BaseActivity<ActivityMainBinding>(R.layout.activity_main) {
                 }
             }
         }
+    }
+
+    private fun createPopupMenu(view: View, @MenuRes menuId: Int): PopupMenu {
+        val popupMenu = PopupMenu(this, view, Gravity.END)
+        menuInflater.inflate(menuId, popupMenu.menu)
+        return popupMenu
+    }
+
+    private fun showDeletePopupMenu(popupMenu: PopupMenu, position: Int) {
+        popupMenu.setOnMenuItemClickListener {
+            if (it.itemId == R.id.action_delete) {
+                alarmList?.let { alarmDateList ->
+                    if (isRegisterAlarm(alarmDateList[position])) {
+                        alarmManager.cancelAlarm(this@MainActivity, alarmDateList[position])
+                    }
+                    alarmViewModel.onEvent(AlarmEvent.OnDeleteClick(alarmDateList[position]))
+                }
+            }
+            false
+        }
+        popupMenu.show()
+    }
+
+    private fun showAllDeletePopupMenu(popupMenu: PopupMenu) {
+        popupMenu.setOnMenuItemClickListener {
+            if (it.itemId == R.id.action_all_delete) {
+                alarmList?.let { alarmDateList ->
+                    alarmDateList.forEach { alarmWithDate ->
+                        if (isRegisterAlarm(alarmWithDate)) {
+                            alarmManager.cancelAlarm(this@MainActivity, alarmWithDate)
+                        }
+                    }
+                    alarmViewModel.onEvent(AlarmEvent.OnAllDeleteClick(alarmDateList))
+                }
+            }
+            false
+        }
+        popupMenu.show()
     }
 
     private suspend fun observeAlarmWithDate() {

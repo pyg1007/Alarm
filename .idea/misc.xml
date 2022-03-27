@@ -15,6 +15,8 @@
         <entry key="..\:/AndroidProject/Alarm/app/src/main/res/layout/layout_summary.xml" value="0.1" />
         <entry key="..\:/AndroidProject/Alarm/app/src/main/res/layout/recycler_date.xml" value="0.2028985507246377" />
         <entry key="..\:/AndroidProject/Alarm/app/src/main/res/layout/recycler_days.xml" value="0.3651041666666667" />
+        <entry key="..\:/AndroidProject/Alarm/app/src/main/res/menu/item_popup_alarm.xml" value="0.3651041666666667" />
+        <entry key="..\:/AndroidProject/Alarm/app/src/main/res/menu/item_popup_all_delete.xml" value="0.3651041666666667" />
         <entry key="..\:/AndroidProject/Alarm/refc/app/src/main/res/drawable/circle_date.xml" value="0.22083333333333333" />
         <entry key="..\:/AndroidProject/Alarm/refc/app/src/main/res/drawable/circle_date_blue.xml" value="0.22083333333333333" />
         <entry key="..\:/AndroidProject/Alarm/refc/app/src/main/res/drawable/circle_date_red.xml" value="0.22083333333333333" />

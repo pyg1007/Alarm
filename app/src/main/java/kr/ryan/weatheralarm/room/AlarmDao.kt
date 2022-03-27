@@ -65,6 +65,10 @@ interface AlarmDao {
     fun getAllAlarmList() : Flow<List<AlarmWithDate>>
 
     @Transaction
+    @Delete
+    suspend fun deleteAllAlarmList(vararg alarmDate: List<AlarmWithDate>)
+
+    @Transaction
     suspend fun insertAlarm(alarm: Alarm, alarmDate: List<AlarmDate>){
         val id = insertAlarmInfo(alarm)
 

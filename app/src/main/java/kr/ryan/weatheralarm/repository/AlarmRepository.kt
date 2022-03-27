@@ -48,6 +48,8 @@ interface AlarmRepository {
 
     fun selectAllAlarmList(): Flow<List<AlarmWithDate>>
 
+    suspend fun deleteAllAlarmList(vararg alarmDate: List<AlarmWithDate>)
+
     suspend fun insertAlarm(alarm: Alarm, alarmDate: List<AlarmDate>)
 
 }
