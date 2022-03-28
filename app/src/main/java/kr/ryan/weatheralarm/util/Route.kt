@@ -16,4 +16,6 @@ object Route {
     const val CANCEL = "CANCEL"
 
     const val SAVE = "SAVE"
+
+    const val MORE = "MORE"
 }

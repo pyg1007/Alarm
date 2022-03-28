@@ -1,5 +1,6 @@
 package kr.ryan.weatheralarm.util
 
+import kr.ryan.weatheralarm.data.Alarm
 import kr.ryan.weatheralarm.data.AlarmWithDate
 
 /**
@@ -19,6 +20,6 @@ sealed class AlarmEvent{
 
     data class OnDeleteClick(val alarmWithDate: AlarmWithDate): AlarmEvent()
 
-    data class OnAllDeleteClick(val alarmWithDate: List<AlarmWithDate>): AlarmEvent()
+    data class OnAllDeleteClick(val alarm: List<Alarm>): AlarmEvent()
 
 }

@@ -57,12 +57,16 @@ class RemainTimerViewModel @Inject constructor(
                 val currentDate = Date().time
                 if (!flag) {
                     flag = true
-                    _remainTime.emit(alarmList.value.findFastAlarmDate() ?: "등록되어있는 알람이 없습니다.")
+                    if (alarmList.value.isNullOrEmpty())
+                        _remainTime.emit("등록되어있는 알람이 없습니다.")
+                    else
+                        _remainTime.emit(alarmList.value.findFastAlarmDate() ?: "켜져있는 알람이 없습니다.")
                 } else {
                     if ((currentDate / 1000) % 60 == 0L) {
-                        _remainTime.emit(
-                            alarmList.value.findFastAlarmDate() ?: "등록되어있는 알람이 없습니다."
-                        )
+                        if (alarmList.value.isNullOrEmpty())
+                            _remainTime.emit("등록되어있는 알람이 없습니다.")
+                        else
+                            _remainTime.emit(alarmList.value.findFastAlarmDate() ?: "켜져있는 알람이 없습니다.")
                     }
                 }
                 delay(timeMillis = 1000)

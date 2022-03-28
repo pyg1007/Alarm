@@ -15,20 +15,19 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.lifecycle.whenCreated
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
+import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.launch
 import kr.ryan.permissionmodule.requestPermission
 import kr.ryan.weatheralarm.BuildConfig
 import kr.ryan.weatheralarm.R
+import kr.ryan.weatheralarm.data.GooglePlayServiceStatus
 import kr.ryan.weatheralarm.util.*
 import kr.ryan.weatheralarm.viewModel.WeatherViewModel
 import timber.log.Timber
 import java.net.URLDecoder
 import java.util.*
 
+@ExperimentalCoroutinesApi
 @AndroidEntryPoint
 @SuppressLint("CustomSplashScreen")
 class SplashActivity : AppCompatActivity() {
@@ -51,7 +50,12 @@ class SplashActivity : AppCompatActivity() {
             }
 
             repeatOnLifecycle(Lifecycle.State.STARTED) {
-                observeWeather()
+                launch {
+                    observeDBException()
+                }
+                launch {
+                    observeWeather()
+                }
             }
 
         }
@@ -110,12 +114,17 @@ class SplashActivity : AppCompatActivity() {
                 requestPermission({
                     if (this@SplashActivity.isEnableLocationSystem()) {
                         Timber.d("enable Location System")
-                        this@SplashActivity.getCurrentLatXLngY()?.let { latXLngY ->
-                            callApi(latXLngY)
-                            Timber.d("location x = ${latXLngY.x} y = ${latXLngY.y} lat = ${latXLngY.lat} lon = ${latXLngY.lng}")
-                        } ?: run {
-                            Timber.d("location Error")
-                            routeNextActivity()
+                        when(this@SplashActivity.isInstallGooglePlayService()){
+                            GooglePlayServiceStatus.SUCCESS -> {
+                                this@SplashActivity.getCurrentLatXLngY()?.let { latXLngY ->
+                                    callApi(latXLngY)
+                                    Timber.d("location x = ${latXLngY.x} y = ${latXLngY.y} lat = ${latXLngY.lat} lon = ${latXLngY.lng}")
+                                } ?: run {
+                                    Timber.d("location Error")
+                                    routeNextActivity()
+                                }
+                            }
+                            else -> Timber.d("unavailable Google Play Service")
                         }
                     } else {
                         showDialog()
@@ -125,6 +134,14 @@ class SplashActivity : AppCompatActivity() {
                 }, *permissions)
             } else {
                 Timber.d("not null $it")
+                routeNextActivity()
+            }
+        }
+    }
+
+    private suspend fun observeDBException(){
+        weatherViewModel.error.collect {
+            if (it != null){
                 routeNextActivity()
             }
         }

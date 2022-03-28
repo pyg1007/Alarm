@@ -19,6 +19,6 @@ class AlarmDeleteUseCase @Inject constructor(
 
     suspend fun deleteAlarm(alarm: Alarm) = alarmRepository.deleteAlarmInfo(alarm)
     
-    suspend fun deleteAllAlarmList(vararg alarmDate: List<AlarmWithDate>) = alarmRepository.deleteAllAlarmList(*alarmDate)
+    suspend fun deleteAllAlarm(vararg alarm: Alarm) = alarmRepository.deleteAllAlarm(*alarm)
 
 }

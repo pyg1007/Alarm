@@ -3,10 +3,7 @@ package kr.ryan.weatheralarm.viewModel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.catch
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.flow.retry
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import kr.ryan.retrofitmodule.NetWorkResult
 import kr.ryan.weatheralarm.data.InternalWeather
@@ -35,12 +32,17 @@ class WeatherViewModel @Inject constructor(
     private val selectWeatherUseCase: WeatherSelectUseCase,
     private val insertWeatherUseCase: WeatherInsertUseCase
 ): ViewModel(){
+    
+    private val _error = MutableStateFlow<Throwable?>(null)
+    val error: StateFlow<Throwable?>
+        get() = _error.asStateFlow()
 
     val weather = flow {
         selectWeatherUseCase.selectWeatherInfo().collect {
             emit(it)
         }
     }.catch {
+        _error.emit(it)
         Timber.d("Exception $it")
     }
 

@@ -29,6 +29,9 @@ interface AlarmDao {
     @Delete
     suspend fun deleteAlarmInfo(alarm: Alarm)
 
+    @Delete
+    suspend fun deleteAllAlarm(vararg alarm: Alarm)
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertAlarmInfo(alarm: Alarm) : Long
 
@@ -64,9 +67,6 @@ interface AlarmDao {
     @Query("Select * from alarm")
     fun getAllAlarmList() : Flow<List<AlarmWithDate>>
 
-    @Transaction
-    @Delete
-    suspend fun deleteAllAlarmList(vararg alarmDate: List<AlarmWithDate>)
 
     @Transaction
     suspend fun insertAlarm(alarm: Alarm, alarmDate: List<AlarmDate>){

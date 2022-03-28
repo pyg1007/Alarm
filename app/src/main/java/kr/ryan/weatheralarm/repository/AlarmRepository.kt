@@ -25,6 +25,8 @@ interface AlarmRepository {
 
     suspend fun deleteAlarmInfo(alarm: Alarm)
 
+    suspend fun deleteAllAlarm(vararg alarm: Alarm)
+
     /**
      *
      * AlarmDate Dao
@@ -47,8 +49,6 @@ interface AlarmRepository {
     suspend fun selectAlarmWithDate(index: Long): AlarmWithDate
 
     fun selectAllAlarmList(): Flow<List<AlarmWithDate>>
-
-    suspend fun deleteAllAlarmList(vararg alarmDate: List<AlarmWithDate>)
 
     suspend fun insertAlarm(alarm: Alarm, alarmDate: List<AlarmDate>)
 

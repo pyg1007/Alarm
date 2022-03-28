@@ -225,7 +225,7 @@ class MainActivity : BaseActivity<ActivityMainBinding>(R.layout.activity_main) {
                             alarmManager.cancelAlarm(this@MainActivity, alarmWithDate)
                         }
                     }
-                    alarmViewModel.onEvent(AlarmEvent.OnAllDeleteClick(alarmDateList))
+                    alarmViewModel.onEvent(AlarmEvent.OnAllDeleteClick(alarmDateList.map { list -> list.alarm }))
                 }
             }
             false
@@ -235,6 +235,7 @@ class MainActivity : BaseActivity<ActivityMainBinding>(R.layout.activity_main) {
 
     private suspend fun observeAlarmWithDate() {
         alarmViewModel.alarmList.collect {
+            Timber.d("$it")
             alarmList = it
             alarmAdapter.submitList(it.toMutableList())
         }
