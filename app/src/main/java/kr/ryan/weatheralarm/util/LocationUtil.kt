@@ -4,8 +4,10 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.location.Geocoder
 import android.location.Location
+import android.location.LocationListener
 import android.location.LocationManager
 import android.os.Build
+import android.os.Bundle
 import android.os.Looper
 import android.provider.Settings
 import com.google.android.gms.location.LocationCallback
@@ -30,12 +32,14 @@ import kotlin.coroutines.resume
  */
 
 @SuppressLint("MissingPermission")
-suspend fun Context.getCurrentLatXLngY(): LatXLngY? {
+suspend fun Context.getGooglePlayServiceCurrentLatXLngY(): LatXLngY? {
     return CoroutineScope(Dispatchers.Main).async {
         return@async runCatching {
-            var location = lastLocationListener(this@getCurrentLatXLngY)
+            var location =
+                googlePlayServiceLastLocationListener(this@getGooglePlayServiceCurrentLatXLngY)
             if (location == null)
-                location = lastLocationListener(this@getCurrentLatXLngY)
+                location =
+                    googlePlayServiceLastLocationListener(this@getGooglePlayServiceCurrentLatXLngY)
 
             CalculatorLatitudeAndLongitude.convertGRIDTOGPS(
                 TO_GRID,
@@ -49,7 +53,7 @@ suspend fun Context.getCurrentLatXLngY(): LatXLngY? {
 }
 
 @SuppressLint("MissingPermission")
-suspend fun lastLocationListener(context: Context) =
+suspend fun googlePlayServiceLastLocationListener(context: Context) =
     suspendCancellableCoroutine<Location?> { result ->
 
         runCatching {
@@ -96,6 +100,66 @@ suspend fun lastLocationListener(context: Context) =
         }.onFailure {
             Timber.d("Failure -> $it")
         }
+    }
+
+@SuppressLint("MissingPermission")
+suspend fun Context.getLocationManagerCurrentLatXLngY(): LatXLngY? {
+    return CoroutineScope(Dispatchers.Main).async {
+        return@async runCatching {
+            val locationManager = this@getLocationManagerCurrentLatXLngY.getSystemService(Context.LOCATION_SERVICE) as LocationManager
+
+            var location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER)
+            if (location == null)
+                location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER)
+            if (location == null)
+                location = locationManager.locationManagerLastLocationListener(this@getLocationManagerCurrentLatXLngY)
+
+            CalculatorLatitudeAndLongitude.convertGRIDTOGPS(
+                TO_GRID,
+                location!!.latitude,
+                location.longitude
+            )
+        }.onFailure {
+            Timber.d("Location Error => $it")
+        }.getOrNull()
+    }.await()
+}
+
+@SuppressLint("MissingPermission")
+suspend fun LocationManager.locationManagerLastLocationListener(context: Context) =
+    suspendCancellableCoroutine<Location?> { result ->
+        val gpsListener = object : LocationListener {
+            override fun onLocationChanged(p0: Location) {
+                if (result.isActive) {
+                    result.resume(p0)
+                    removeUpdates(this)
+                }
+            }
+
+            override fun onLocationChanged(locations: MutableList<Location>) {
+                super.onLocationChanged(locations)
+            }
+
+            override fun onFlushComplete(requestCode: Int) {
+                super.onFlushComplete(requestCode)
+            }
+
+            override fun onStatusChanged(provider: String?, status: Int, extras: Bundle?) {
+                super.onStatusChanged(provider, status, extras)
+            }
+
+            override fun onProviderEnabled(provider: String) {
+                super.onProviderEnabled(provider)
+            }
+
+            override fun onProviderDisabled(provider: String) {
+                super.onProviderDisabled(provider)
+            }
+        }
+
+        requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0f, gpsListener)
+
+        result.invokeOnCancellation { removeUpdates(gpsListener) }
     }
 
 fun Context.isEnableLocationSystem(): Boolean {

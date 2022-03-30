@@ -37,6 +37,11 @@ class DateViewHolder constructor(private val binding: RecyclerDateBinding) : Rec
         }.launchIn(
             coroutineScope
         )
+
+        binding.switchAlarmState.setOnCheckedChangeListener { componentButton, b ->
+            alarmWithDate.alarm.onOff = binding.switchAlarmState.isChecked
+            onSwitchClick(componentButton, alarmWithDate)
+        }
     }
 
     private fun initBinding(alarmWithDate: AlarmWithDate){
@@ -55,6 +60,7 @@ class DateViewHolder constructor(private val binding: RecyclerDateBinding) : Rec
 
         private lateinit var onItemClick: (View, Int, AlarmWithDate) -> Unit
         private lateinit var onLongItemClick: (View, Int, AlarmWithDate) -> Unit
+        private lateinit var onSwitchClick: (View, AlarmWithDate) -> Unit
 
         fun setOnItemClick(itemClick: (View, Int, AlarmWithDate) -> Unit){
             onItemClick = itemClick
@@ -62,6 +68,10 @@ class DateViewHolder constructor(private val binding: RecyclerDateBinding) : Rec
 
         fun setOnLongItemClick(itemClick: (View, Int, AlarmWithDate) -> Unit){
             onLongItemClick = itemClick
+        }
+
+        fun setOnSwitchClick(itemClick: (View, AlarmWithDate) -> Unit){
+            onSwitchClick = itemClick
         }
 
     }

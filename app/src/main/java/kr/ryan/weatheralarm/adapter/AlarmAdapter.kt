@@ -6,6 +6,7 @@ import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kr.ryan.weatheralarm.R
 import kr.ryan.weatheralarm.adapter.viewHolder.DateViewHolder
 import kr.ryan.weatheralarm.adapter.viewHolder.DaysViewHolder
@@ -22,10 +23,12 @@ import kr.ryan.weatheralarm.util.AlarmWithDateDiffUtil
 const val DAYS = 1
 const val DATE = 2
 
+@ExperimentalCoroutinesApi
 class AlarmAdapter : ListAdapter<AlarmWithDate, RecyclerView.ViewHolder>(AlarmWithDateDiffUtil()) {
 
     private lateinit var _onClickEvent: (View, Int, AlarmWithDate) -> Unit
     private lateinit var _onLongClickEvent: (View, Int, AlarmWithDate) -> Unit
+    private lateinit var _onSwitchClickEvent: (View, AlarmWithDate) -> Unit
 
     fun setOnClickListener(clickListener: (View, Int, AlarmWithDate) -> Unit) {
         _onClickEvent = clickListener
@@ -35,11 +38,18 @@ class AlarmAdapter : ListAdapter<AlarmWithDate, RecyclerView.ViewHolder>(AlarmWi
         _onLongClickEvent = longClickListener
     }
 
+    fun setOnSwitchClickListener(switchClickListener: (View, AlarmWithDate) -> Unit) {
+        _onSwitchClickEvent = switchClickListener
+    }
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return when (viewType) {
             DAYS -> {
-                DaysViewHolder.setOnItemClick(_onClickEvent)
-                DaysViewHolder.setOnLongItemClick(_onLongClickEvent)
+                with(DaysViewHolder){
+                    setOnItemClick(_onClickEvent)
+                    setOnLongItemClick(_onLongClickEvent)
+                    setOnSwitchClick(_onSwitchClickEvent)
+                }
                 DaysViewHolder(
                     DataBindingUtil.inflate(
                         LayoutInflater.from(parent.context),
@@ -50,8 +60,11 @@ class AlarmAdapter : ListAdapter<AlarmWithDate, RecyclerView.ViewHolder>(AlarmWi
                 )
             }
             DATE -> {
-                DateViewHolder.setOnItemClick(_onClickEvent)
-                DateViewHolder.setOnLongItemClick(_onLongClickEvent)
+                with(DateViewHolder){
+                    setOnItemClick(_onClickEvent)
+                    setOnLongItemClick(_onLongClickEvent)
+                    setOnSwitchClick(_onSwitchClickEvent)
+                }
                 DateViewHolder(
                     DataBindingUtil.inflate(
                         LayoutInflater.from(parent.context),

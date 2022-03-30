@@ -10,6 +10,7 @@ import kr.ryan.weatheralarm.data.AlarmWithDate
 import kr.ryan.weatheralarm.usecase.AlarmDeleteUseCase
 import kr.ryan.weatheralarm.usecase.AlarmInsertUseCase
 import kr.ryan.weatheralarm.usecase.AlarmSelectUseCase
+import kr.ryan.weatheralarm.usecase.AlarmUpdateUseCase
 import kr.ryan.weatheralarm.util.AlarmEvent
 import kr.ryan.weatheralarm.util.Route
 import kr.ryan.weatheralarm.util.UiEvent
@@ -26,7 +27,8 @@ import javax.inject.Inject
 class AlarmViewModel @Inject constructor(
     private val selectUseCase: AlarmSelectUseCase,
     private val insertUseCase: AlarmInsertUseCase,
-    private val deleteUseCase: AlarmDeleteUseCase
+    private val deleteUseCase: AlarmDeleteUseCase,
+    private val updateUseCase: AlarmUpdateUseCase
 ) : ViewModel() {
 
     private val _alarmList = MutableStateFlow<List<AlarmWithDate>>(emptyList())
@@ -49,14 +51,17 @@ class AlarmViewModel @Inject constructor(
 
     fun onEvent(event: AlarmEvent) {
         when (event) {
+
             is AlarmEvent.OnAddClick -> { // 추가버튼
                 sendEvent(UiEvent.Navigate(Route.ADD_MODE))
             }
+
             is AlarmEvent.OnUndoDeleteClick -> { // 스낵바 취소버튼
                 deleteAlarmDate?.let {
                     insertAlarm(it)
                 }
             }
+
             is AlarmEvent.OnDeleteClick -> { // 롱클릭시 나타나는 팝업메뉴 클릭시
                 deleteAlarmDate = event.alarmWithDate
                 deleteAlarm(event.alarmWithDate.alarm)
@@ -67,12 +72,19 @@ class AlarmViewModel @Inject constructor(
                     )
                 )
             }
-            is AlarmEvent.OnAllDeleteClick ->{
+
+            is AlarmEvent.OnUpdate -> {
+                updateAlarm(event.alarmWithDate)
+            }
+
+            is AlarmEvent.OnAllDeleteClick -> {
                 allDeleteAlarm(*event.alarm.toTypedArray())
             }
+
             is AlarmEvent.OnAlarmClick -> { // 설정되어있는 알람 클릭
                 sendEvent(UiEvent.Navigate(Route.EDIT_MODE, event.alarmWithDate))
             }
+
         }
     }
 
@@ -96,6 +108,10 @@ class AlarmViewModel @Inject constructor(
 
     private fun insertAlarm(alarmWithDate: AlarmWithDate) = viewModelScope.launch {
         insertUseCase.insertAlarm(alarmWithDate.alarm, alarmWithDate.alarmDate)
+    }
+
+    private fun updateAlarm(alarmWithDate: AlarmWithDate) = viewModelScope.launch {
+        updateUseCase.updateAlarmInfo(alarmWithDate.alarm)
     }
 
     fun sendEvent(event: UiEvent) = viewModelScope.launch {

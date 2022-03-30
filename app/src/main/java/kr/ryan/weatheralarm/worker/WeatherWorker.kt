@@ -13,6 +13,7 @@ import kotlinx.coroutines.launch
 import kr.ryan.permissionmodule.requestPermission
 import kr.ryan.retrofitmodule.NetWorkResult
 import kr.ryan.weatheralarm.BuildConfig
+import kr.ryan.weatheralarm.data.GooglePlayServiceStatus
 import kr.ryan.weatheralarm.data.Mapping.convertWeatherToInternalWeather
 import kr.ryan.weatheralarm.di.AlarmApplication
 import kr.ryan.weatheralarm.usecase.WeatherInsertUseCase
@@ -61,7 +62,10 @@ class WeatherWorker @AssistedInject constructor(
 
                 requestPermission({
                     val baseDate = Calendar.getInstance()
-                    val latXLngY = applicationContext.getCurrentLatXLngY()!!
+                    val latXLngY = when(applicationContext.isInstallGooglePlayService()){
+                        GooglePlayServiceStatus.SUCCESS -> applicationContext.getGooglePlayServiceCurrentLatXLngY()!!
+                        else -> applicationContext.getLocationManagerCurrentLatXLngY()!!
+                    }
                     val result = useCase.getWeatherInfo(
                         hashMapOf(
                             "serviceKey" to URLDecoder.decode(BuildConfig.weather_api_key, "UTF-8"),

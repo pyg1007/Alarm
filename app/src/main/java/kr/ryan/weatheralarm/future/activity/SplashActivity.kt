@@ -116,7 +116,7 @@ class SplashActivity : AppCompatActivity() {
                         Timber.d("enable Location System")
                         when(this@SplashActivity.isInstallGooglePlayService()){
                             GooglePlayServiceStatus.SUCCESS -> {
-                                this@SplashActivity.getCurrentLatXLngY()?.let { latXLngY ->
+                                this@SplashActivity.getGooglePlayServiceCurrentLatXLngY()?.let { latXLngY ->
                                     callApi(latXLngY)
                                     Timber.d("location x = ${latXLngY.x} y = ${latXLngY.y} lat = ${latXLngY.lat} lon = ${latXLngY.lng}")
                                 } ?: run {
@@ -124,7 +124,14 @@ class SplashActivity : AppCompatActivity() {
                                     routeNextActivity()
                                 }
                             }
-                            else -> Timber.d("unavailable Google Play Service")
+                            else -> {
+                                this@SplashActivity.getLocationManagerCurrentLatXLngY()?.let { latXLngY ->
+                                    callApi(latXLngY)
+                                } ?: run {
+                                    routeNextActivity()
+                                }
+                                Timber.d("unavailable Google Play Service")
+                            }
                         }
                     } else {
                         showDialog()

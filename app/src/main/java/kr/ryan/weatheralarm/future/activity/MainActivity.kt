@@ -62,6 +62,7 @@ class MainActivity : BaseActivity<ActivityMainBinding>(R.layout.activity_main) {
                 initRecyclerView()
                 recyclerViewItemClick()
                 recyclerViewItemLongClick()
+                recyclerSwitchClick()
             }
 
             repeatOnLifecycle(Lifecycle.State.STARTED) {
@@ -120,6 +121,13 @@ class MainActivity : BaseActivity<ActivityMainBinding>(R.layout.activity_main) {
             alarmList?.let {
                 alarmViewModel.onEvent(AlarmEvent.OnAlarmClick(it[position]))
             }
+        }
+    }
+
+    private fun recyclerSwitchClick(){
+        alarmAdapter.setOnSwitchClickListener { _, alarmWithDate ->
+            alarmViewModel.onEvent(AlarmEvent.OnUpdate(alarmWithDate))
+            Timber.d("$alarmWithDate")
         }
     }
 

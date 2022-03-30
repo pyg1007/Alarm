@@ -22,4 +22,6 @@ sealed class AlarmEvent{
 
     data class OnAllDeleteClick(val alarm: List<Alarm>): AlarmEvent()
 
+    data class OnUpdate(val alarmWithDate: AlarmWithDate): AlarmEvent()
+
 }
