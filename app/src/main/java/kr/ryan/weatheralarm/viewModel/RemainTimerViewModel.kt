@@ -9,6 +9,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collect
 import kr.ryan.weatheralarm.data.AlarmWithDate
 import kr.ryan.weatheralarm.usecase.AlarmSelectUseCase
+import kr.ryan.weatheralarm.usecase.AlarmUpdateUseCase
 import kr.ryan.weatheralarm.util.findFastAlarmDate
 import java.util.*
 import javax.inject.Inject
@@ -23,7 +24,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class RemainTimerViewModel @Inject constructor(
-    private val selectUseCase: AlarmSelectUseCase
+    private val selectUseCase: AlarmSelectUseCase,
+    private val updateUseCase: AlarmUpdateUseCase
 ) : ViewModel() {
 
     private var timerJob: Job? = null
@@ -69,8 +71,41 @@ class RemainTimerViewModel @Inject constructor(
                             _remainTime.emit(alarmList.value.findFastAlarmDate() ?: "켜져있는 알람이 없습니다.")
                     }
                 }
+                fixAlarmDate(currentDate)
                 delay(timeMillis = 1000)
             }
+        }
+    }
+
+    private suspend fun fixAlarmDate(currentTime: Long){
+        if (alarmList.value.isNullOrEmpty())
+            return
+
+        // 꺼져있는 알람
+        val offAlarmList = alarmList.value.filter { alarmWithDate -> !alarmWithDate.alarm.onOff}
+
+        offAlarmList.forEach { alarmWithDate ->
+            alarmWithDate.alarmDate.forEach {alarmDate ->
+                if (alarmWithDate.alarm.isRepeat){
+                    if (alarmDate.date.time < currentTime){
+                        val calendar = Calendar.getInstance().apply {
+                            time = alarmDate.date
+                        }
+                        calendar.add(Calendar.DAY_OF_MONTH, 7)
+                        alarmDate.date = calendar.time
+                    }
+                }else{
+                    if (alarmDate.date.time < currentTime){
+                        val calendar = Calendar.getInstance().apply {
+                            time = alarmDate.date
+                        }
+                        calendar.add(Calendar.DAY_OF_MONTH, 1)
+                        alarmDate.date = calendar.time
+                    }
+                }
+            }
+
+            updateUseCase.updateAlarmDate(alarmWithDate.alarmDate)
         }
     }
 
