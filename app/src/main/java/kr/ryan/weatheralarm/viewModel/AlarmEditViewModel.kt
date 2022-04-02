@@ -399,7 +399,7 @@ class AlarmEditViewModel @Inject constructor(
                 }
 
                 val exist = isExistAlarmDate(dateList)
-                if (!exist) {
+                if (!exist && dateList.sortedBy { date -> date.date }[0].date.time > Date().time) {
                     insertUseCase.insertAlarm(alarm, dateList)
                 }
                 Pair(AlarmWithDate(alarm, dateList), exist)
