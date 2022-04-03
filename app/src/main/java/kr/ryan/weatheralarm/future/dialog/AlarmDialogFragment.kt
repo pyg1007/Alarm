@@ -6,6 +6,9 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.FrameLayout
+import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.*
@@ -212,7 +215,16 @@ class AlarmDialogFragment : BaseDialogFragment<DialogAlarmBinding>(R.layout.dial
                 }
                 is UiEvent.ShowSnackBar -> {
                     Timber.d("show SnackBar ${it.message}")
-                    Snackbar.make(binding.rootLayout, it.message, Snackbar.LENGTH_SHORT).show()
+                    val snackBar = Snackbar.make(binding.rootLayout, it.message, Snackbar.LENGTH_SHORT)
+                    val frameLayout = snackBar.view as FrameLayout
+                    val params = frameLayout.getChildAt(0).layoutParams as? FrameLayout.LayoutParams
+                    params?.apply {
+                        height = binding.btnCancel.height
+                        width = FrameLayout.LayoutParams.MATCH_PARENT
+                        setMargins(0, 0, 0, binding.btnCancel.height)
+                    }
+                    frameLayout.getChildAt(0).layoutParams = params
+                    if (!snackBar.isShown) snackBar.show()
                 }
                 is UiEvent.PopUpStack -> {
                     dismiss()
