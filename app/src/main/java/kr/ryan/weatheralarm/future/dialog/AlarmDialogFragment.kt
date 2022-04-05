@@ -127,7 +127,7 @@ class AlarmDialogFragment : BaseDialogFragment<DialogAlarmBinding>(R.layout.dial
             val date = it.alarmDate[0].date
             preHour = date.getCurrentHour()
             preMin = date.getCurrentMin()
-            editViewModel.run {
+            with(editViewModel) {
                 changeYear(date.getCurrentYear())
                 changeMonth(date.getCurrentMonth())
                 changeDate(date.getCurrentDate())
@@ -214,17 +214,11 @@ class AlarmDialogFragment : BaseDialogFragment<DialogAlarmBinding>(R.layout.dial
                     }
                 }
                 is UiEvent.ShowSnackBar -> {
-                    Timber.d("show SnackBar ${it.message}")
                     val snackBar = Snackbar.make(binding.rootLayout, it.message, Snackbar.LENGTH_SHORT)
-                    val frameLayout = snackBar.view as FrameLayout
-                    val params = frameLayout.getChildAt(0).layoutParams as? FrameLayout.LayoutParams
-                    params?.apply {
-                        height = binding.btnCancel.height
-                        width = FrameLayout.LayoutParams.MATCH_PARENT
-                        setMargins(0, 0, 0, binding.btnCancel.height)
+                    if (!snackBar.isShown) {
+                        snackBar.anchorView = binding.btnCancel
+                        snackBar.show()
                     }
-                    frameLayout.getChildAt(0).layoutParams = params
-                    if (!snackBar.isShown) snackBar.show()
                 }
                 is UiEvent.PopUpStack -> {
                     dismiss()
