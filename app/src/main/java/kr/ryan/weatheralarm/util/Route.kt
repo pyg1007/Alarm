@@ -18,4 +18,6 @@ object Route {
     const val SAVE = "SAVE"
 
     const val MORE = "MORE"
+
+    const val CALENDAR = "CALENDAR"
 }

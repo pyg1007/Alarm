@@ -94,6 +94,7 @@ class AlarmViewModel @Inject constructor(
             "CANCEL" -> _uiEvent.emit(UiEvent.Navigate(Route.CANCEL))
             "SAVE" -> _uiEvent.emit(UiEvent.Navigate(Route.SAVE))
             "MORE" -> _uiEvent.emit(UiEvent.Navigate(Route.MORE))
+            "CALENDAR" -> _uiEvent.emit(UiEvent.Navigate(Route.CALENDAR))
             else -> throw IllegalStateException("알 수 없는 루트")
         }
     }
