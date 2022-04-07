@@ -50,9 +50,7 @@ class AlarmDialogFragment : BaseDialogFragment<DialogAlarmBinding>(R.layout.dial
     private var alarm: Alarm? = null
 
     private val calendarDialog by lazy {
-        CalendarDialogFragment().also {
-            it.show(childFragmentManager, "Calendar")
-        }
+        CalendarDialogFragment()
     }
     @Inject
     lateinit var adapter: AlarmAdapter
@@ -105,6 +103,7 @@ class AlarmDialogFragment : BaseDialogFragment<DialogAlarmBinding>(R.layout.dial
         initBinding()
         initViewModel()
         changeTimePicker()
+        selectCalendarDay()
     }
 
     private fun initAlarm() {
@@ -171,6 +170,16 @@ class AlarmDialogFragment : BaseDialogFragment<DialogAlarmBinding>(R.layout.dial
         }
     }
 
+    private fun selectCalendarDay(){
+        CalendarDialogFragment.setOnCancelEvent {
+
+        }
+
+        CalendarDialogFragment.setOnSaveEvent { year, month, day ->
+
+        }
+    }
+
     private suspend fun disMissFocusEditText(){
         binding.rootLayout.onSingleClicks().onEach {
             binding.etAlarmTitle.clearFocus()
@@ -220,7 +229,7 @@ class AlarmDialogFragment : BaseDialogFragment<DialogAlarmBinding>(R.layout.dial
                             })
                         }
                         Route.CALENDAR -> {
-
+                            calendarDialog.show(parentFragmentManager, "Calendar")
                         }
                         else -> {
 
