@@ -14,6 +14,7 @@ import kr.ryan.weatheralarm.usecase.AlarmUpdateUseCase
 import kr.ryan.weatheralarm.util.AlarmEvent
 import kr.ryan.weatheralarm.util.Route
 import kr.ryan.weatheralarm.util.UiEvent
+import timber.log.Timber
 import javax.inject.Inject
 
 /**
@@ -89,6 +90,7 @@ class AlarmViewModel @Inject constructor(
     }
 
     fun onClickBtn(route: String) = viewModelScope.launch {
+        Timber.d("alarmViewModel onClick -> $route")
         when (route) {
             "ADD" -> _uiEvent.emit(UiEvent.Navigate(Route.ADD_MODE))
             "CANCEL" -> _uiEvent.emit(UiEvent.Navigate(Route.CANCEL))

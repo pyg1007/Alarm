@@ -30,7 +30,8 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintHeight_percent="0.2"
-            app:layout_constraintWidth_percent="0.5" />
+            app:layout_constraintWidth_percent="0.5"
+        />
 
         <Button
             android:id="@+id/btn_save"
@@ -38,7 +39,7 @@
             android:layout_height="0dp"
             android:background="@color/cyan_200"
             android:gravity="center"
-            android:onClick="@{() -> alarmViewModel.onClickBtn(`SAVE`)}"
+            android:onClick="@{() -> alarmViewModel.onClickBtn(`CANCEL`)}"
             android:text="@string/save"
             app:backgroundTint="@null"
             app:layout_constraintBottom_toBottomOf="parent"

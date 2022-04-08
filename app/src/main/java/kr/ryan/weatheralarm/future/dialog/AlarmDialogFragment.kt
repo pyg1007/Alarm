@@ -229,7 +229,7 @@ class AlarmDialogFragment : BaseDialogFragment<DialogAlarmBinding>(R.layout.dial
                             })
                         }
                         Route.CALENDAR -> {
-                            calendarDialog.show(parentFragmentManager, "Calendar")
+                            calendarDialog.show(childFragmentManager, "Calendar")
                         }
                         else -> {
 

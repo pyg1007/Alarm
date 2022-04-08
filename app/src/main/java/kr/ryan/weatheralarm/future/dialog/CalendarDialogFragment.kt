@@ -95,9 +95,9 @@ class CalendarDialogFragment : BaseDialogFragment<DialogCalendarBinding>(R.layou
 
     private fun dateChangeListener() {
         binding.calendar.setOnDateChangeListener { _, year, month, day ->
-            Timber.d("year -> $year month -> $month day -> $day")
+            Timber.d("year -> $year month -> ${month + 1} day -> $day")
             this.year = year
-            this.month = month
+            this.month = month + 1
             this.day = day
         }
     }
