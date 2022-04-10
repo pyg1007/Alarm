@@ -12,6 +12,7 @@ import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.*
+import androidx.lifecycle.Observer
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -72,11 +73,13 @@ class AlarmDialogFragment : BaseDialogFragment<DialogAlarmBinding>(R.layout.dial
         }
     }
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        initBinding()
+        initViewModel()
+        changeTimePicker()
+        selectCalendarDay()
+
         viewLifecycleOwner.lifecycleScope.launch {
             whenResumed {
                 requireActivity().dialogFragmentResize(this@AlarmDialogFragment, 0.8f, 0.8f)
@@ -86,7 +89,7 @@ class AlarmDialogFragment : BaseDialogFragment<DialogAlarmBinding>(R.layout.dial
                 initAlarm()
             }
 
-            lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 launch {
                     observeUiState()
                 }
@@ -95,15 +98,6 @@ class AlarmDialogFragment : BaseDialogFragment<DialogAlarmBinding>(R.layout.dial
                 }
             }
         }
-        return super.onCreateView(inflater, container, savedInstanceState)
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        initBinding()
-        initViewModel()
-        changeTimePicker()
-        selectCalendarDay()
     }
 
     private fun initAlarm() {
@@ -147,7 +141,7 @@ class AlarmDialogFragment : BaseDialogFragment<DialogAlarmBinding>(R.layout.dial
             val date = Date()
             preHour = date.getCurrentHour()
             preMin = date.getCurrentMin()
-            editViewModel.run {
+            with(editViewModel) {
                 changeYear(date.getCurrentYear())
                 changeMonth(date.getCurrentMonth())
                 changeDate(date.getCurrentDate())
@@ -176,7 +170,14 @@ class AlarmDialogFragment : BaseDialogFragment<DialogAlarmBinding>(R.layout.dial
         }
 
         CalendarDialogFragment.setOnSaveEvent { year, month, day ->
-
+            with(editViewModel){
+                changeYear(year)
+                changeMonth(month)
+                changeDate(day)
+            }
+            editViewModel.showDate.observe(viewLifecycleOwner, Observer {
+                Timber.d("show Date => $it")
+            })
         }
     }
 
@@ -229,7 +230,7 @@ class AlarmDialogFragment : BaseDialogFragment<DialogAlarmBinding>(R.layout.dial
                             })
                         }
                         Route.CALENDAR -> {
-                            calendarDialog.show(childFragmentManager, "Calendar")
+                            calendarDialog.show(parentFragmentManager, "Calendar")
                         }
                         else -> {
 

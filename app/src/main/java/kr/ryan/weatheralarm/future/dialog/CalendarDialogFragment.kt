@@ -51,11 +51,11 @@ class CalendarDialogFragment : BaseDialogFragment<DialogCalendarBinding>(R.layou
         }
     }
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        initBinding()
+        initCalendarView()
+        dateChangeListener()
 
         viewLifecycleOwner.lifecycleScope.launch {
 
@@ -63,7 +63,7 @@ class CalendarDialogFragment : BaseDialogFragment<DialogCalendarBinding>(R.layou
                 requireActivity().dialogFragmentResize(this@CalendarDialogFragment, 0.8f, 0.5f)
             }
 
-            lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED){
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.RESUMED){
                 Timber.d("START")
                 launch {
                     observeUiState()
@@ -72,19 +72,11 @@ class CalendarDialogFragment : BaseDialogFragment<DialogCalendarBinding>(R.layou
 
         }
 
-        return super.onCreateView(inflater, container, savedInstanceState)
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        initBinding()
-        initCalendarView()
-        dateChangeListener()
     }
 
     private fun initBinding() {
         binding.apply {
-            alarmViewModel = alarmViewModel
+            alarmViewModel = this@CalendarDialogFragment.alarmViewModel
             lifecycleOwner = viewLifecycleOwner
         }
     }
@@ -104,17 +96,15 @@ class CalendarDialogFragment : BaseDialogFragment<DialogCalendarBinding>(R.layou
 
     private suspend fun observeUiState() {
         alarmViewModel.uiEvent.collect {
-            Timber.d("Active UiState -> $it")
+            Timber.d("UiStateActive $it")
             when (it) {
                 is UiEvent.Navigate -> {
                     when (it.route) {
                         Route.CANCEL -> {
-                            Timber.d("Cancel Clicked")
                             cancelEvent()
                             alarmViewModel.sendEvent(UiEvent.PopUpStack)
                         }
                         Route.SAVE -> {
-                            Timber.d("Save Clicked")
                             saveEvent(year, month, day)
                             alarmViewModel.sendEvent(UiEvent.PopUpStack)
                         }
