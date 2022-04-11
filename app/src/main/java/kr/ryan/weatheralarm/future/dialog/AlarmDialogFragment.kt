@@ -50,9 +50,8 @@ class AlarmDialogFragment : BaseDialogFragment<DialogAlarmBinding>(R.layout.dial
 
     private var alarm: Alarm? = null
 
-    private val calendarDialog by lazy {
-        CalendarDialogFragment()
-    }
+    private var calendarDialog: CalendarDialogFragment? = null
+
     @Inject
     lateinit var adapter: AlarmAdapter
 
@@ -230,7 +229,14 @@ class AlarmDialogFragment : BaseDialogFragment<DialogAlarmBinding>(R.layout.dial
                             })
                         }
                         Route.CALENDAR -> {
-                            calendarDialog.show(parentFragmentManager, "Calendar")
+                            calendarDialog = CalendarDialogFragment()
+                            calendarDialog?.also { dialogFragment ->
+                                if (!dialogFragment.isAdded){
+                                    dialogFragment.show(parentFragmentManager, "Calendar")
+                                }
+                            }
+
+
                         }
                         else -> {
 

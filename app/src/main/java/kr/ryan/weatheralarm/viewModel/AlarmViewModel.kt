@@ -90,6 +90,7 @@ class AlarmViewModel @Inject constructor(
     }
 
     fun onClickBtn(route: String) = viewModelScope.launch {
+        Timber.d("route $route")
         when (route) {
             "ADD" -> _uiEvent.emit(UiEvent.Navigate(Route.ADD_MODE))
             "CANCEL" -> _uiEvent.emit(UiEvent.Navigate(Route.CANCEL))
