@@ -46,7 +46,7 @@ class AlarmEditViewModel @Inject constructor(
         }
     }.catch { e ->
         Timber.d("Exception $e")
-    }.stateIn(viewModelScope, SharingStarted.Lazily, emptyList<Int>())
+    }.stateIn(viewModelScope, SharingStarted.Lazily, emptyList())
 
     private val dayList = listOf("일", "월", "화", "수", "목", "금", "토")
 
@@ -140,7 +140,13 @@ class AlarmEditViewModel @Inject constructor(
                     val savedDateList = alarmWithDate.alarmDate.map { alarmDate ->
                         alarmDate.date.convertDate()
                     }
-                    Timber.d("Saved -> $savedDateList current -> $currentDateList isEquals -> ${currentDateList.containsAll(savedDateList)}")
+                    Timber.d(
+                        "Saved -> $savedDateList current -> $currentDateList isEquals -> ${
+                            currentDateList.containsAll(
+                                savedDateList
+                            )
+                        }"
+                    )
                     val checkDuplicateList =
                         currentDateList.toSet().minus(savedDateList.toSet())
                     Timber.d("check -> $checkDuplicateList")
@@ -374,7 +380,7 @@ class AlarmEditViewModel @Inject constructor(
                         onOff = true
                     )
 
-                    dateList = mutableListOf<AlarmDate>()
+                    dateList = mutableListOf()
 
                     flowSelectedDays.value.forEachIndexed { index, boolean ->
 

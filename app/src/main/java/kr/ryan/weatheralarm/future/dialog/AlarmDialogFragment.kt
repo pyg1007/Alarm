@@ -3,16 +3,9 @@ package kr.ryan.weatheralarm.future.dialog
 import android.app.AlarmManager
 import android.content.Context
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
-import android.widget.FrameLayout
-import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.coordinatorlayout.widget.CoordinatorLayout
-import androidx.core.content.ContextCompat
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.*
-import androidx.lifecycle.Observer
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -88,7 +81,7 @@ class AlarmDialogFragment : BaseDialogFragment<DialogAlarmBinding>(R.layout.dial
                 initAlarm()
             }
 
-            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.RESUMED) {
                 launch {
                     observeUiState()
                 }
@@ -163,24 +156,21 @@ class AlarmDialogFragment : BaseDialogFragment<DialogAlarmBinding>(R.layout.dial
         }
     }
 
-    private fun selectCalendarDay(){
+    private fun selectCalendarDay() {
         CalendarDialogFragment.setOnCancelEvent {
 
         }
 
         CalendarDialogFragment.setOnSaveEvent { year, month, day ->
-            with(editViewModel){
+            with(editViewModel) {
                 changeYear(year)
                 changeMonth(month)
                 changeDate(day)
             }
-            editViewModel.showDate.observe(viewLifecycleOwner, Observer {
-                Timber.d("show Date => $it")
-            })
         }
     }
 
-    private suspend fun disMissFocusEditText(){
+    private suspend fun disMissFocusEditText() {
         binding.rootLayout.onSingleClicks().onEach {
             binding.etAlarmTitle.clearFocus()
             requireContext().hideKeyboard(binding.etAlarmTitle)
@@ -201,17 +191,20 @@ class AlarmDialogFragment : BaseDialogFragment<DialogAlarmBinding>(R.layout.dial
 
                                 Timber.d("SAVE")
 
-                                if (isExist){
+                                if (isExist) {
                                     saveEvent("이미 등록되어있는 날짜입니다.")
                                     alarmViewModel.sendEvent(UiEvent.PopUpStack)
-                                }else {
+                                } else {
 
                                     if (Date() < alarmWithDate.alarmDate.sortedBy { date -> date.date }[0].date) {
 
                                         val alarmManager =
                                             requireContext().getSystemService(Context.ALARM_SERVICE) as? AlarmManager
                                         if (requireContext().isRegisterAlarm(alarmWithDate)) {
-                                            alarmManager?.cancelAlarm(requireContext(), alarmWithDate)
+                                            alarmManager?.cancelAlarm(
+                                                requireContext(),
+                                                alarmWithDate
+                                            )
                                         }
 
                                         alarmManager?.registerAlarm(requireContext(), alarmWithDate)
@@ -231,7 +224,7 @@ class AlarmDialogFragment : BaseDialogFragment<DialogAlarmBinding>(R.layout.dial
                         Route.CALENDAR -> {
                             calendarDialog = CalendarDialogFragment()
                             calendarDialog?.also { dialogFragment ->
-                                if (!dialogFragment.isAdded){
+                                if (!dialogFragment.isAdded) {
                                     dialogFragment.show(parentFragmentManager, "Calendar")
                                 }
                             }
@@ -244,7 +237,8 @@ class AlarmDialogFragment : BaseDialogFragment<DialogAlarmBinding>(R.layout.dial
                     }
                 }
                 is UiEvent.ShowSnackBar -> {
-                    val snackBar = Snackbar.make(binding.rootLayout, it.message, Snackbar.LENGTH_SHORT)
+                    val snackBar =
+                        Snackbar.make(binding.rootLayout, it.message, Snackbar.LENGTH_SHORT)
                     if (!snackBar.isShown) {
                         snackBar.anchorView = binding.btnCancel
                         snackBar.show()

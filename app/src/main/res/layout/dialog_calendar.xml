@@ -39,7 +39,7 @@
             android:layout_height="0dp"
             android:background="@color/cyan_200"
             android:gravity="center"
-            android:onClick="@{() -> alarmViewModel.onClickBtn(`CANCEL`)}"
+            android:onClick="@{() -> alarmViewModel.onClickBtn(`SAVE`)}"
             android:text="@string/save"
             app:backgroundTint="@null"
             app:layout_constraintBottom_toBottomOf="parent"

@@ -1,6 +1,7 @@
 package kr.ryan.weatheralarm.di
 
 import android.app.Application
+import android.os.Build
 import androidx.hilt.work.HiltWorker
 import androidx.hilt.work.HiltWorkerFactory
 import androidx.work.*
@@ -8,6 +9,7 @@ import dagger.hilt.android.HiltAndroidApp
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kr.ryan.weatheralarm.BuildConfig
 import kr.ryan.weatheralarm.util.getCertainTime
 import kr.ryan.weatheralarm.worker.WeatherWorker
 import timber.log.Timber
@@ -42,7 +44,8 @@ class AlarmApplication : Application(), Configuration.Provider{
             createWorkManager()
         }
 
-        Timber.plant(Timber.DebugTree())
+        if (BuildConfig.DEBUG)
+            Timber.plant(Timber.DebugTree())
     }
 
     private fun createWorkManager(){
