@@ -10,6 +10,7 @@ import kotlinx.coroutines.runBlocking
 import kr.ryan.weatheralarm.data.Alarm
 import kr.ryan.weatheralarm.data.AlarmDate
 import kr.ryan.weatheralarm.data.InternalWeather
+import kr.ryan.weatheralarm.data.IsWeatherUpdate
 import timber.log.Timber
 import java.util.*
 import java.util.concurrent.Executors
@@ -21,11 +22,13 @@ import java.util.concurrent.Executors
  * Created On 2021-10-24.
  * Description:
  */
-@Database(entities = [Alarm::class, AlarmDate::class, InternalWeather::class], version = 1)
+@Database(entities = [Alarm::class, AlarmDate::class, InternalWeather::class, IsWeatherUpdate::class], version = 1)
 @TypeConverters(value = [DateConverter::class, JsonConverter::class])
 abstract class AlarmDatabase : RoomDatabase() {
+
     abstract fun alarmDao(): AlarmDao
     abstract fun weatherDao() : WeatherDao
+    abstract fun isWeatherDao() : IsUpdateDao
 
     companion object {
 
