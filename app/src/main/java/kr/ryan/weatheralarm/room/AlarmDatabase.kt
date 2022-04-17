@@ -33,7 +33,19 @@ abstract class AlarmDatabase : RoomDatabase() {
     companion object {
 
         fun getInstance(context: Context): AlarmDatabase =
-            Room.databaseBuilder(context, AlarmDatabase::class.java, "Alarm.db").build()
+            Room.databaseBuilder(context, AlarmDatabase::class.java, "Alarm.db").
+            addCallback(object : Callback(){
+                override fun onCreate(db: SupportSQLiteDatabase) {
+                    super.onCreate(db)
+
+                    Executors.newSingleThreadExecutor().execute {
+                        runBlocking {
+                            getInstance(context).isWeatherDao().insertIsWeatherUpdate(
+                                IsWeatherUpdate.DEFAULT_IS_WEATHER_UPDATE)
+                        }
+                    }
+                }
+            }).build()
 
     }
 

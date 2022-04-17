@@ -17,4 +17,9 @@ data class IsWeatherUpdate(
     val index: Int = 0,
     val date: Date,
     val isUpdate: Boolean
-)
+){
+    companion object{
+        private const val DEFAULT_INDEX = 1
+        val DEFAULT_IS_WEATHER_UPDATE = IsWeatherUpdate(DEFAULT_INDEX, Date(),false)
+    }
+}

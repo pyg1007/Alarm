@@ -22,6 +22,7 @@ import kr.ryan.weatheralarm.BuildConfig
 import kr.ryan.weatheralarm.R
 import kr.ryan.weatheralarm.data.GooglePlayServiceStatus
 import kr.ryan.weatheralarm.util.*
+import kr.ryan.weatheralarm.viewModel.CheckUpdateViewModel
 import kr.ryan.weatheralarm.viewModel.WeatherViewModel
 import timber.log.Timber
 import java.net.URLDecoder
@@ -33,6 +34,7 @@ import java.util.*
 class SplashActivity : AppCompatActivity() {
 
     private val weatherViewModel by viewModels<WeatherViewModel>()
+    private val checkUpdate by viewModels<CheckUpdateViewModel>()
 
     private val permissions = arrayOf(
         android.Manifest.permission.ACCESS_COARSE_LOCATION,
