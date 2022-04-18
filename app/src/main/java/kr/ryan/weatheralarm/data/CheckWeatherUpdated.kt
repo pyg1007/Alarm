@@ -12,7 +12,7 @@ import java.util.*
  * Description:
  */
 @Entity
-data class IsWeatherUpdate(
+data class CheckWeatherUpdated(
     @PrimaryKey
     val index: Int = 0,
     val date: Date,
@@ -20,6 +20,6 @@ data class IsWeatherUpdate(
 ){
     companion object{
         private const val DEFAULT_INDEX = 1
-        val DEFAULT_IS_WEATHER_UPDATE = IsWeatherUpdate(DEFAULT_INDEX, Date(),false)
+        val DEFAULT_IS_WEATHER_UPDATE = CheckWeatherUpdated(DEFAULT_INDEX, Date(),false)
     }
 }

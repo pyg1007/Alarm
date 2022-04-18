@@ -1,6 +1,6 @@
 package kr.ryan.weatheralarm.usecase
 
-import kr.ryan.weatheralarm.repository.IsWeatherUpdateRepository
+import kr.ryan.weatheralarm.repository.CheckWeatherUpdateRepository
 import javax.inject.Inject
 
 /**
@@ -10,8 +10,8 @@ import javax.inject.Inject
  * Created On 2022-04-14.
  * Description:
  */
-class IsWeatherUpdateSelectUseCase @Inject constructor(
-    private val repository: IsWeatherUpdateRepository
+class CheckUpdatedSelectUseCase @Inject constructor(
+    private val repository: CheckWeatherUpdateRepository
 ) {
 
     fun selectIsUpdateWeather() = repository.selectIsWeatherUpdate()

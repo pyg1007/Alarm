@@ -6,9 +6,9 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.launch
-import kr.ryan.weatheralarm.data.IsWeatherUpdate
-import kr.ryan.weatheralarm.usecase.IsWeatherUpdateSelectUseCase
-import kr.ryan.weatheralarm.usecase.IsWeatherUpdateUseCase
+import kr.ryan.weatheralarm.data.CheckWeatherUpdated
+import kr.ryan.weatheralarm.usecase.CheckUpdatedSelectUseCase
+import kr.ryan.weatheralarm.usecase.CheckUpdatedUseCase
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -21,18 +21,18 @@ import javax.inject.Inject
  */
 @HiltViewModel
 class CheckUpdateViewModel @Inject constructor(
-    private val isWeatherUpdateSelectUseCase: IsWeatherUpdateSelectUseCase,
-    private val isWeatherUpdateUseCase: IsWeatherUpdateUseCase
+    private val checkUpdatedSelectUseCase: CheckUpdatedSelectUseCase,
+    private val checkUpdatedUseCase: CheckUpdatedUseCase
 ) : ViewModel() {
 
-    val isWeatherUpdate = flow {
-        emit(isWeatherUpdateSelectUseCase.selectIsUpdateWeather())
+    val checkUpdateWeather = flow {
+        emit(checkUpdatedSelectUseCase.selectIsUpdateWeather())
     }.catch {
         Timber.d("$it")
     }
 
-    fun completeWeatherUpdate(isWeatherUpdate: IsWeatherUpdate) = viewModelScope.launch {
-        isWeatherUpdateUseCase.isUpdateWeather(isWeatherUpdate)
+    fun changeWeatherUpdate(checkWeatherUpdated: CheckWeatherUpdated) = viewModelScope.launch {
+        checkUpdatedUseCase.isUpdateWeather(checkWeatherUpdated)
     }
 
 }

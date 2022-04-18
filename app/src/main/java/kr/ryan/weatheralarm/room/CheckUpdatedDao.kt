@@ -2,7 +2,7 @@ package kr.ryan.weatheralarm.room
 
 import androidx.room.*
 import kotlinx.coroutines.flow.Flow
-import kr.ryan.weatheralarm.data.IsWeatherUpdate
+import kr.ryan.weatheralarm.data.CheckWeatherUpdated
 
 /**
  * WeatherAlarm
@@ -12,15 +12,15 @@ import kr.ryan.weatheralarm.data.IsWeatherUpdate
  * Description:
  */
 @Dao
-interface IsUpdateDao {
+interface CheckUpdatedDao {
 
     @Query("SELECT * FROM isweatherupdate")
-    fun selectIsWeatherUpdate() : Flow<IsWeatherUpdate>
+    fun selectIsWeatherUpdate() : Flow<CheckWeatherUpdated>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertIsWeatherUpdate(isWeatherUpdate: IsWeatherUpdate)
+    suspend fun insertIsWeatherUpdate(checkWeatherUpdated: CheckWeatherUpdated)
 
     @Update
-    suspend fun updateIsWeatherUpdate(isWeatherUpdate: IsWeatherUpdate)
+    suspend fun updateIsWeatherUpdate(checkWeatherUpdated: CheckWeatherUpdated)
 
 }
