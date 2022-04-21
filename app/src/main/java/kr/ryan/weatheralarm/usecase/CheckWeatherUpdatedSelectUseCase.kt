@@ -10,10 +10,10 @@ import javax.inject.Inject
  * Created On 2022-04-14.
  * Description:
  */
-class CheckUpdatedSelectUseCase @Inject constructor(
+class CheckWeatherUpdatedSelectUseCase @Inject constructor(
     private val repository: CheckWeatherUpdateRepository
 ) {
 
-    fun selectIsUpdateWeather() = repository.selectIsWeatherUpdate()
+    fun selectCheckWeatherUpdateWeather() = repository.selectCheckUpdatedWeather()
 
 }

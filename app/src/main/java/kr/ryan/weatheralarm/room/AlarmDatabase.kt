@@ -38,7 +38,7 @@ abstract class AlarmDatabase : RoomDatabase() {
 
                     Executors.newSingleThreadExecutor().execute {
                         runBlocking {
-                            getInstance(context).isWeatherDao().insertIsWeatherUpdate(
+                            getInstance(context).isWeatherDao().insertCheckWeatherUpdate(
                                 CheckWeatherUpdated.DEFAULT_IS_WEATHER_UPDATE)
                         }
                     }

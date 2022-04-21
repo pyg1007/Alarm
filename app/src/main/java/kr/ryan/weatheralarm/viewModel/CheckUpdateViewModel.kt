@@ -7,8 +7,8 @@ import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.launch
 import kr.ryan.weatheralarm.data.CheckWeatherUpdated
-import kr.ryan.weatheralarm.usecase.CheckUpdatedSelectUseCase
-import kr.ryan.weatheralarm.usecase.CheckUpdatedUseCase
+import kr.ryan.weatheralarm.usecase.CheckWeatherUpdatedSelectUseCase
+import kr.ryan.weatheralarm.usecase.CheckWeatherUpdatedUseCase
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -21,18 +21,18 @@ import javax.inject.Inject
  */
 @HiltViewModel
 class CheckUpdateViewModel @Inject constructor(
-    private val checkUpdatedSelectUseCase: CheckUpdatedSelectUseCase,
-    private val checkUpdatedUseCase: CheckUpdatedUseCase
+    private val checkWeatherUpdatedSelectUseCase: CheckWeatherUpdatedSelectUseCase,
+    private val checkWeatherUpdatedUseCase: CheckWeatherUpdatedUseCase
 ) : ViewModel() {
 
-    val checkUpdateWeather = flow {
-        emit(checkUpdatedSelectUseCase.selectIsUpdateWeather())
+    val checkUpdateWeather = flow<CheckWeatherUpdated> {
+        emit(checkWeatherUpdatedSelectUseCase.selectCheckWeatherUpdateWeather())
     }.catch {
         Timber.d("$it")
     }
 
     fun changeWeatherUpdate(checkWeatherUpdated: CheckWeatherUpdated) = viewModelScope.launch {
-        checkUpdatedUseCase.isUpdateWeather(checkWeatherUpdated)
+        checkWeatherUpdatedUseCase.updateCheckWeather(checkWeatherUpdated)
     }
 
 }

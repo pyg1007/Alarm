@@ -34,7 +34,7 @@ import java.util.*
 class SplashActivity : AppCompatActivity() {
 
     private val weatherViewModel by viewModels<WeatherViewModel>()
-    private val checkUpdate by viewModels<CheckUpdateViewModel>()
+    private val checkUpdateViewModel by viewModels<CheckUpdateViewModel>()
 
     private val permissions = arrayOf(
         android.Manifest.permission.ACCESS_COARSE_LOCATION,
@@ -56,7 +56,7 @@ class SplashActivity : AppCompatActivity() {
                     observeDBException()
                 }
                 launch {
-                    observeWeather()
+                    observeWeatherUpdate()
                 }
             }
 
@@ -79,7 +79,7 @@ class SplashActivity : AppCompatActivity() {
             registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
                 if (result.resultCode == RESULT_OK) {
                     CoroutineScope(Dispatchers.Main).launch {
-                        observeWeather()
+                        observeWeatherUpdate()
                     }
                 }
             }
@@ -109,50 +109,60 @@ class SplashActivity : AppCompatActivity() {
         }
     }
 
-    private suspend fun observeWeather() {
-        Timber.d("observe Weather Active")
-        weatherViewModel.weather.collect {
-            if (it == null) {
-                requestPermission({
-                    if (this@SplashActivity.isEnableLocationSystem()) {
-                        Timber.d("enable Location System")
-                        when(this@SplashActivity.isInstallGooglePlayService()){
-                            GooglePlayServiceStatus.SUCCESS -> {
-                                this@SplashActivity.getGooglePlayServiceCurrentLatXLngY()?.let { latXLngY ->
-                                    callApi(latXLngY)
-                                    Timber.d("location x = ${latXLngY.x} y = ${latXLngY.y} lat = ${latXLngY.lat} lon = ${latXLngY.lng}")
-                                } ?: run {
-                                    Timber.d("location Error")
-                                    routeNextActivity()
-                                }
-                            }
-                            else -> {
-                                this@SplashActivity.getLocationManagerCurrentLatXLngY()?.let { latXLngY ->
-                                    callApi(latXLngY)
-                                } ?: run {
-                                    routeNextActivity()
-                                }
-                                Timber.d("unavailable Google Play Service")
-                            }
-                        }
-                    } else {
-                        showDialog()
-                    }
-                }, {
-                    Timber.d("denied")
-                }, *permissions)
+    private suspend fun observeWeatherUpdate() {
+        checkUpdateViewModel.checkUpdateWeather.collect { check ->
+            if (!check.isUpdate) {
+                checkPermission()
             } else {
-                Timber.d("not null $it")
+                /**
+                 *
+                 *  update된 날짜를 비교해서 이전날짜라면 다시 업데이트 콜
+                 *
+                 */
                 routeNextActivity()
             }
         }
     }
 
-    private suspend fun observeDBException(){
+    private suspend fun observeDBException() {
         weatherViewModel.error.collect {
-            if (it != null){
+            if (it != null) {
                 routeNextActivity()
             }
+        }
+    }
+
+    private suspend fun checkPermission() {
+        requestPermission({
+            getWeatherInfo()
+        }, {
+            Timber.d("denied")
+        }, *permissions)
+    }
+
+    private suspend fun getWeatherInfo(){
+        if (this@SplashActivity.isEnableLocationSystem()) {
+            when (this@SplashActivity.isInstallGooglePlayService()) {
+                GooglePlayServiceStatus.SUCCESS -> {
+                    this@SplashActivity.getGooglePlayServiceCurrentLatXLngY()?.let { latXLngY ->
+                        callApi(latXLngY)
+                        Timber.d("location x = ${latXLngY.x} y = ${latXLngY.y} lat = ${latXLngY.lat} lon = ${latXLngY.lng}")
+                    } ?: run {
+                        Timber.d("location Error")
+                        routeNextActivity()
+                    }
+                }
+                else -> {
+                    this@SplashActivity.getLocationManagerCurrentLatXLngY()?.let { latXLngY ->
+                        callApi(latXLngY)
+                    } ?: run {
+                        routeNextActivity()
+                    }
+                    Timber.d("unavailable Google Play Service")
+                }
+            }
+        } else {
+            showDialog()
         }
     }
 

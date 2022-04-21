@@ -11,10 +11,10 @@ import javax.inject.Inject
  * Created On 2022-04-14.
  * Description:
  */
-class CheckUpdatedUseCase @Inject constructor(
+class CheckWeatherUpdatedUseCase @Inject constructor(
     private val repository: CheckWeatherUpdateRepository
 ) {
 
-    suspend fun isUpdateWeather(checkWeatherUpdated: CheckWeatherUpdated) = repository.updateIsWeatherUpdate(checkWeatherUpdated)
+    suspend fun updateCheckWeather(checkWeatherUpdated: CheckWeatherUpdated) = repository.updateWeather(checkWeatherUpdated)
 
 }

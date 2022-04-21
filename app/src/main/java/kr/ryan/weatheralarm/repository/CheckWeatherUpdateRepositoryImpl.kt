@@ -13,11 +13,12 @@ import kr.ryan.weatheralarm.room.CheckUpdatedDao
  */
 class CheckWeatherUpdateRepositoryImpl(private val dao: CheckUpdatedDao) : CheckWeatherUpdateRepository{
 
-    override fun selectIsWeatherUpdate(): Flow<CheckWeatherUpdated> {
-        return dao.selectIsWeatherUpdate()
+    override suspend fun updateWeather(checkWeatherUpdated: CheckWeatherUpdated) {
+        dao.updateCheckWeatherUpdate(checkWeatherUpdated)
     }
 
-    override suspend fun updateIsWeatherUpdate(checkWeatherUpdated: CheckWeatherUpdated) {
-        dao.updateIsWeatherUpdate(checkWeatherUpdated)
+    override fun selectCheckWeatherUpdate(): Flow<CheckWeatherUpdated> {
+        return dao.selectCheckWeatherUpdate()
     }
+
 }

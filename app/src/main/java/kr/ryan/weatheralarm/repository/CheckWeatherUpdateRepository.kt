@@ -12,7 +12,7 @@ import kr.ryan.weatheralarm.data.CheckWeatherUpdated
  */
 interface CheckWeatherUpdateRepository {
 
-    fun selectCheckUpdatedWeather() : Flow<CheckWeatherUpdated>
+    fun selectCheckWeatherUpdate() : Flow<CheckWeatherUpdated>
 
     suspend fun updateWeather(checkWeatherUpdated: CheckWeatherUpdated)
 

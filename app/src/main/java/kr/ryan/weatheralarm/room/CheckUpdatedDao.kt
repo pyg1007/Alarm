@@ -14,13 +14,13 @@ import kr.ryan.weatheralarm.data.CheckWeatherUpdated
 @Dao
 interface CheckUpdatedDao {
 
-    @Query("SELECT * FROM isweatherupdate")
-    fun selectIsWeatherUpdate() : Flow<CheckWeatherUpdated>
+    @Query("SELECT * FROM checkweatherupdated")
+    fun selectCheckWeatherUpdate() : Flow<CheckWeatherUpdated>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertIsWeatherUpdate(checkWeatherUpdated: CheckWeatherUpdated)
+    suspend fun insertCheckWeatherUpdate(checkWeatherUpdated: CheckWeatherUpdated)
 
     @Update
-    suspend fun updateIsWeatherUpdate(checkWeatherUpdated: CheckWeatherUpdated)
+    suspend fun updateCheckWeatherUpdate(checkWeatherUpdated: CheckWeatherUpdated)
 
 }
