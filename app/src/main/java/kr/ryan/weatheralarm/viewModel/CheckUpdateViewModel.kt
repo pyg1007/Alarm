@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.launch
 import kr.ryan.weatheralarm.data.CheckWeatherUpdated
@@ -25,8 +26,10 @@ class CheckUpdateViewModel @Inject constructor(
     private val checkWeatherUpdatedUseCase: CheckWeatherUpdatedUseCase
 ) : ViewModel() {
 
-    val checkUpdateWeather = flow<CheckWeatherUpdated> {
-        emit(checkWeatherUpdatedSelectUseCase.selectCheckWeatherUpdateWeather())
+    val checkUpdateWeather = flow {
+        checkWeatherUpdatedSelectUseCase.selectCheckWeatherUpdateWeather().collect {
+            emit(it)
+        }
     }.catch {
         Timber.d("$it")
     }

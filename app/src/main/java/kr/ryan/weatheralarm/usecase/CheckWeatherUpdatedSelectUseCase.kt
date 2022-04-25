@@ -14,6 +14,6 @@ class CheckWeatherUpdatedSelectUseCase @Inject constructor(
     private val repository: CheckWeatherUpdateRepository
 ) {
 
-    fun selectCheckWeatherUpdateWeather() = repository.selectCheckUpdatedWeather()
+    fun selectCheckWeatherUpdateWeather() = repository.selectCheckWeatherUpdate()
 
 }

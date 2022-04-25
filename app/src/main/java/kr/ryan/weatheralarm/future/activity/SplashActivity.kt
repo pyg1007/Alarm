@@ -111,6 +111,7 @@ class SplashActivity : AppCompatActivity() {
 
     private suspend fun observeWeatherUpdate() {
         checkUpdateViewModel.checkUpdateWeather.collect { check ->
+            Timber.d("check -> $check")
             if (!check.isUpdate) {
                 checkPermission()
             } else {
@@ -119,7 +120,18 @@ class SplashActivity : AppCompatActivity() {
                  *  update된 날짜를 비교해서 이전날짜라면 다시 업데이트 콜
                  *
                  */
-                routeNextActivity()
+                val toDayUpdateDate = Calendar.getInstance().apply {
+                    time = Date()
+                    set(Calendar.HOUR_OF_DAY, 2)
+                    set(Calendar.MINUTE, 40)
+                    set(Calendar.SECOND, 0)
+                }.time
+
+                if(check.date.before(toDayUpdateDate)){
+                    checkPermission()
+                }else{
+                    routeNextActivity()
+                }
             }
         }
     }

@@ -13,9 +13,11 @@ import kotlinx.coroutines.launch
 import kr.ryan.permissionmodule.requestPermission
 import kr.ryan.retrofitmodule.NetWorkResult
 import kr.ryan.weatheralarm.BuildConfig
+import kr.ryan.weatheralarm.data.CheckWeatherUpdated
 import kr.ryan.weatheralarm.data.GooglePlayServiceStatus
 import kr.ryan.weatheralarm.data.Mapping.convertWeatherToInternalWeather
 import kr.ryan.weatheralarm.di.AlarmApplication
+import kr.ryan.weatheralarm.usecase.CheckWeatherUpdatedUseCase
 import kr.ryan.weatheralarm.usecase.WeatherInsertUseCase
 import kr.ryan.weatheralarm.usecase.WeatherUseCase
 import kr.ryan.weatheralarm.util.*
@@ -46,10 +48,13 @@ class WeatherWorker @AssistedInject constructor(
     )
 
     @Inject
-    lateinit var useCase: WeatherUseCase
+    lateinit var weatherUseCase: WeatherUseCase
 
     @Inject
     lateinit var insertUseCase: WeatherInsertUseCase
+
+    @Inject
+    lateinit var checkWeatherUpdatedUseCase: CheckWeatherUpdatedUseCase
 
     private var retry = 0
 
@@ -66,7 +71,7 @@ class WeatherWorker @AssistedInject constructor(
                         GooglePlayServiceStatus.SUCCESS -> applicationContext.getGooglePlayServiceCurrentLatXLngY()!!
                         else -> applicationContext.getLocationManagerCurrentLatXLngY()!!
                     }
-                    val result = useCase.getWeatherInfo(
+                    val result = weatherUseCase.getWeatherInfo(
                         hashMapOf(
                             "serviceKey" to URLDecoder.decode(BuildConfig.weather_api_key, "UTF-8"),
                             "nx" to latXLngY.x.toInt().toString(),
@@ -85,6 +90,7 @@ class WeatherWorker @AssistedInject constructor(
                             result.data.convertWeatherToInternalWeather()?.let {
                                 Timber.d("Worker & NetWork Success")
                                 insertUseCase.insertWeatherInfo(it)
+                                checkWeatherUpdatedUseCase.updateCheckWeather(CheckWeatherUpdated(1, Date(), true))
                             }
                         }
                         else -> {

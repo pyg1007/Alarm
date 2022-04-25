@@ -6,8 +6,10 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import kr.ryan.retrofitmodule.NetWorkResult
+import kr.ryan.weatheralarm.data.CheckWeatherUpdated
 import kr.ryan.weatheralarm.data.InternalWeather
 import kr.ryan.weatheralarm.data.Mapping.convertWeatherToInternalWeather
+import kr.ryan.weatheralarm.usecase.CheckWeatherUpdatedUseCase
 import kr.ryan.weatheralarm.usecase.WeatherInsertUseCase
 import kr.ryan.weatheralarm.usecase.WeatherSelectUseCase
 import kr.ryan.weatheralarm.usecase.WeatherUseCase
@@ -17,7 +19,9 @@ import kr.ryan.weatheralarm.util.CalculatorLatitudeAndLongitude.convertGRIDTOGPS
 import timber.log.Timber
 import java.net.SocketException
 import java.net.SocketTimeoutException
+import java.util.*
 import javax.inject.Inject
+import kotlin.collections.HashMap
 
 /**
  * WeatherAlarm
@@ -30,7 +34,8 @@ import javax.inject.Inject
 class WeatherViewModel @Inject constructor(
     private val weatherUseCase: WeatherUseCase,
     private val selectWeatherUseCase: WeatherSelectUseCase,
-    private val insertWeatherUseCase: WeatherInsertUseCase
+    private val insertWeatherUseCase: WeatherInsertUseCase,
+    private val checkWeatherUpdatedUseCase: CheckWeatherUpdatedUseCase
 ): ViewModel(){
     
     private val _error = MutableStateFlow<Throwable?>(null)
@@ -58,6 +63,7 @@ class WeatherViewModel @Inject constructor(
                 result.data.convertWeatherToInternalWeather()?.let {
                     val weatherInfo = InternalWeather(it.index, it.date, latXLngY.lat.toInt(), latXLngY.lng.toInt(), it.item)
                     insertWeatherUseCase.insertWeatherInfo(weatherInfo)
+                    checkWeatherUpdatedUseCase.updateCheckWeather(CheckWeatherUpdated(index = 1, date = Date(), isUpdate = true))
                 }
                 complete()
             }
