@@ -16,7 +16,7 @@ import kr.ryan.weatheralarm.R
  */
 object DrawCircle {
 
-    @BindingAdapter("draw")
+    @BindingAdapter("drawCirCle")
     @JvmStatic
     fun TextView.setDrawCircle(value: Boolean) {
         if (background == null && value) {
@@ -40,7 +40,7 @@ object DrawCircle {
         inverseBindingListener.onChange()
     }
 
-    @InverseBindingAdapter(attribute = "draw", event = "drawAttrChanged")
+    @InverseBindingAdapter(attribute = "drawCirCle", event = "drawAttrChanged")
     @JvmStatic
     fun TextView.getDrawCircle(): Boolean {
         return background != null
