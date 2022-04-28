@@ -1,19 +1,18 @@
-package kr.ryan.weatheralarm.adapter
+package kr.ryan.weatheralarm.util
 
 import android.graphics.Color
 import androidx.annotation.ColorInt
 import androidx.databinding.BindingAdapter
 import androidx.recyclerview.widget.RecyclerView
-import kr.ryan.weatheralarm.util.CustomDivider
 
 /**
  * WeatherAlarm
- * Class: ProvideDivider
+ * Class: ProvideDividerBindingAdapter
  * Created by pyg10.
- * Created On 2021-11-03.
+ * Created On 2022-04-27.
  * Description:
  */
-object ProvideDivider {
+object ProvideDividerBindingAdapter {
 
     @JvmStatic
     @BindingAdapter(value = ["dividerHeight", "dividerPadding", "dividerColor"], requireAll = false)
@@ -22,7 +21,7 @@ object ProvideDivider {
         dividerPadding: Float?,
         @ColorInt dividerColor: Int?
     ) {
-        val divider = CustomDivider(
+        val divider = CustomDividerItemDecoration(
             height = dividerHeight ?: 0f,
             padding = dividerPadding ?: 0f,
             color = dividerColor ?: Color.TRANSPARENT

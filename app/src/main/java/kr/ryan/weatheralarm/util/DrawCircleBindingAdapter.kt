@@ -1,4 +1,4 @@
-package kr.ryan.weatheralarm.adapter
+package kr.ryan.weatheralarm.util
 
 import android.widget.TextView
 import androidx.core.content.ContextCompat
@@ -9,12 +9,12 @@ import kr.ryan.weatheralarm.R
 
 /**
  * WeatherAlarm
- * Class: DrawCircle
+ * Class: DrawCircleBindingAdapter
  * Created by pyg10.
- * Created On 2021-12-20.
+ * Created On 2022-04-27.
  * Description:
  */
-object DrawCircle {
+object DrawCircleBindingAdapter {
 
     @BindingAdapter("drawCirCle")
     @JvmStatic
@@ -34,13 +34,13 @@ object DrawCircle {
         }
     }
 
-    @BindingAdapter("drawAttrChanged")
+    @BindingAdapter("drawCircleAttrChanged")
     @JvmStatic
     fun TextView.changeListener(inverseBindingListener: InverseBindingListener) {
         inverseBindingListener.onChange()
     }
 
-    @InverseBindingAdapter(attribute = "drawCirCle", event = "drawAttrChanged")
+    @InverseBindingAdapter(attribute = "drawCirCle", event = "drawCircleAttrChanged")
     @JvmStatic
     fun TextView.getDrawCircle(): Boolean {
         return background != null

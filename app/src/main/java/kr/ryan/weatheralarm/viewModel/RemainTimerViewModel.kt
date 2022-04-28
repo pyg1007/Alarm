@@ -4,12 +4,13 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.*
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collect
 import kr.ryan.weatheralarm.data.AlarmWithDate
-import kr.ryan.weatheralarm.usecase.AlarmSelectUseCase
-import kr.ryan.weatheralarm.usecase.AlarmUpdateUseCase
+import kr.ryan.weatheralarm.domain.usecase.AlarmSelectUseCase
+import kr.ryan.weatheralarm.domain.usecase.AlarmUpdateUseCase
 import kr.ryan.weatheralarm.util.findFastAlarmDate
 import java.util.*
 import javax.inject.Inject
@@ -42,7 +43,7 @@ class RemainTimerViewModel @Inject constructor(
     }
 
     private fun getAlarmList() = viewModelScope.launch {
-        selectUseCase.selectAlarmList().collect {
+        selectUseCase<Flow<List<AlarmWithDate>>>("Select", null, null).collect {
             alarmList.emit(it)
 
             if (flag)
@@ -105,7 +106,7 @@ class RemainTimerViewModel @Inject constructor(
                 }
             }
 
-            updateUseCase.updateAlarmDate(alarmWithDate.alarmDate)
+            updateUseCase("UpdateAlarmDate",null ,alarmWithDate.alarmDate)
         }
     }
 

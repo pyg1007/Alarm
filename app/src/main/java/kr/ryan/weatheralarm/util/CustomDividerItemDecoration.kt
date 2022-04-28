@@ -12,7 +12,7 @@ import androidx.recyclerview.widget.RecyclerView
  * Created On 2021-11-03.
  * Description:
  */
-class CustomDivider(private val height: Float, private val padding: Float, @ColorInt private val color: Int) : RecyclerView.ItemDecoration() {
+class CustomDividerItemDecoration(private val height: Float, private val padding: Float, @ColorInt private val color: Int) : RecyclerView.ItemDecoration() {
 
     private val paint = Paint()
 

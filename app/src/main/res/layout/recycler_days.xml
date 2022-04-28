@@ -87,7 +87,7 @@
 
                 <TextView
                     android:id="@+id/tv_sunday"
-                    draw="@={days[0]}"
+                    drawCirCle="@={days[0]}"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:gravity="center"
@@ -102,7 +102,7 @@
 
                 <TextView
                     android:id="@+id/tv_monday"
-                    draw="@={days[1]}"
+                    drawCirCle="@={days[1]}"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:gravity="center"
@@ -117,7 +117,7 @@
 
                 <TextView
                     android:id="@+id/tv_tuesday"
-                    draw="@={days[2]}"
+                    drawCirCle="@={days[2]}"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:gravity="center"
@@ -132,7 +132,7 @@
 
                 <TextView
                     android:id="@+id/tv_wednesday"
-                    draw="@={days[3]}"
+                    drawCirCle="@={days[3]}"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:gravity="center"
@@ -147,7 +147,7 @@
 
                 <TextView
                     android:id="@+id/tv_thursday"
-                    draw="@={days[4]}"
+                    drawCirCle="@={days[4]}"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:gravity="center"
@@ -162,7 +162,7 @@
 
                 <TextView
                     android:id="@+id/tv_friday"
-                    draw="@={days[5]}"
+                    drawCirCle="@={days[5]}"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:gravity="center"
@@ -177,7 +177,7 @@
 
                 <TextView
                     android:id="@+id/tv_saturday"
-                    draw="@={days[6]}"
+                    drawCirCle="@={days[6]}"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:gravity="center"

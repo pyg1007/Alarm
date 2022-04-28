@@ -9,9 +9,9 @@ import kotlinx.coroutines.launch
 import kr.ryan.weatheralarm.data.Alarm
 import kr.ryan.weatheralarm.data.AlarmDate
 import kr.ryan.weatheralarm.data.AlarmWithDate
-import kr.ryan.weatheralarm.usecase.AlarmInsertUseCase
-import kr.ryan.weatheralarm.usecase.AlarmSelectUseCase
-import kr.ryan.weatheralarm.usecase.AlarmUpdateUseCase
+import kr.ryan.weatheralarm.domain.usecase.AlarmInsertUseCase
+import kr.ryan.weatheralarm.domain.usecase.AlarmSelectUseCase
+import kr.ryan.weatheralarm.domain.usecase.AlarmUpdateUseCase
 import kr.ryan.weatheralarm.util.*
 import kr.ryan.weatheralarm.util.Route.ADD_MODE
 import kr.ryan.weatheralarm.util.Route.EDIT_MODE
@@ -39,7 +39,7 @@ class AlarmEditViewModel @Inject constructor(
     private var savedAlarmWithDateList = mutableListOf<AlarmWithDate>()
 
     private val _randomPendingNumber = flow {
-        selectUseCase.selectAlarmList().map {
+        selectUseCase<Flow<List<AlarmWithDate>>>("Select", null, null).map {
             emit(it.map { alarmWithDate ->
                 alarmWithDate.alarm.pendingId
             })
@@ -118,7 +118,7 @@ class AlarmEditViewModel @Inject constructor(
 
      */
     private fun selectAlarmDate() = viewModelScope.launch {
-        selectUseCase.selectAlarmList().collect {
+        selectUseCase<Flow<List<AlarmWithDate>>>("Select", null, null).collect {
             savedAlarmWithDateList = it.toMutableList()
         }
     }
@@ -316,13 +316,11 @@ class AlarmEditViewModel @Inject constructor(
             }
 
             if (_preAlarmWithDate.value!!.alarm != alarm) {
-                Timber.d("update alarm")
-                updateUseCase.updateAlarmInfo(alarm)
+                updateUseCase("UpdateAlarm", alarm, null)
             }
 
             if (_preAlarmWithDate.value!!.alarmDate != alarmDate) {
-                Timber.d("update alarmDate")
-                insertUseCase.insertAlarmDate(alarmDate)
+                insertUseCase("InsertAlarmDate", null, alarmDate)
             }
 
             Timber.d("$alarm $alarmDate")
@@ -406,7 +404,7 @@ class AlarmEditViewModel @Inject constructor(
 
                 val exist = isExistAlarmDate(dateList)
                 if (!exist && dateList.sortedBy { date -> date.date }[0].date.time > Date().time) {
-                    insertUseCase.insertAlarm(alarm, dateList)
+                    insertUseCase("InsertAlarm", alarm, dateList)
                 }
                 Pair(AlarmWithDate(alarm, dateList), exist)
             }.onSuccess {

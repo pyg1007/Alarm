@@ -7,14 +7,13 @@ import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import kr.ryan.weatheralarm.data.Alarm
 import kr.ryan.weatheralarm.data.AlarmWithDate
-import kr.ryan.weatheralarm.usecase.AlarmDeleteUseCase
-import kr.ryan.weatheralarm.usecase.AlarmInsertUseCase
-import kr.ryan.weatheralarm.usecase.AlarmSelectUseCase
-import kr.ryan.weatheralarm.usecase.AlarmUpdateUseCase
+import kr.ryan.weatheralarm.domain.usecase.AlarmDeleteUseCase
+import kr.ryan.weatheralarm.domain.usecase.AlarmInsertUseCase
+import kr.ryan.weatheralarm.domain.usecase.AlarmSelectUseCase
+import kr.ryan.weatheralarm.domain.usecase.AlarmUpdateUseCase
 import kr.ryan.weatheralarm.util.AlarmEvent
 import kr.ryan.weatheralarm.util.Route
 import kr.ryan.weatheralarm.util.UiEvent
-import timber.log.Timber
 import javax.inject.Inject
 
 /**
@@ -45,7 +44,7 @@ class AlarmViewModel @Inject constructor(
     }
 
     private fun selectAlarmList() = viewModelScope.launch {
-        selectUseCase.selectAlarmList().collect {
+        selectUseCase<Flow<List<AlarmWithDate>>>("Select", null, null).collect {
             _alarmList.emit(it)
         }
     }
@@ -101,19 +100,19 @@ class AlarmViewModel @Inject constructor(
     }
 
     private fun allDeleteAlarm(vararg alarm: Alarm) = viewModelScope.launch {
-        deleteUseCase.deleteAllAlarm(*alarm)
+        deleteUseCase("Multi", *alarm)
     }
 
     private fun deleteAlarm(alarm: Alarm) = viewModelScope.launch {
-        deleteUseCase.deleteAlarm(alarm)
+        deleteUseCase("Single", alarm)
     }
 
     private fun insertAlarm(alarmWithDate: AlarmWithDate) = viewModelScope.launch {
-        insertUseCase.insertAlarm(alarmWithDate.alarm, alarmWithDate.alarmDate)
+        insertUseCase("Single", alarmWithDate.alarm, alarmWithDate.alarmDate)
     }
 
     private fun updateAlarm(alarmWithDate: AlarmWithDate) = viewModelScope.launch {
-        updateUseCase.updateAlarmInfo(alarmWithDate.alarm)
+        updateUseCase("Single", alarmWithDate.alarm, null)
     }
 
     fun sendEvent(event: UiEvent) = viewModelScope.launch {

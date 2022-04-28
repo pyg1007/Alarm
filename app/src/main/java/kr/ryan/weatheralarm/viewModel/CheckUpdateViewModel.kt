@@ -8,8 +8,8 @@ import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.launch
 import kr.ryan.weatheralarm.data.CheckWeatherUpdated
-import kr.ryan.weatheralarm.usecase.CheckWeatherUpdatedSelectUseCase
-import kr.ryan.weatheralarm.usecase.CheckWeatherUpdatedUseCase
+import kr.ryan.weatheralarm.domain.usecase.CheckWeatherUpdatedSelectUseCase
+import kr.ryan.weatheralarm.domain.usecase.CheckWeatherUpdatedUseCase
 import timber.log.Timber
 import javax.inject.Inject
 

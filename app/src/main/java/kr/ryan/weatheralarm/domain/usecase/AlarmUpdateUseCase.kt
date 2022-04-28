@@ -1,4 +1,4 @@
-package kr.ryan.weatheralarm.usecase
+package kr.ryan.weatheralarm.domain.usecase
 
 import kr.ryan.weatheralarm.data.Alarm
 import kr.ryan.weatheralarm.data.AlarmDate
@@ -16,9 +16,11 @@ class AlarmUpdateUseCase @Inject constructor(
     private val alarmRepository: AlarmRepository
 ) {
 
-    suspend fun updateAlarmInfo(alarm: Alarm) = alarmRepository.updateAlarmInfo(alarm)
-
-    suspend fun updateAlarmDate(alarmDate: List<AlarmDate>) =
-        alarmRepository.updateAlarmDate(alarmDate)
+    suspend operator fun invoke(mode: String, alarm: Alarm?, alarmDate: List<AlarmDate>?){
+        when(mode){
+            "UpdateAlarm" -> alarmRepository.updateAlarmInfo(alarm!!)
+            "UpdateAlarmDate" -> alarmRepository.updateAlarmDate(alarmDate!!)
+        }
+    }
 
 }

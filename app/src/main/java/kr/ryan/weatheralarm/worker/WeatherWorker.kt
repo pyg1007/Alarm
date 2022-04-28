@@ -2,7 +2,6 @@ package kr.ryan.weatheralarm.worker
 
 import android.annotation.SuppressLint
 import android.content.Context
-import android.location.LocationManager
 import androidx.hilt.work.HiltWorker
 import androidx.work.*
 import dagger.assisted.Assisted
@@ -17,11 +16,10 @@ import kr.ryan.weatheralarm.data.CheckWeatherUpdated
 import kr.ryan.weatheralarm.data.GooglePlayServiceStatus
 import kr.ryan.weatheralarm.data.Mapping.convertWeatherToInternalWeather
 import kr.ryan.weatheralarm.di.AlarmApplication
-import kr.ryan.weatheralarm.usecase.CheckWeatherUpdatedUseCase
-import kr.ryan.weatheralarm.usecase.WeatherInsertUseCase
-import kr.ryan.weatheralarm.usecase.WeatherUseCase
+import kr.ryan.weatheralarm.domain.usecase.CheckWeatherUpdatedUseCase
+import kr.ryan.weatheralarm.domain.usecase.WeatherInsertUseCase
+import kr.ryan.weatheralarm.domain.usecase.WeatherUseCase
 import kr.ryan.weatheralarm.util.*
-import kr.ryan.weatheralarm.util.CalculatorLatitudeAndLongitude.TO_GRID
 import timber.log.Timber
 import java.net.URLDecoder
 import java.util.*

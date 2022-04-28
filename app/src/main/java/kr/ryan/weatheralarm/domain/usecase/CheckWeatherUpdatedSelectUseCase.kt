@@ -1,4 +1,4 @@
-package kr.ryan.weatheralarm.usecase
+package kr.ryan.weatheralarm.domain.usecase
 
 import kr.ryan.weatheralarm.repository.CheckWeatherUpdateRepository
 import javax.inject.Inject

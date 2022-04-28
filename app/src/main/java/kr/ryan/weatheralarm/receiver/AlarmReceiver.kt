@@ -9,11 +9,12 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
+import kr.ryan.weatheralarm.data.Alarm
 import kr.ryan.weatheralarm.data.AlarmDate
 import kr.ryan.weatheralarm.data.AlarmWithDate
-import kr.ryan.weatheralarm.usecase.AlarmSelectUseCase
-import kr.ryan.weatheralarm.usecase.AlarmUpdateUseCase
-import kr.ryan.weatheralarm.usecase.WeatherSelectUseCase
+import kr.ryan.weatheralarm.domain.usecase.AlarmSelectUseCase
+import kr.ryan.weatheralarm.domain.usecase.AlarmUpdateUseCase
+import kr.ryan.weatheralarm.domain.usecase.WeatherSelectUseCase
 import kr.ryan.weatheralarm.util.*
 import timber.log.Timber
 import java.util.*
@@ -47,16 +48,16 @@ class AlarmReceiver : BroadcastReceiver() {
 
                 it.getParcelableExtra<AlarmDate>("alarm")?.let { alarmDate ->
 
-                    val alarmInfo = selectUseCase.selectAlarmInfo(alarmDate.alarmIndex ?: -1)
+                    val alarmInfo = selectUseCase<Alarm>("SelectAlarmInfo", null, alarmDate.alarmIndex ?: -1)
 
                     if (!alarmInfo.isRepeat){ // 요일
 
                         alarmInfo.onOff = false
-                        updateUseCase.updateAlarmInfo(alarmInfo)
+                        updateUseCase("UpdateAlarm", alarmInfo, null)
 
                     }else{ // 날짜
 
-                        val alarmList = selectUseCase.selectAlarmDate(alarmInfo.index ?: -1)
+                        val alarmList = selectUseCase<List<AlarmDate>>("SelectAlarmDate", alarmInfo.index ?: -1, null)
 
                         if (!alarmList.isNullOrEmpty()){
 
@@ -76,9 +77,9 @@ class AlarmReceiver : BroadcastReceiver() {
                             nextTime.add(Calendar.DAY_OF_MONTH, 7)
                             alarmList[index].date = nextTime.time
 
-                            updateUseCase.updateAlarmDate(alarmList)
+                            updateUseCase("UpdateAlarmDate", null, alarmList)
 
-                            val alarm = selectUseCase.selectAlarmWithDate(alarmDate.alarmIndex ?: -1)
+                            val alarm = selectUseCase<AlarmWithDate>("SelectAlarmWithDate", null, alarmDate.alarmIndex ?: -1)
                             context?.let {
                                 if (it.isRegisterAlarm(alarm))
                                     alarmManager?.cancelAlarm(it, alarm)
