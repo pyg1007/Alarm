@@ -59,7 +59,7 @@ class WeatherViewModel @Inject constructor(
                 result.data.convertWeatherToInternalWeather()?.let {
                     val weatherInfo = InternalWeather(it.index, it.date, latXLngY.lat.toInt(), latXLngY.lng.toInt(), it.item)
                     insertWeatherUseCase.insertWeatherInfo(weatherInfo)
-                    checkWeatherUpdatedUseCase.updateCheckWeather(CheckWeatherUpdated(index = 1, date = Date(), isUpdate = true))
+                    checkWeatherUpdatedUseCase(CheckWeatherUpdated(index = 1, date = Date(), isUpdate = true))
                 }
                 complete()
             }

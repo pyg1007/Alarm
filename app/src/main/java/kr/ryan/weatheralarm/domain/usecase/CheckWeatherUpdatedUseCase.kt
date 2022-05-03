@@ -15,6 +15,6 @@ class CheckWeatherUpdatedUseCase @Inject constructor(
     private val repository: CheckWeatherUpdateRepository
 ) {
 
-    suspend fun updateCheckWeather(checkWeatherUpdated: CheckWeatherUpdated) = repository.updateWeather(checkWeatherUpdated)
+    suspend operator fun invoke(checkWeatherUpdated: CheckWeatherUpdated) = repository.updateWeather(checkWeatherUpdated)
 
 }

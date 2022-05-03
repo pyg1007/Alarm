@@ -88,7 +88,7 @@ class WeatherWorker @AssistedInject constructor(
                             result.data.convertWeatherToInternalWeather()?.let {
                                 Timber.d("Worker & NetWork Success")
                                 insertUseCase.insertWeatherInfo(it)
-                                checkWeatherUpdatedUseCase.updateCheckWeather(CheckWeatherUpdated(1, Date(), true))
+                                checkWeatherUpdatedUseCase(CheckWeatherUpdated(1, Date(), true))
                             }
                         }
                         else -> {

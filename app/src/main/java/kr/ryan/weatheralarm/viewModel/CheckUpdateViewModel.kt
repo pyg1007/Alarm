@@ -27,7 +27,7 @@ class CheckUpdateViewModel @Inject constructor(
 ) : ViewModel() {
 
     val checkUpdateWeather = flow {
-        checkWeatherUpdatedSelectUseCase.selectCheckWeatherUpdateWeather().collect {
+        checkWeatherUpdatedSelectUseCase().collect {
             emit(it)
         }
     }.catch {
@@ -35,7 +35,7 @@ class CheckUpdateViewModel @Inject constructor(
     }
 
     fun changeWeatherUpdate(checkWeatherUpdated: CheckWeatherUpdated) = viewModelScope.launch {
-        checkWeatherUpdatedUseCase.updateCheckWeather(checkWeatherUpdated)
+        checkWeatherUpdatedUseCase(checkWeatherUpdated)
     }
 
 }
