@@ -243,7 +243,6 @@ class MainActivity : BaseActivity<ActivityMainBinding>(R.layout.activity_main) {
 
     private suspend fun observeAlarmWithDate() {
         alarmViewModel.alarmList.collect {
-            Timber.d("$it")
             alarmList = it
             alarmAdapter.submitList(it.toMutableList())
         }
