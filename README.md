@@ -11,6 +11,11 @@
     AlarmManager
     WorkerManager
 
+## Detail
+![alarm](https://user-images.githubusercontent.com/8927650/169806329-6a6d2bf3-0845-45fc-8d56-4da147328095.png)
+
+
+
 ## Environment
     Android Studio Chipmunk
     Windows 10
